@@ -1,5 +1,6 @@
 import argparse
 import getpass
+import hashlib
 import random
 import string
 
@@ -11,10 +12,9 @@ def ord_str(s: str) -> int:
     :param s: The string to be converted
     :return: The corresponding integer representation of `s`
     """
-    str_ord = 0
-    for i, c in enumerate(s):
-        str_ord += ord(c) * 2 ** i
-    return str_ord
+    hash_value = hashlib.md5(s.encode()).hexdigest()
+
+    return int(hash_value, 16)
 
 
 def is_valid_pwd(pwd: str) -> bool:

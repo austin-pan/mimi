@@ -5,12 +5,15 @@ import random
 import string
 
 
-def ord_str(s: str) -> int:
+def hash_str(s: str) -> int:
     """
-    Convert a string into a unique corresponding integer. Similar to the `ord()` but for strings.
+    Convert a string into a unique deterministic integer using a hash.
 
-    :param s: The string to be converted
-    :return: The corresponding integer representation of `s`
+    Args:
+        s (str): The string to be converted
+
+    Returns:
+        int: The corresponding integer representation of `s`
     """
     hash_value = hashlib.md5(s.encode()).hexdigest()
 
@@ -19,8 +22,8 @@ def ord_str(s: str) -> int:
 
 def is_valid_pwd(pwd: str) -> bool:
     """
-    Check if a provided password is valid. A valid password has at least one uppercase letter, one digit, and one
-    punctuation mark.
+    Check if a provided password is valid. A valid password has at least one
+    uppercase letter, one digit, and one punctuation mark.
 
     :param pwd: The password to check the validity of
     :return: Whether the password is valid
@@ -41,7 +44,8 @@ def is_valid_pwd(pwd: str) -> bool:
 
 def gen_pwd(seed: int, pwd_len: int) -> str:
     """
-    Given a seed, deterministically generate a password of the specified length.
+    Given a seed, deterministically generate a password of the specified
+    length.
 
     :param seed: The seed to use for the random number generator
     :param pwd_len: The desired length of the generated password
@@ -60,14 +64,29 @@ def gen_pwd(seed: int, pwd_len: int) -> str:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Generate a password for a specified application.')
+    parser = argparse.ArgumentParser(
+        description='Generate a password for a specified application.'
+    )
 
-    parser.add_argument('app', type=str, help='The application to generate a password for')
-    parser.add_argument('user', type=str, help='The username used for the application')
-    parser.add_argument('-l', '--length', type=int, default=32, help='The password length to generate. Default 32')
+    parser.add_argument(
+        'app',
+        type=str,
+        help='The application to generate a password for'
+    )
+    parser.add_argument(
+        'user',
+        type=str,
+        help='The username used for the application'
+    )
+    parser.add_argument(
+        '-l', '--length',
+        type=int,
+        default=32,
+        help='The password length to generate. Default 32'
+    )
     args = parser.parse_args()
 
     key = getpass.getpass(prompt='Secret: ')
-    seed = ord_str(args.app + args.user + key)
+    seed = hash_str(args.app + args.user + key)
 
     print(gen_pwd(seed, args.length))

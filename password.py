@@ -1,19 +1,19 @@
 import argparse
 import getpass
 import hashlib
+import time
 import random
 import string
+
+import pyperclip
 
 
 def hash_str(s: str) -> int:
     """
-    Convert a string into a unique deterministic integer using a hash.
+    Convert a string into a unique deterministic integer using a md5 hash.
 
-    Args:
-        s (str): The string to be converted
-
-    Returns:
-        int: The corresponding integer representation of `s`
+    :param s: The string to be converted
+    :return: The corresponding integer representation of `s`
     """
     hash_value = hashlib.md5(s.encode()).hexdigest()
 
@@ -55,38 +55,48 @@ def gen_pwd(seed: int, pwd_len: int) -> str:
 
     chars = string.ascii_letters + string.digits + string.punctuation
     while True:
-        pwd = ''.join([random.choice(chars) for _ in range(pwd_len)])
-
+        pwd = "".join([random.choice(chars) for _ in range(pwd_len)])
         if is_valid_pwd(pwd):
             break
 
     return pwd
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='Generate a password for a specified application.'
+        description="Generate a password for a specified application."
     )
 
     parser.add_argument(
-        'app',
+        "app",
         type=str,
-        help='The application to generate a password for'
+        help="The application to generate a password for."
     )
     parser.add_argument(
-        'user',
+        "user",
         type=str,
-        help='The username used for the application'
+        help="The username used for the application."
     )
     parser.add_argument(
-        '-l', '--length',
+        "-l", "--length",
         type=int,
         default=32,
-        help='The password length to generate. Default 32'
+        help="The password length to generate. Default 32."
+    )
+    parser.add_argument(
+        "-t", "--time",
+        type=float,
+        default=5,
+        help="The number of non-negative seconds to temporarily keep the"
+             "password on your clipboard. Default is 5."
     )
     args = parser.parse_args()
 
-    key = getpass.getpass(prompt='Secret: ')
-    seed = hash_str(args.app + args.user + key)
+    key = getpass.getpass(prompt="Secret: ")
+    pwd_seed = hash_str(args.app + args.user + key)
+    password = gen_pwd(pwd_seed, args.length)
 
-    print(gen_pwd(seed, args.length))
+    clipboard = pyperclip.paste()
+    pyperclip.copy(password)
+    time.sleep(args.time)
+    pyperclip.copy(clipboard)

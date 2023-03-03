@@ -71,14 +71,14 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "app",
-        type=str,
-        help="The application to generate a password for."
-    )
-    parser.add_argument(
         "user",
         type=str,
         help="The username used for the application."
+    )
+    parser.add_argument(
+        "app",
+        type=str,
+        help="The application to generate a password for."
     )
     parser.add_argument(
         "-l", "--length",

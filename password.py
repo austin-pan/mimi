@@ -31,7 +31,10 @@ def is_valid_pwd(pwd: str) -> bool:
     has_upper = False
     has_digit = False
     has_punc = False
+    num_letters = 0
     for c in pwd:
+        if c in string.ascii_letters:
+            num_letters += 1
         if c in string.ascii_uppercase:
             has_upper = True
         if c in string.digits:
@@ -39,7 +42,7 @@ def is_valid_pwd(pwd: str) -> bool:
         if c in string.punctuation:
             has_punc = True
 
-    return has_upper and has_digit and has_punc
+    return has_upper and has_digit and has_punc and num_letters > 4
 
 
 def gen_pwd(seed: int, pwd_len: int) -> str:
@@ -91,9 +94,11 @@ if __name__ == "__main__":
              "password on your clipboard. Default is 5."
     )
     args = parser.parse_args()
+    if args.length < 8:
+        raise ValueError("Password length is too short, must be at least 8.")
 
     key = getpass.getpass(prompt="Secret: ")
-    pwd_seed = hash_str(args.app + args.user + key)
+    pwd_seed = hash_str(args.app + args.user + str(args.length) + key)
     password = gen_pwd(pwd_seed, args.length)
 
     clipboard = pyperclip.paste()

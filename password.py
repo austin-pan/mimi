@@ -1,7 +1,6 @@
 import argparse
 import getpass
 import hashlib
-import time
 import random
 import string
 
@@ -86,22 +85,21 @@ if __name__ == "__main__":
         default=32,
         help="The password length to generate. Default 32."
     )
-    parser.add_argument(
-        "-t", "--time",
-        type=float,
-        default=5,
-        help="The number of non-negative seconds to temporarily keep the"
-             "password on your clipboard. Default is 5."
-    )
     args = parser.parse_args()
     if args.length < 8:
         raise ValueError("Password length is too short, must be at least 8.")
 
     key = getpass.getpass(prompt="Secret: ")
+    confirm_key = getpass.getpass(prompt="Confirm: ")
+    if key != confirm_key:
+        exit("Secret's didn't match!")
+
     pwd_seed = hash_str(args.app + args.user + str(args.length) + key)
     password = gen_pwd(pwd_seed, args.length)
 
     clipboard = pyperclip.paste()
     pyperclip.copy(password)
-    time.sleep(args.time)
-    pyperclip.copy(clipboard)
+    input("Press Enter to continue")
+    if pyperclip.paste() == password:
+        pyperclip.copy(clipboard)
+

@@ -28,8 +28,6 @@ options:
   -h, --help            show this help message and exit
   -l LENGTH, --length LENGTH
                         The password length to generate. Default 32.
-  -t TIME, --time TIME  The number of non-negative seconds to temporarily keep thepassword on
-                        your clipboard. Default is 5.
 ```
 
 For example, to create an account for "gmail" 

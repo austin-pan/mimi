@@ -1,0 +1,10 @@
+body {
+  margin: 0px;
+}
+
+form {
+  margin: 20px auto;
+  width: 400px;
+  display: grid;
+  grid-auto-flow: row;
+}

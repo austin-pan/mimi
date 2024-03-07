@@ -1,4 +1,4 @@
-import { letters, upper, digits, special } from "./symbols.js";
+import { letters, upper, digits, special } from "./utils/symbols";
 
 export default class PasswordConfig {
   constructor(options) {
@@ -22,6 +22,6 @@ export default class PasswordConfig {
         if (special.includes(c)) { hasPunc = true; }
     }
 
-    return hasUpper && hasDigit && hasPunc && numLetters > 4;
+    return hasUpper && hasDigit && hasPunc;
   }
 }

@@ -1,15 +1,25 @@
 import seedrandom from "seedrandom";
-import { letters, digits, special, space } from "./symbols.js";
-import PasswordConfig from "./config";
+import { letters, digits, special, space } from "../utils/symbols.js";
+import PasswordConfig from "../config.js";
+import PasswordGenerator from "./passwordGenerator.js";
 
-export default class PasswordGenerator {
+export default class RandomPasswordGenerator extends PasswordGenerator {
   /**
    *
    * @param {PasswordConfig} config
    */
-  constructor(config) {
-    this.config = config;
+  constructor() {
+    super();
+
     this.alphabet = letters.concat(digits, special, space);
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  ready = () => {
+    return true;
   }
 
   /**
@@ -19,7 +29,7 @@ export default class PasswordGenerator {
    * @param {int} length Length of password.
    * @returns {string} Generated password.
    */
-  generate = (seed, length) => {
+  generate = (seed, length, config) => {
     const rng = seedrandom(seed);
 
     for (let i = 0; i < 10; i++) {

@@ -7,4 +7,14 @@ form {
   width: clamp(100px, 80%, 400px);
   display: grid;
   grid-auto-flow: row;
+  gap: 15px;
+}
+
+form > div {
+  display: flex;
+  gap: 8px;
+}
+
+form input {
+  flex: 1;
 }

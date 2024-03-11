@@ -13,15 +13,11 @@ export default class WordPasswordGenerator extends PasswordGenerator {
   constructor() {
     super();
 
-    fetch(words)
-      .then(res => res.text())
-      .then(text => {
-        const wordBank = text.split("\n");
-        this.#lengthToWords = Object.groupBy(wordBank, (word) => word.length );
-        this.#wordMaxLength = Math.max(...Object.keys(this.#lengthToWords));
-        this.#wordMinLength = Math.min(...Object.keys(this.#lengthToWords));
-        this.#ready = true;
-      });
+    const wordBank = words.split("\n");
+    this.#lengthToWords = Object.groupBy(wordBank, (word) => word.length );
+    this.#wordMaxLength = Math.max(...Object.keys(this.#lengthToWords));
+    this.#wordMinLength = Math.min(...Object.keys(this.#lengthToWords));
+    this.#ready = true;
   }
 
   ready = () => {
@@ -46,33 +42,42 @@ export default class WordPasswordGenerator extends PasswordGenerator {
     const wordsPortion = randomWords.join(" ");
     const validatorPortion = this.#generateValidator(length - wordsPortion.length - 1, rng, config);
     const password = wordsPortion + " " + validatorPortion;
-    console.log(password);
-    console.log(password.length);
-    // console.log(randomWords.reduce((acc, x) => acc + x, 0));
 
     return password;
   }
 
   /**
    *
-   * @param {int} length
+   * @param {int} totalLength
    * @param {seedrandom.PRNG} rng
-   * @returns {int[]}
+   * @param {int[]} lengths
+   * @returns
    */
-  #generateWordLengths = (length, rng) => {
-    let totalLength = 0;
-    let wordLengths = [];
+  #generateWordLengths = (totalLength, rng, lengths = []) => {
+    // Valid length sequence found
+    if (totalLength == 0) { return lengths; }
+    // Length sequence sum is too large
+    if (totalLength < 0) { return null; }
 
-    while (true) {
-      let nextLength = Math.floor(rng() * (this.#wordMaxLength - this.#wordMinLength) + this.#wordMinLength);
-      if (totalLength + nextLength >= length) {
-        break;
-      }
+    let candidateLengths = Object.keys(this.#lengthToWords);
 
-      wordLengths.push(nextLength);
-      totalLength += nextLength + 1; // +1 length for space after word
+    while (candidateLengths.length > 0) {
+      const randomIndex = Math.floor(rng() * candidateLengths.length);
+      const candidateLength = candidateLengths[randomIndex];
+
+      const branchSequence = this.#generateWordLengths(
+        totalLength - candidateLength - 1, // -1 length for space after word
+        rng,
+        lengths.concat([candidateLength])
+      );
+      if (branchSequence !== null) { return branchSequence; }
+
+      // Remove explored index
+      candidateLengths.splice(randomIndex, 1);
     }
-    return wordLengths;
+
+    // No valid length sequences for specified `totalLength`
+    return null;
   }
 
   /**

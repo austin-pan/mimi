@@ -15,7 +15,7 @@ submitBtn.addEventListener("click", (event) => {
   const secret = document.querySelector("input#secret").value;
   const length = parseInt(document.querySelector("input#length").value);
 
-  const seed = username + app + secret;
+  const seed = [username, app, secret].join(" ");
   const password = generator.generate(seed, length, config);
 
   copyContent(password);

@@ -1,6 +1,4 @@
-import PasswordConfig from "../config";
-
-export default class PasswordGenerator {
+export class PasswordGenerator {
   /**
    *
    * @returns {boolean}

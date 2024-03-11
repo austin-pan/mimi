@@ -1,6 +1,6 @@
-import { letters, upper, digits, special } from "./utils/symbols";
+import { letters, upper, digits, special } from "./utils/symbols.js";
 
-export default class PasswordConfig {
+export class PasswordConfig {
   constructor(options) {
     this.options = options;
   }

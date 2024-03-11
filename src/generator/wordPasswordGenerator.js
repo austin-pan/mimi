@@ -1,10 +1,11 @@
-import PasswordGenerator from "./passwordGenerator";
-import { digits, special, upper } from "../utils/symbols";
-import seedrandom from "seedrandom";
 import words from "../res/mediumWords.txt";
-import PasswordConfig from "../config";
 
-export default class WordPasswordGenerator extends PasswordGenerator {
+import seedrandom from "seedrandom";
+import { digits, special, upper } from "../utils/symbols.js";
+import { PasswordGenerator } from "./passwordGenerator.js";
+import { PasswordConfig } from "../config.js";
+
+export class WordPasswordGenerator extends PasswordGenerator {
   #ready = false;
   #lengthToWords = null;
   #wordMaxLength = null;

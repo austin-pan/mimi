@@ -1,5 +1,3 @@
-import seedrandom from "seedrandom";
-
 /**
  * Create an array with the numbers from `start` to `stop`, inclusive.
  *

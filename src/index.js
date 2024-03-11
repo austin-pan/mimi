@@ -1,8 +1,8 @@
 import "./styles/style.css";
 
-import { copyContent } from "./utils/clipboard";
-import PasswordConfig from "./config";
-import WordPasswordGenerator from "./generator/wordPasswordGenerator";
+import { copyContent } from "./utils/clipboard.js";
+import { PasswordConfig } from "./config.js";
+import { WordPasswordGenerator } from "./generator/wordPasswordGenerator.js";
 
 const generator = new WordPasswordGenerator();
 const submitBtn = document.querySelector("button#generate");

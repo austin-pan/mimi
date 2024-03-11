@@ -1,9 +1,9 @@
 import seedrandom from "seedrandom";
 import { letters, digits, special, space } from "../utils/symbols.js";
-import PasswordConfig from "../config.js";
-import PasswordGenerator from "./passwordGenerator.js";
+import { PasswordConfig } from "../config.js";
+import { PasswordGenerator } from "./passwordGenerator.js";
 
-export default class RandomPasswordGenerator extends PasswordGenerator {
+export class RandomPasswordGenerator extends PasswordGenerator {
   /**
    *
    * @param {PasswordConfig} config

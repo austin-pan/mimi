@@ -3,5 +3,3 @@
 .idea
 .vscode
 node_modules
-dist/*
-!dist/index.html

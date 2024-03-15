@@ -2,7 +2,7 @@ import words from "../res/mediumWords.txt";
 
 import seedrandom from "seedrandom";
 import { digits, special, upper } from "../utils/symbols.js";
-import { PasswordGenerator } from "./passwordGenerator.js";
+import { PasswordGenerator } from "./password-generator.js";
 import { PasswordConfig } from "../config.js";
 
 export class WordPasswordGenerator extends PasswordGenerator {
@@ -15,7 +15,7 @@ export class WordPasswordGenerator extends PasswordGenerator {
     super();
 
     const wordBank = words.split("\n");
-    this.#lengthToWords = Object.groupBy(wordBank, (word) => word.length );
+    this.#lengthToWords = Object.groupBy(wordBank, (word) => word.length);
     this.#wordMaxLength = Math.max(...Object.keys(this.#lengthToWords));
     this.#wordMinLength = Math.min(...Object.keys(this.#lengthToWords));
     this.#ready = true;

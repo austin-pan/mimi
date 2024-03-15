@@ -18,6 +18,10 @@ module.exports = {
         test: /\.txt$/i,
         type: 'asset/source',
       },
+      {
+        test: /\.svg$/i,
+        use: ['svg-inline-loader'],
+      },
     ],
   },
 };

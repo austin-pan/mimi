@@ -8,28 +8,32 @@
 <body>
   <div id="content">
     <form id="password-form">
+      <label for="username">Username: </label>
       <div>
-        <label for="username">Username: </label>
         <input id="username" form="password-form" autocomplete="off">
       </div>
 
+      <label for="app">Application: </label>
       <div>
-        <label for="app">Application: </label>
         <input id="app" form="password-form" autocomplete="off">
       </div>
 
-      <div>
-        <label for="secret">Secret: </label>
+      <label for="secret">Secret: </label>
+      <div id="secret-field" class="field-container">
         <input id="secret" type="password" form="password-form">
       </div>
 
+      <label for="length">Length: </label>
       <div>
-        <label for="length">Length: </label>
         <input id="length" type="number" form="password-form" value="32">
       </div>
 
       <button id="generate" type="submit">Generate</button>
     </form>
+
+    <div id="generated" class="field-container">
+      <input id="generated-password" type="password" disabled>
+    </div>
   </div>
 
   <script src="./main.js"></script>

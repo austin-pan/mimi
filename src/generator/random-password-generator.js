@@ -1,7 +1,7 @@
 import seedrandom from "seedrandom";
 import { letters, digits, special, space } from "../utils/symbols.js";
 import { PasswordConfig } from "../config.js";
-import { PasswordGenerator } from "./passwordGenerator.js";
+import { PasswordGenerator } from "./password-generator.js";
 
 export class RandomPasswordGenerator extends PasswordGenerator {
   /**

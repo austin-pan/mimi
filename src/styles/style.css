@@ -11,8 +11,7 @@ form {
   width: clamp(100px, 80%, 400px);
   display: grid;
   grid-auto-flow: row;
-  grid-template-columns: 100px 300px;
-  grid-template-rows: repeat(5, 30px);
+  grid-template-rows: repeat(5, 35px);
   gap: 15px;
   align-items: center;
 }
@@ -23,30 +22,29 @@ form label {
 
 form > div {
   display: flex;
-  align-items: start;
+  height: 100%;
 }
 
-form input {
+input[type=text],
+input[type=password] {
   flex: 1;
+  border-radius: 5px;
+  padding: 5px;
 }
 
 form button {
   grid-area: -2 / 1 / -1 / -1;
 }
 
-.field-container {
-  position: relative;
-}
-
 svg {
   height: 1rem;
+  transform: rotateX(180deg);
 }
 
 .field-button {
   position: absolute;
-  right: 0px;
-  top: 0px;
-  margin-right: 4px;
+  right: 10px;
+  top: 0.4rem;
 }
 
 .icon-button {
@@ -54,6 +52,10 @@ svg {
   padding: 2px 0px 0px 0px;
   border: none;
   background-color: transparent;
+}
+
+.icon-button:active {
+  fill: lightblue;
 }
 
 button:hover {
@@ -65,7 +67,39 @@ button:hover {
   width: 100%;
 }
 
-#generated {
+#generated-container {
   margin: 0px auto;
   width: 400px;
+}
+
+#username-container::before {
+  content: "Username";
+}
+
+#app-container::before {
+  content: "Application";
+}
+
+#secret-container::before {
+  content: "Secret";
+}
+
+#length-container::before {
+  content: "Length"
+}
+
+#generated-container::before {
+  content: "Generated Password";
+}
+
+.input-container {
+  position: relative;
+}
+
+.input-container::before {
+  position: absolute;
+  top: -0.6rem;
+  left: 0.5rem;
+  color: black;
+  background-color: white;
 }

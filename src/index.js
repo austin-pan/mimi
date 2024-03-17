@@ -29,7 +29,7 @@ const pwVisibilityToggle = document.createElement("button");
 pwVisibilityToggle.classList.add("field-button", "icon-button");
 pwVisibilityToggle.type = "button";
 pwVisibilityToggle.innerHTML = visibleIcon;
-const secretField = document.querySelector("div#secret-field");
+const secretField = document.querySelector("div#secret-container");
 secretField.appendChild(pwVisibilityToggle);
 const secret = document.querySelector("input#secret");
 
@@ -47,7 +47,7 @@ const genPwVisibilityToggle = document.createElement("button");
 genPwVisibilityToggle.classList.add("field-button", "icon-button");
 genPwVisibilityToggle.type = "button";
 genPwVisibilityToggle.innerHTML = visibleIcon;
-const generatedField = document.querySelector("div#generated");
+const generatedField = document.querySelector("div#generated-container");
 generatedField.appendChild(genPwVisibilityToggle);
 const generatedSecret = document.querySelector("input#generated-password");
 

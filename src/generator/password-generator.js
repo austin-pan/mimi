@@ -1,20 +1,13 @@
-export class PasswordGenerator {
-  /**
-   *
-   * @returns {boolean}
-   */
-  ready() {
-    return false;
-  }
+import * as WordsV1 from "./words-v1.js";
+import * as CharactersV1 from "./characters-v1.js";
 
-  /**
-   * Generate a password of the specified length.
-   *
-   * @param {string} seed Seed for random number generator.
-   * @param {int} length Length of password.
-   * @returns {string} Generated password.
-   */
-  generate = (seed, length, config) => {
-    return "password";
+export function generate(type, seed, length, config) {
+  switch (type) {
+    case WordsV1.id:
+      return WordsV1.generate(seed, length, config);
+    case CharactersV1.id:
+      return CharactersV1.generate(seed, length, config);
+    default:
+      throw new Error(`Unrecognized password type ${type}`);
   }
 }

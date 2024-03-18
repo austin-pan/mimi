@@ -6,34 +6,24 @@ body {
   margin: 0px;
 }
 
-form {
+div#content {
   margin: 20px auto;
   width: clamp(100px, 80%, 400px);
-  display: grid;
-  grid-auto-flow: row;
-  grid-template-rows: repeat(5, 35px);
-  gap: 15px;
-  align-items: center;
-}
-
-form label {
-  text-align: right;
-}
-
-form > div {
-  display: flex;
-  height: 100%;
 }
 
 input[type=text],
 input[type=password] {
-  flex: 1;
   border-radius: 5px;
-  padding: 5px;
+  width: 100%;
+  height: 2.5rem;
 }
 
-form button {
-  grid-area: -2 / 1 / -1 / -1;
+input[type=text] {
+  padding: 10px;
+}
+
+input[type=password] {
+  padding: 0 30px 0px 10px;
 }
 
 svg {
@@ -44,12 +34,12 @@ svg {
 .field-button {
   position: absolute;
   right: 10px;
-  top: 0.4rem;
+  top: 0.5rem;
+  padding: 3px 0px 0px 0px;
 }
 
 .icon-button {
   height: 1.4rem;
-  padding: 2px 0px 0px 0px;
   border: none;
   background-color: transparent;
 }
@@ -60,16 +50,6 @@ svg {
 
 button:hover {
   cursor: pointer;
-}
-
-#generated-password {
-  display: block;
-  width: 100%;
-}
-
-#generated-container {
-  margin: 0px auto;
-  width: 400px;
 }
 
 #username-container::before {
@@ -84,16 +64,9 @@ button:hover {
   content: "Secret";
 }
 
-#length-container::before {
-  content: "Length"
-}
-
-#generated-container::before {
-  content: "Generated Password";
-}
-
 .input-container {
   position: relative;
+  margin: 15px 0px;
 }
 
 .input-container::before {
@@ -102,4 +75,24 @@ button:hover {
   left: 0.5rem;
   color: black;
   background-color: white;
+}
+
+#generated {
+  display: flex;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+#generated span {
+  flex: 1;
+}
+
+#length-container {
+  margin: 20px 0px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#length-container input[type=range] {
+  flex: 1;
 }

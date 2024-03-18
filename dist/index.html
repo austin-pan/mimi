@@ -6,32 +6,7 @@
   <title>Mimi</title>
 </head>
 <body>
-  <div id="content">
-    <form id="password-form">
-      <div id="username-container" class="input-container">
-        <input id="username" type="text" form="password-form" autocomplete="off">
-      </div>
-
-      <div id="app-container" class="input-container">
-        <input id="app" type="text" form="password-form" autocomplete="off">
-      </div>
-
-      <div id="secret-container" class="input-container">
-        <input id="secret" type="password" form="password-form">
-      </div>
-
-      <div id="length-container" class="input-container">
-        <input id="length" type="number" form="password-form" value="32">
-        <input id="length-slider" type="range" min="8" max="64" value="32">
-      </div>
-
-      <button id="generate" type="submit">Generate</button>
-    </form>
-
-    <div id="generated-container" class="input-container">
-      <input id="generated-password" type="password" disabled>
-    </div>
-  </div>
+  <div id="content"></div>
 
   <script src="./main.js"></script>
 </body>

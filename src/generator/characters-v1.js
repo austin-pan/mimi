@@ -15,7 +15,7 @@ export const id = "characters-v1";
 export function generate(seed, length, config) {
   const rng = seedrandom(seed);
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 100; i++) {
     const password = generatePotentialPassword(rng, length);
     if (config.validate(password)) {
       return password;

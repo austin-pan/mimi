@@ -3,6 +3,8 @@ import hiddenIcon from "../res/visibility_off_FILL0_wght400_GRAD0_opsz24.svg"
 import copyIcon from "../res/content_copy_FILL0_wght400_GRAD0_opsz24.svg"
 
 import * as Clipboard from "./clipboard.js";
+import * as WordsV1 from "../generator/words-v1.js";
+import * as CharactersV1 from "../generator/characters-v1.js";
 
 const inputContainerClass = "input-container";
 
@@ -31,7 +33,8 @@ export function createSecretField(id) {
   inputField.autocapitalize = "off";
 
   const visibilityToggle = document.createElement("button");
-  visibilityToggle.classList.add("field-button", "icon-button");
+  visibilityToggle.classList.add("field-button", "icon-button", "eye-button");
+  visibilityToggle.title = "Show/Hide Password";
   visibilityToggle.type = "button";
   visibilityToggle.innerHTML = visibleIcon;
   visibilityToggle.addEventListener("click", () => {
@@ -86,11 +89,13 @@ export function createGeneratedPasswordDisplay(id) {
   const displayDiv = document.createElement("div");
   displayDiv.id = id;
 
-  const passwordDisplay = document.createElement("span");
+  const passwordDisplay = document.createElement("div");
+  passwordDisplay.classList.add("generated-display");
   passwordDisplay.textContent = "***";
 
   const copyPasswordButton = document.createElement("button");
-  copyPasswordButton.classList.add("icon-button");
+  copyPasswordButton.classList.add("icon-button", "copy-button");
+  copyPasswordButton.title = "Copy";
   copyPasswordButton.type = "button";
   copyPasswordButton.innerHTML = copyIcon;
   copyPasswordButton.addEventListener("click", () => {
@@ -111,17 +116,17 @@ export function createGeneratorSelector(id) {
   selectorLabel.textContent = "Generator: ";
 
   const selections = [
-    "words-v1",
-    "characters-v1"
+    WordsV1.id,
+    CharactersV1.id
   ];
-  const selector = createSelectorElement(id, selections);
+  const selector = createSelectorElement(selections);
 
   selectorDiv.appendChild(selectorLabel);
   selectorDiv.appendChild(selector);
   return selectorDiv
 }
 
-function createSelectorElement(id, selections) {
+function createSelectorElement(selections) {
   const selector = document.createElement("select");
   selections.forEach(selection => {
     const option = document.createElement("option");

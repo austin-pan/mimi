@@ -2,7 +2,9 @@ import "./styles/style.css";
 
 import * as PasswordConfig from "./password-config.js";
 import * as ComponentFactory from "./utils/component-factory.js";
-import * as PasswordGenerator from "./generator/password-generator.js"
+import * as PasswordGenerator from "./generator/password-generator.js";
+
+import * as StringUtils from "./utils/strings.js";
 
 const contentDiv = document.querySelector("div#content");
 const generatedPwComponent = ComponentFactory.createGeneratedPasswordDisplay("generated");
@@ -45,7 +47,7 @@ contentDiv.appendChild(generatorSelectorComponent);
         const config = new PasswordConfig.Config(options);
 
         const seed = [username, app, secret].join(" ");
-        const password = PasswordGenerator.generate(passwordType, seed, length, config)
+        const password = StringUtils.escapeHTML(PasswordGenerator.generate(passwordType, seed, length, config))
           .replace(/ /g, '<span class="highlighted-space"> </span>');
         generatedPwComponent.querySelector(".generated-display").innerHTML = password;
       });

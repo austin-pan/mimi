@@ -51,11 +51,16 @@ export const v2BaseInput = {
 };
 
 export const v2FrozenVectors = {
-  words32: "selfish-general-repay-telling-V6",
+  words32: "shuandeent-cuvogaend-i-tumble-H5",
   chars32: "UAhyTJRz4fPkKn7PmMDVukj3c#iFLk@4",
-  words42: "depends-popcorn-topical-divided-baptism-N7",
+  words42: "quiet-vicar-chiasseil-anthony-streinash-N7",
   chars20: "Dr?R!Y3?gfw!ojAuUeeE",
 };
+
+// The words-v2 bank was expanded from 10,014 to 15,000 entries pre-adoption
+// (a one-time, authorized change; see scripts/expand-wordbank.mjs). It is frozen
+// again at this size.
+export const WORD_BANK_V2_SIZE = 15000;
 
 // Node-side loader for the shared word-bank assets (used by unit tests in any
 // client). The browser clients load these over fetch instead.

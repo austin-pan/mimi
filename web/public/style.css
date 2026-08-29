@@ -164,9 +164,7 @@ h1 { margin-bottom: 0.05rem; font: 700 2rem/1 Georgia, serif; letter-spacing: -0
 .profile-panel[open] .disclosure { transform: rotate(180deg); }
 .profile-content {
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) auto;
-  gap: 0.7rem;
-  align-items: end;
+  gap: 0.75rem;
   padding: 0 1rem 1rem 3.65rem;
 }
 .microcopy { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 0.75rem; }
@@ -286,31 +284,37 @@ input[type="range"] { min-height: 24px; padding: 0; accent-color: var(--plum); }
 .more-options summary { width: fit-content; padding-top: 0.65rem; color: var(--muted); font-size: 0.76rem; font-weight: 750; cursor: pointer; }
 .option-grid { margin-top: 0.65rem; }
 
-.compact-actions { display: flex; gap: 0.4rem; }
-.compact-actions button, .copy-button {
+.copy-button {
   min-height: 40px;
   padding: 0.5rem 0.8rem;
   border: 1px solid var(--plum);
   border-radius: 10px;
-  background: var(--plum);
-  color: white;
+  background: transparent;
+  color: var(--plum);
   font-size: 0.78rem;
   font-weight: 800;
 }
-.compact-actions .quiet, .copy-button { background: transparent; color: var(--plum); }
 
-.transfer-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; grid-column: 1 / -1; }
-.transfer-button {
-  min-height: 34px;
-  padding: 0.35rem 0.7rem;
+.profile-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem; grid-column: 1 / -1; }
+.button-group { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.primary-group { padding-right: 0.7rem; border-right: 1px solid var(--line); }
+.pb {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 38px;
+  padding: 0.45rem 0.8rem;
   border: 1px solid var(--line);
-  border-radius: 999px;
-  background: rgba(255, 253, 248, 0.7);
-  color: var(--muted);
-  font-size: 0.74rem;
+  border-radius: 10px;
+  background: rgba(255, 253, 248, 0.82);
+  color: var(--plum);
+  font-size: 0.78rem;
   font-weight: 750;
 }
-.transfer-button:hover { border-color: #9b88ac; color: var(--plum); background: var(--lavender); }
+.pb svg { width: 16px; height: 16px; flex: 0 0 auto; }
+.pb:hover { border-color: #9b88ac; background: var(--lavender); }
+.pb-solid { border-color: var(--plum); background: var(--plum); color: #fff; font-weight: 800; }
+.pb-solid:hover { border-color: var(--plum-dark); background: var(--plum-dark); }
 .profile-qr {
   display: grid;
   grid-column: 1 / -1;
@@ -468,8 +472,10 @@ footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
 }
 
 [data-theme="dark"] .brand-mark,
-[data-theme="dark"] .compact-actions button:not(.quiet),
+[data-theme="dark"] .pb-solid,
 [data-theme="dark"] .generate-button { background: #725d7f; color: #fff; }
+[data-theme="dark"] .pb-solid { border-color: #725d7f; }
+[data-theme="dark"] .pb-solid:hover { background: #836d90; border-color: #836d90; }
 [data-theme="dark"] .generate-button:hover { background: #836d90; }
 [data-theme="dark"] .install-button,
 [data-theme="dark"] .theme-button,
@@ -482,8 +488,8 @@ footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
 [data-theme="dark"] label { color: #c7bdc9; }
 [data-theme="dark"] input,
 [data-theme="dark"] select { background: #211c25; color: var(--ink); }
-[data-theme="dark"] .transfer-button { background: rgba(41, 35, 45, 0.7); border-color: rgba(194, 169, 208, 0.2); }
-[data-theme="dark"] .transfer-button:hover { border-color: #8c729b; color: var(--plum-dark); background: rgba(61, 51, 69, 0.72); }
+[data-theme="dark"] .pb { background: rgba(41, 35, 45, 0.7); border-color: rgba(194, 169, 208, 0.2); color: var(--plum); }
+[data-theme="dark"] .pb:hover { border-color: #8c729b; color: var(--plum-dark); background: rgba(61, 51, 69, 0.72); }
 [data-theme="dark"] .length-settings legend { color: #c7bdc9; }
 [data-theme="dark"] .length-modes label { background: #211c25; }
 [data-theme="dark"] .length-modes label:has(input:checked) { background: rgba(61, 51, 69, 0.72); }
@@ -532,8 +538,8 @@ footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
 @media (max-width: 560px) {
   main { padding-top: 0.75rem; }
   .brand p { display: none; }
-  .profile-content { grid-template-columns: 1fr; padding-left: 1rem; }
-  .compact-actions { flex-wrap: wrap; }
+  .profile-content { padding-left: 1rem; }
+  .primary-group { padding-right: 0; border-right: 0; }
   .microcopy { grid-column: auto; }
   .form-grid { gap: 0.65rem; }
   .full { grid-column: 1 / -1; }

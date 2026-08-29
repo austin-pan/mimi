@@ -157,8 +157,9 @@ importProfileButton.addEventListener("click", async () => {
     await saveProfile(code);
     profileSummary.textContent = "Profile imported on this device";
     setProfileStatus("Imported — Mimi will now reproduce the same passwords here.", "success");
-    importProfileButton.textContent = "Imported ✓";
-    setTimeout(() => { importProfileButton.textContent = "Import"; }, 1800);
+    const importLabel = importProfileButton.querySelector(".pb-label");
+    importLabel.textContent = "Imported ✓";
+    setTimeout(() => { importLabel.textContent = "Import"; }, 1800);
     setStatus("Profile imported. You're ready to go.", "success");
   } catch (error) {
     profilePanel.open = true;
@@ -207,12 +208,12 @@ showQrButton.addEventListener("click", async () => {
       return;
     }
     profileQr.hidden = false;
-    showQrButton.textContent = "Hide QR";
+    showQrButton.querySelector(".pb-label").textContent = "Hide";
     showQrButton.setAttribute("aria-expanded", "true");
   } else {
     profileQr.hidden = true;
     profileQrCanvas.innerHTML = "";
-    showQrButton.textContent = "Show QR";
+    showQrButton.querySelector(".pb-label").textContent = "QR";
     showQrButton.setAttribute("aria-expanded", "false");
   }
 });

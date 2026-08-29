@@ -56,7 +56,9 @@ core plus assets live in `shared/`, imported by both clients.
 | `shared/core/generation-settings.js` | Style-specific recommended lengths and descriptive strength guidance. |
 | `shared/core/word-bank.js` | Platform-neutral word-bank loader (`loadWordBankFrom(url)`); no DOM/extension coupling. |
 | `shared/assets/word-bank-v1.txt` | Frozen original list; changing it breaks V1 outputs. |
-| `shared/assets/word-bank-v2.txt` | V2 list, including added pronouns; immutable after release. |
+| `shared/assets/word-bank-v2.txt` | V2 list (15,000 entries: original words, pronouns, plus pre-adoption word-like tokens); frozen. |
+| `scripts/expand-wordbank.mjs` | Reproducible generator used for the one-time pre-adoption v2 bank expansion. |
+| `scripts/make-icons.mjs` | Regenerates the brand-mark PWA/extension PNG icons from the plum "m" mark. |
 | `shared/styles/tokens.css` | Canonical design tokens (palette) consumed by the extension. |
 | `shared/test/` | Single golden-vector source (`vectors.js`) plus generators, profile, settings, and transfer suites. |
 | `web/src/index.js` | PWA UI wiring; imports the shared core and passes word-bank URLs relative to `document.baseURI`. |
@@ -101,8 +103,15 @@ lowercase, uppercase, digit, and commonly accepted special-character coverage.
 
 Never modify a released algorithm, parameter, word-bank order, normalization
 rule, encoding, or alphabet. Introduce `v3` instead. Golden vectors in
-`web/test/generators.test.js` are recovery-critical and must not be casually
-updated to make a failing change pass.
+`shared/test/` are recovery-critical and must not be casually updated to make a
+failing change pass.
+
+One-time exception (2026-08-29, pre-adoption): the `word-bank-v2.txt` list was
+expanded from 10,014 to 15,000 entries while the service had no users, adding
+pronounceable word-like tokens (see `scripts/expand-wordbank.mjs`). The original
+10,014 entries are preserved as an exact prefix, but this still changes every
+`words-v2` output, so the golden word vectors were regenerated. The bank is
+frozen again at 15,000; any further change must use a new algorithm ID.
 
 Recommended mode is presentation policy, not an additional KDF input. It maps
 `words-v2` to 42 characters (five 7-letter words plus the uppercase/digit
@@ -222,6 +231,10 @@ that it has.
   core and visual language, with active-tab autofill of app label and username,
   per-site presets, profile QR/file transfer, and an `Alt+Shift+M` shortcut.
   Verified byte-for-byte parity with the PWA in a Chromium DOM smoke test.
+- [x] Regenerated the PWA/extension icons to match the plum italic-"m" brand
+  mark, and redesigned the profile actions into a grouped, icon-labeled toolbar.
+- [x] Expanded the `words-v2` bank to 15,000 word-like entries (pre-adoption,
+  authorized) and regenerated the golden word vectors.
 
 ### Next
 

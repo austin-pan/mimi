@@ -14,6 +14,7 @@ import {
 import {
   FAST_TEST_PARAMETERS,
   PROFILE_SALT_FIXTURE,
+  WORD_BANK_V2_SIZE,
   legacyVectors,
   loadWordBankAsset,
   v2BaseInput,
@@ -101,6 +102,9 @@ test("v2 word bank adds portable pronouns without changing v1", () => {
     assert.ok(wordsV2.includes(pronoun), `${pronoun} missing from v2`);
   }
   assert.equal(wordsV1.length, 10_000);
-  assert.equal(wordsV2.length, 10_014);
-  assert.equal(new Set(wordsV2.map((word) => word.trim().toLocaleLowerCase("en-US"))).size, 10_014);
+  assert.equal(wordsV2.length, WORD_BANK_V2_SIZE);
+  assert.equal(
+    new Set(wordsV2.map((word) => word.trim().toLocaleLowerCase("en-US"))).size,
+    WORD_BANK_V2_SIZE,
+  );
 });

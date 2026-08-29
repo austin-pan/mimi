@@ -110,6 +110,10 @@ current release is published manually from the tested `web/dist` artifact.
 Automatic branch publishing is intentionally deferred because it requires a
 persistent `contents: write` workflow permission.
 
+The 2026-08-29 release is live at `https://austin-pan.github.io/mimi/` from
+`gh-pages` commit `2cea1e4`. Its HTML, manifest, local Argon2id generation, and
+zero-console-error production smoke test were verified after propagation.
+
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, pin each action to a reviewed commit SHA,
 enable branch protection, require review for workflow/core changes, and protect
@@ -144,6 +148,7 @@ that it has.
   `-`/`.` word separators, common symbols, digits, and pronouns.
 - [x] Preserved V1 algorithms and word bank with golden vectors.
 - [x] Added offline PWA shell and GitHub Pages deployment workflow.
+- [x] Published and smoke-tested the first backend-free GitHub Pages release.
 
 ### Next
 

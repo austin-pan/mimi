@@ -60,7 +60,6 @@ function encodeContext(input) {
   return encoder.encode(JSON.stringify([
     "mimi",
     2,
-    input.kind,
     input.application.normalize("NFKC"),
     input.username.normalize("NFKC"),
     input.slot,

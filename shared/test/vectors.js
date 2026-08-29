@@ -43,18 +43,21 @@ export const v2BaseInput = {
   secret: "correct horse battery staple",
   application: "example.com",
   username: "alice@example.com",
-  kind: "website",
   slot: 1,
   length: 32,
   separator: "-",
   style: "words-v2",
 };
 
+// Vectors were recomputed after removing the experimental `input.kind` field
+// from encodeContext() in derive-v2.js. That field was added post-v1.3.2 and
+// never shipped to real users, so this is a pre-adoption correction, not a
+// breaking algorithm change. No existing passwords are affected.
 export const v2FrozenVectors = {
-  words32: "shocilliia-iostadan-it-tumble-H5",
-  chars32: "UAhyTJRz4fPkKn7PmMDVukj3c#iFLk@4",
-  words42: "she-pinelim-cedar-miostusice-ciabureant-H6",
-  chars20: "Dr?R!Y3?gfw!ojAuUeeE",
+  words32: "lizzie-his-rinnilan-teildigot-M4",
+  chars32: "%wKYLY$Kwetcv9rnN.UvF#mhrmKtLs4N",
+  words42: "plea-me-flocoliok-fileideaon-billaimben-D6",
+  chars20: "9g$JqcHnPH.n*HCa5vvs",
 };
 
 // The words-v2 bank was expanded from 10,014 to 15,000 entries pre-adoption

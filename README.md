@@ -41,10 +41,10 @@ The app supports:
 - Plain-language strength guidance based on the selected generator and length,
   plus confirmation of the character classes V2 guarantees. Mimi deliberately
   does not score the apparent randomness of an individual output.
-- Public Profile Code transfer by QR code, `.mimi-profile` file, in-app camera
-  QR scanning (bundled, offline), and copy/paste. The QR encodes an auto-import
-  deep link, so scanning it with a phone camera opens Mimi and imports the
-  profile. Nothing transferred carries a secret.
+- Public Profile Code transfer by QR code, `.mimi-profile` file, and copy/paste.
+  The QR encodes an auto-import deep link, so scanning it with a phone's built-in
+  camera opens Mimi and imports the profile — no in-app scanner needed. Nothing
+  transferred carries a secret.
 - An in-app "new version is ready" prompt when an updated service worker is
   waiting, so updates apply on an explicit refresh rather than silently.
 
@@ -72,6 +72,10 @@ The PWA uses only relative URLs, so it works both at a project path such as
 - The word banks and algorithms are public by design.
 - Checked-in golden vectors fail tests if a released algorithm changes.
 - The installed PWA works offline after its initial successful load.
+- The dependency surface is deliberately small — Argon2 (`hash-wasm`) and a
+  QR encoder for the public code (`qrcode-generator`); a strict Content Security
+  Policy blocks all external network access. See
+  [the security review](docs/security-review.md).
 
 This project has not received an independent cryptographic audit. A compromised
 site deployment or application update could serve code that captures future

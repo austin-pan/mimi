@@ -30,8 +30,11 @@ Each user has:
 
 The profile code is stored locally and can be copied/imported on other devices.
 It is safe to print or encode in a QR code, but users must retain a recovery copy:
-losing every copy changes all V2 passwords. The current UI supports code transfer;
-QR display/scanning and file export remain future convenience work.
+losing every copy changes all V2 passwords. The UI supports transfer by QR
+display (scannable with a phone's native camera), `.mimi-profile` file, and
+copy/paste. An in-app camera scanner was intentionally dropped to keep the
+third-party supply chain minimal — the native camera plus the deep-link QR
+already cover it.
 
 For a laptop login, a user opens the installed PWA on a phone—optionally in
 airplane mode—selects `Laptop / device login`, enters a stable user-chosen device
@@ -55,6 +58,7 @@ core plus assets live in `shared/`, imported by both clients.
 | `shared/core/profile-file.js` | Builds and parses the `.mimi-profile` transfer file, which carries only the public code. |
 | `shared/core/generation-settings.js` | Style-specific recommended lengths and descriptive strength guidance. |
 | `shared/core/word-bank.js` | Platform-neutral word-bank loader (`loadWordBankFrom(url)`); no DOM/extension coupling. |
+| `shared/core/seedrandom.js` | Vendored ARC4 RNG (from seedrandom 3.0.5) for frozen V1 compatibility only; no npm dependency. |
 | `shared/assets/word-bank-v1.txt` | Frozen original list; changing it breaks V1 outputs. |
 | `shared/assets/word-bank-v2.txt` | V2 list (15,000 entries: original words, pronouns, plus pre-adoption word-like tokens); frozen. |
 | `scripts/expand-wordbank.mjs` | Reproducible generator used for the one-time pre-adoption v2 bank expansion. |
@@ -73,6 +77,7 @@ core plus assets live in `shared/`, imported by both clients.
 | `.github/workflows/pages.yml` | Read-only CI build and compatibility gate (runs from the repo root). |
 | `.github/workflows/deploy.yml` | Manual-dispatch gh-pages publish; the only `contents: write` workflow. |
 | `docs/testing-and-release.md` | Automated-check commands, deploy/rollback steps, and the manual device checklist. |
+| `docs/security-review.md` | Internal security review: TCB, controls, hardening applied, and residual risks. |
 | `password.py` | Separate original CLI retained for existing users; it is not compatible with web V1/V2. |
 
 There is no application backend, API, Vercel configuration, Python web runtime,
@@ -173,7 +178,7 @@ verified.
 
 App version `1.2.0` is live at `https://austin-pan.github.io/mimi/`, published by
 the `deploy.yml` workflow (gh-pages commit `6e3c979`, source `ec78381`). This
-build adds style-specific strength guidance, QR-code / `.mimi-profile` / camera
+build adds style-specific strength guidance, QR-code / `.mimi-profile` / paste
 transfer of the public Profile Code, inline SVG theme icons, brand-matched app
 icons, a redesigned profile toolbar, the refined 15,000-entry `words-v2` bank,
 shared `tokens.css`, and an update-available prompt. Its build, 29-test suite,
@@ -199,9 +204,17 @@ the GitHub account with passkeys or two-factor authentication.
 - Clipboard use is opt-in and cannot guarantee automatic safe restoration.
 - A manually typed laptop password can be observed by the target device or a
   nearby attacker; Mimi only controls derivation and display.
+- Network egress is the primary control: CSP `connect-src 'self'` (no external
+  hosts) means even a malicious bundled library cannot exfiltrate the secret.
+  The trusted computing base is deliberately small — `hash-wasm` (Argon2,
+  essential) and `qrcode-generator` (public code only); `seedrandom` is vendored
+  and `jsqr`/the camera scanner were removed. See `docs/security-review.md`.
+- `frame-ancestors`/`X-Frame-Options` cannot be set on GitHub Pages (no response
+  headers; meta CSP ignores `frame-ancestors`), so the page can be framed. Low
+  impact (generate/copy only); a header-setting host would close it.
 
 This project has not received an independent cryptographic review. Do not claim
-that it has.
+that it has. `docs/security-review.md` records an internal review only.
 
 ## Current work
 
@@ -247,22 +260,25 @@ that it has.
   extension consume one token file.
 - [x] Added a service-worker update flow with an in-app "refresh to update"
   banner; documented rollback in `docs/testing-and-release.md`.
-- [x] Added offline QR *scanning* (bundled jsQR + camera) to import a profile
-  from another device's QR, with a graceful no-camera fallback.
 - [x] Added a manual-dispatch `deploy.yml` (the only `contents: write` workflow)
   and a manual device/extension test checklist.
+- [x] Minimized the third-party supply chain: vendored `seedrandom`'s ARC4 core
+  into `shared/core/seedrandom.js` (V1 vectors byte-identical) and removed QR
+  *scanning* (`jsqr`). Remaining runtime deps are `hash-wasm` (Argon2, essential)
+  and `qrcode-generator` (QR display of the public code). Transfer is by QR
+  display + native phone camera, `.mimi-profile` file, and copy/paste.
 
 ### Next
 
 - [ ] Perform the `docs/testing-and-release.md` manual checklist on real iOS
-  Safari and Android Chrome devices (service worker, install, camera scan,
-  offline) — cannot be proven by Node unit tests.
+  Safari and Android Chrome devices (service worker, install, native-camera QR
+  import, offline) — cannot be proven by Node unit tests.
 - [ ] Extension Phase 4: load-unpacked verification in real Chrome/Edge (popup
   lifecycle, keyboard/AX, zoom, themes), then Firefox packaging via a
   `webextension-polyfill` adapter. Consider a PSL-based registrable-domain
   helper to replace the current `www.`-stripping host heuristic.
-- [ ] Bring QR scanning and the shared design tokens to the extension too
-  (options page), reusing the same jsQR path and `tokens.css`.
+- [ ] Bring the shared design tokens (`tokens.css`) to the extension options
+  page so both surfaces load one stylesheet.
 - [ ] Design a V3 compatibility-policy model for minimum uppercase, digit,
   special, and distinct-special counts without changing released V2 outputs.
 - [ ] Commission an independent cryptographic review before recommending Mimi

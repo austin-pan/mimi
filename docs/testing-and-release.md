@@ -13,7 +13,7 @@ CI (`.github/workflows/pages.yml`) runs `npm ci`, `npm run build`, and `npm test
 read-only on every push to `master`/`main`. These cover the derivation golden
 vectors, profile/QR/file logic, the QR encode→decode round-trip, generation
 settings, and the extension adapter/manifest. They cannot exercise real service
-workers, camera capture, or install flows — do those manually below.
+workers or install flows — do those manually below.
 
 ## Deploying to GitHub Pages
 
@@ -38,7 +38,7 @@ files change so the swap is clean.
 
 ## Manual device checklist (needs real devices)
 
-Node tests cannot prove service-worker, install, camera, or platform behavior.
+Node tests cannot prove service-worker, install, or platform behavior.
 Before calling a release done, verify on at least one iOS Safari and one Android
 Chrome device:
 
@@ -47,11 +47,10 @@ Chrome device:
 - [ ] Install to home screen (iOS: Share → Add to Home Screen; Android: Install
       prompt) and confirm the icon is the plum "m" mark and the app opens
       standalone.
-- [ ] Create a profile on one device; transfer it to another by **QR scan**, by
-      **`.mimi-profile` file**, and by **copy/paste**, and confirm all three
-      reproduce the same password.
-- [ ] Scan a QR shown on another screen with the in-app **Scan** button; confirm
-      camera permission prompt, successful decode, and import.
+- [ ] Create a profile on one device; transfer it to another by **QR** (show it,
+      scan with the receiving phone's native camera → the deep link opens Mimi
+      and imports), by **`.mimi-profile` file**, and by **copy/paste**, and
+      confirm all three reproduce the same password.
 - [ ] Generate `words-v2` (42) and `characters-v2` (20); confirm exact lengths
       and that the master-secret field clears after generation.
 - [ ] Toggle light/dark; confirm the sun/moon icon and colors follow.

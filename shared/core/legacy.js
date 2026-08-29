@@ -1,4 +1,4 @@
-import seedrandom from "seedrandom";
+import seedrandom from "./seedrandom.js";
 
 import {
   LEGACY_ALPHABET,

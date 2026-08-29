@@ -14,8 +14,8 @@ GitHub Pages serves static files only. All sensitive computation occurs locally.
 After a trusted release is installed, generation works without a network.
 
 The interface should feel like a calm utility rather than a security dashboard.
-Keep the everyday path compact: collapse profile transfer once configured, place
-secondary compatibility/rotation settings under “More options,” and use a
+Keep the everyday path compact: collapse profile transfer once configured, keep
+password type and rotation version visible because both change the output, and use a
 side-by-side generator/result workspace on wider screens. Phone layouts may keep
 short related fields paired until the screen is too narrow for comfortable use.
 
@@ -202,6 +202,17 @@ Profile toolbar. Both PWA and extension builds, all 28 tests, the v11 service-
 worker cache, mobile layout, same-document valid/invalid QR flows, and the live
 GitHub Pages release were verified with zero browser console warnings/errors.
 
+App version `1.3.0` is prepared for release. It hides “Use this code” until the
+field contains a non-active candidate; activates QR links and `.mimi-profile`
+files immediately; collapses the Profile panel and shows a toast after successful
+activation; adds concise button titles and tap/focus/hover field help; promotes
+password type and rotation version to the main form; and makes the footer version
+an explicit service-worker update check. The install guide now explains that iOS
+Home Screen apps and Safari keep separate profile storage. Both builds, all 28
+tests, the v12 cache, profile activation flow, and the 390px mobile layout were
+verified locally. Replace this paragraph's release status with source/gh-pages
+commits after deployment.
+
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, pin each action to a reviewed commit SHA,
 enable branch protection, require review for workflow/core changes, and protect
@@ -288,6 +299,11 @@ that it has. `docs/security-review.md` records an internal review only.
   protected valid local profiles from malformed links, renamed paste activation
   to “Use this code,” added active/edited button states, and organized the PWA's
   mobile Profile toolbar into two-column action groups.
+- [x] Made profile application transactional and quiet: manual code, QR link,
+  and file load all activate immediately, collapse the panel, and confirm with a
+  toast; the activation button only exists while a changed candidate needs action.
+- [x] Added targeted field help, visible password type/version controls, and a
+  tappable footer version that checks the service worker for updates.
 
 ### Next
 

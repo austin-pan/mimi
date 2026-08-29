@@ -37,7 +37,7 @@ Phases 0–3 are implemented on branch `claude/browser-extension-plan-iy0cq6`:
 | Master secret | Entered for each derivation; cleared on generate | Same; clear field in a `finally` block after generation |
 | Friendly words / Compact characters | Yes | Same shared formatters and word bank |
 | Recommended / exact length | 42 words, 20 characters, or 12–64 exact | Same shared settings and labels |
-| Separator, credential kind, and rotation version | Yes | Same controls, secondary fields collapsed under "More options" |
+| Separator, password type, and rotation version | Yes | Same controls, with type and version visible because both alter the output |
 | Descriptive strength guidance | Yes | Same shared guidance module; no sample-appearance entropy score |
 | Copy result | Explicit button | Explicit copy button; optional direct fill is deferred |
 | Credential presets | None | Save label+username+style presets locally (no secret); open a preset to pre-fill the popup |
@@ -136,7 +136,7 @@ compact PWA form and result card:
   inline (avoids cramming recovery-sensitive actions into the popup).
 - **Core form** — app/device label (with host suggestion), username,
   master secret, style, length mode, and separator. Secondary controls
-  (kind, version/slot) under "More options."
+  (kind, version/slot) as visible recipe fields.
 - **Result card** — generated password, strength badge, copy button,
   status line.
 

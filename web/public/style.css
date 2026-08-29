@@ -180,6 +180,43 @@ h2 { margin-bottom: 0; font: 700 1.45rem/1.15 Georgia, serif; letter-spacing: -0
 }
 .full { grid-column: 1 / -1; }
 label { display: grid; gap: 0.32rem; color: #5d5561; font-size: 0.76rem; font-weight: 750; }
+.label-line { display: flex; align-items: center; gap: 0.3rem; }
+.help-tip {
+  position: relative;
+  display: inline-grid;
+  width: 1rem;
+  height: 1rem;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  color: var(--muted);
+  cursor: help;
+  font-size: 0.65rem;
+  line-height: 1;
+}
+.help-tip::after {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.5rem);
+  z-index: 30;
+  width: max-content;
+  max-width: min(240px, 72vw);
+  padding: 0.5rem 0.6rem;
+  transform: translate(-50%, 0.2rem);
+  border-radius: 9px;
+  background: var(--plum-dark);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(48, 42, 53, 0.22);
+  content: attr(data-tip);
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.4;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+.help-tip:hover::after, .help-tip:focus::after { opacity: 1; transform: translate(-50%, 0); }
+.help-tip:focus { outline: 2px solid rgba(155, 136, 172, 0.45); outline-offset: 2px; }
 
 input, select {
   width: 100%;
@@ -399,7 +436,34 @@ input[type="range"] { min-height: 24px; padding: 0; accent-color: var(--plum); }
 
 footer { padding: 0.8rem 0 0; color: #8b828e; text-align: center; font-size: 0.72rem; }
 footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
-#app-version { font-variant-numeric: tabular-nums; }
+.version-button {
+  padding: 0;
+  border: 0;
+  border-bottom: 1px dotted currentColor;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+.version-button:hover { color: var(--plum); }
+
+.toast {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 40;
+  max-width: min(340px, calc(100% - 2rem));
+  padding: 0.7rem 0.9rem;
+  border: 1px solid rgba(95, 81, 110, 0.18);
+  border-radius: 12px;
+  background: var(--cream);
+  color: #52765c;
+  box-shadow: 0 14px 42px rgba(48, 42, 53, 0.22);
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+.toast[data-type="error"] { color: #a44747; }
+.toast[data-type="info"] { color: var(--plum); }
 
 .install-dialog {
   width: min(570px, calc(100% - 2rem));
@@ -510,6 +574,8 @@ footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
   background: rgba(61, 51, 69, 0.72);
 }
 [data-theme="dark"] .dialog-note { background: rgba(112, 74, 67, 0.3); color: #ddbeb7; }
+[data-theme="dark"] .toast { background: #29232d; border-color: rgba(194, 169, 208, 0.22); color: #9bc7a4; }
+[data-theme="dark"] .toast[data-type="error"] { color: #ef9999; }
 
 .update-banner {
   position: fixed;
@@ -571,6 +637,7 @@ footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
   .profile-toolbar { display: grid; width: 100%; }
   .button-group { display: grid; width: 100%; grid-template-columns: 1fr 1fr; }
   .primary-group { padding: 0 0 0.7rem; border-right: 0; border-bottom: 1px solid var(--line); }
+  .primary-group:has(#save-profile[hidden]) #create-profile { grid-column: 1 / -1; }
   .pb { justify-content: center; }
   .microcopy { grid-column: auto; }
   .form-grid { gap: 0.65rem; }
@@ -581,6 +648,7 @@ footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
   .install-dialog { width: calc(100% - 1rem); margin-bottom: 0.5rem; border-radius: 22px; }
   .install-steps { grid-template-columns: 1fr; }
   .length-guidance, .password-strength { align-items: flex-start; }
+  .toast { top: 0.7rem; right: 50%; width: max-content; transform: translateX(50%); }
 }
 
 @media (max-width: 350px) {

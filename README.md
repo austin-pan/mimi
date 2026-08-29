@@ -23,13 +23,15 @@ the shared derivation core live at the root (`shared/`), with the PWA in `web/`
 and the Manifest V3 extension in `extension/` (`npm run build:ext`).
 
 The first-time flow creates a public, random Mimi Profile Code. Back it up and
-import it on each device. It contains no master secret, but losing every copy
+apply it on each device. It contains no master secret, but losing every copy
 changes all `argon2id-v2` outputs.
 
 To reuse a code, paste it into the Profile Code field and choose **Use this
 code**; Mimi does not read the clipboard automatically. A link or external QR
 code using `#profile=…` applies the profile locally and removes the fragment from
-the visible URL after validation.
+the visible URL after validation. Loading a `.mimi-profile` file also activates
+it immediately. On iPhone and iPad, Safari and an installed Home Screen app keep
+separate profile storage, so apply the profile once inside each surface.
 
 The app supports:
 
@@ -51,7 +53,8 @@ The app supports:
   camera opens Mimi and imports the profile — no in-app scanner needed. Nothing
   transferred carries a secret.
 - An in-app "new version is ready" prompt when an updated service worker is
-  waiting, so updates apply on an explicit refresh rather than silently.
+  waiting, so updates apply on an explicit refresh rather than silently. Tap the
+  version number in the footer to check manually.
 
 See [the visual identity guide](docs/visual-identity.md) for the shared design
 language, and [the browser extension implementation plan](docs/browser-extension-plan.md)

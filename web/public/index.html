@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="header-actions">
-        <button type="button" id="install-app" class="install-button">
+        <button type="button" id="install-app" class="install-button" title="Install Mimi on this device">
           <span aria-hidden="true">↓</span><span>Install</span>
         </button>
         <button type="button" id="theme-toggle" class="theme-button" aria-label="Use dark mode" title="Use dark mode">
@@ -48,33 +48,33 @@
       <div class="profile-content">
         <label>
           Profile code
-          <input id="profile-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Paste MIMI1-…">
+          <input id="profile-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Paste MIMI1-…" title="Your portable, non-secret Mimi profile code">
         </label>
         <div class="profile-toolbar">
           <div class="button-group primary-group" role="group" aria-label="Activate profile">
-            <button type="button" id="save-profile" class="pb pb-solid" disabled>
+            <button type="button" id="save-profile" class="pb pb-solid" title="Activate the profile code you entered" hidden disabled>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
               <span class="pb-label">Use this code</span>
             </button>
-            <button type="button" id="create-profile" class="pb">
+            <button type="button" id="create-profile" class="pb" title="Create and activate a new Mimi profile">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
               <span class="pb-label">New profile</span>
             </button>
           </div>
           <div class="button-group transfer-group" role="group" aria-label="Move active profile">
-            <button type="button" id="copy-profile" class="pb" disabled>
+            <button type="button" id="copy-profile" class="pb" title="Copy the active profile code" disabled>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
               <span class="pb-label">Copy active</span>
             </button>
-            <button type="button" id="show-qr" class="pb" aria-expanded="false" aria-controls="profile-qr" disabled>
+            <button type="button" id="show-qr" class="pb" title="Show a QR code for the active profile" aria-expanded="false" aria-controls="profile-qr" disabled>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3M17 14v3M20 17v4M14 20h.01M20 14h.01"/></svg>
               <span class="pb-label">QR</span>
             </button>
-            <button type="button" id="export-profile" class="pb" disabled>
+            <button type="button" id="export-profile" class="pb" title="Save the active profile as a file" disabled>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M8 11l4 4 4-4M4 21h16"/></svg>
               <span class="pb-label">Save file</span>
             </button>
-            <button type="button" id="import-file" class="pb">
+            <button type="button" id="import-file" class="pb" title="Load and activate a saved Mimi profile file">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V9M8 13l4-4 4 4M4 3h16"/></svg>
               <span class="pb-label">Load file</span>
             </button>
@@ -101,22 +101,22 @@
 
         <div class="form-grid">
           <label>
-            App or device
+            <span class="label-line">App or device <span class="help-tip" tabindex="0" aria-label="Help for app or device" data-tip="The specific place you will use this password. Changing it creates a different password.">?</span></span>
             <input name="application" required autocomplete="off" autocapitalize="none" placeholder="example.com or My MacBook">
           </label>
           <label>
-            Username
+            <span class="label-line">Username <span class="help-tip" tabindex="0" aria-label="Help for username" data-tip="Use the same username each time you recreate this password.">?</span></span>
             <input name="username" required autocomplete="off" autocapitalize="none" placeholder="name@example.com">
           </label>
           <label class="full">
-            Your secret
+            <span class="label-line">Your secret <span class="help-tip" tabindex="0" aria-label="Help for your secret" data-tip="A memorable secret only you know. Mimi never stores it.">?</span></span>
             <span class="input-with-action">
               <input id="secret" name="secret" type="password" required autocomplete="off" autocapitalize="none" placeholder="Your memorable secret">
               <button id="toggle-secret" type="button" class="text-button">Show</button>
             </span>
           </label>
           <label>
-            Style
+            <span class="label-line">Style <span class="help-tip" tabindex="0" aria-label="Help for style" data-tip="Friendly words are easier to type; compact characters fit shorter limits.">?</span></span>
             <select id="style" name="style">
               <optgroup label="Recommended">
                 <option value="words-v2">Friendly words</option>
@@ -134,6 +134,19 @@
               <option value="-">Hyphen —</option>
               <option value=".">Period ·</option>
             </select>
+          </label>
+          <label>
+            <span class="label-line">Password type <span class="help-tip" tabindex="0" aria-label="Help for password type" data-tip="Part of the password recipe. Choose the same type later to recreate the same password.">?</span></span>
+            <select name="kind">
+              <option value="website">Website or app</option>
+              <option value="device-login">Laptop or device login</option>
+              <option value="wifi">Wi-Fi</option>
+              <option value="other">Something else</option>
+            </select>
+          </label>
+          <label>
+            <span class="label-line">Password version <span class="help-tip" tabindex="0" aria-label="Help for password version" data-tip="Increase this number when you need to replace a password while keeping the other details the same.">?</span></span>
+            <input name="slot" type="number" min="1" max="9999" value="1" required>
           </label>
           <fieldset class="full length-settings">
             <legend>Password length</legend>
@@ -158,27 +171,8 @@
           </fieldset>
         </div>
 
-        <details class="more-options">
-          <summary>More options</summary>
-          <div class="form-grid option-grid">
-            <label>
-              Use for
-              <select name="kind">
-                <option value="website">Website</option>
-                <option value="device-login">Laptop / device login</option>
-                <option value="wifi">Wi-Fi</option>
-                <option value="other">Something else</option>
-              </select>
-            </label>
-            <label>
-              Version
-              <input name="slot" type="number" min="1" max="9999" value="1" required>
-            </label>
-          </div>
-        </details>
-
         <p id="legacy-warning" class="notice" hidden>Compatibility mode recreates passwords from an earlier Mimi version.</p>
-        <button id="generate" class="generate-button" type="submit">
+        <button id="generate" class="generate-button" type="submit" title="Generate this password locally on your device">
           <span>Make my password</span><span aria-hidden="true">→</span>
         </button>
       </form>
@@ -189,7 +183,7 @@
             <span class="eyebrow">Ready when you are</span>
             <h2>Your password</h2>
           </div>
-          <button id="copy-password" type="button" class="copy-button">Copy</button>
+          <button id="copy-password" type="button" class="copy-button" title="Copy the generated password">Copy</button>
         </div>
         <pre id="password-result">Your password will appear here</pre>
         <div id="password-strength" class="password-strength" hidden>
@@ -204,7 +198,7 @@
       </aside>
     </div>
 
-    <footer><span class="footer-brand">Mimi</span> · <span id="app-version">v1.2.1</span> · made to travel lightly</footer>
+    <footer><span class="footer-brand">Mimi</span> · <button type="button" id="app-version" class="version-button" title="Check for a Mimi update">v1.3.0</button> · made to travel lightly</footer>
   </main>
 
   <div id="update-banner" class="update-banner" role="status" aria-live="polite" hidden>
@@ -212,6 +206,8 @@
     <button type="button" id="update-now" class="update-refresh">Refresh</button>
     <button type="button" id="update-dismiss" class="update-dismiss" aria-label="Dismiss update notice">×</button>
   </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
   <dialog id="install-dialog" class="install-dialog" aria-labelledby="install-title">
     <div class="dialog-heading">
@@ -236,7 +232,7 @@
         <p>In Chrome, use the install icon in the address bar or choose Install page as app from the menu.</p>
       </section>
     </div>
-    <p class="dialog-note">Moving to a new device? Import your Profile Code there too.</p>
+    <p class="dialog-note">Moving to a new device? Apply your Profile Code there too. On iPhone and iPad, Safari and the installed app keep separate profile storage.</p>
   </dialog>
 </body>
 </html>

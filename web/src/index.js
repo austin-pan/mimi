@@ -62,13 +62,27 @@ const installButton = document.querySelector("#install-app");
 const installDialog = document.querySelector("#install-dialog");
 const themeButton = document.querySelector("#theme-toggle");
 const themeColor = document.querySelector("#theme-color");
+const toast = document.querySelector("#toast");
+const versionButton = document.querySelector("#app-version");
 
-document.querySelector("#app-version").textContent = `v${packageMetadata.version}`;
+versionButton.textContent = `v${packageMetadata.version}`;
 
 let activePassword = "";
 let activeProfileCode = "";
 let deferredInstallPrompt = null;
 let profileInitialization = Promise.resolve();
+let toastTimer;
+let serviceWorkerRegistration = null;
+
+function showToast(message, type = "success") {
+  clearTimeout(toastTimer);
+  toast.textContent = message;
+  toast.dataset.type = type;
+  toast.hidden = false;
+  toastTimer = setTimeout(() => {
+    toast.hidden = true;
+  }, 3200);
+}
 
 function setStatus(message, type = "info") {
   status.textContent = message;
@@ -87,6 +101,7 @@ function setButtonLabel(button, label) {
 function updateProfileActions() {
   const candidate = profileInput.value.trim();
   const isActive = Boolean(activeProfileCode) && candidate === activeProfileCode;
+  useProfileButton.hidden = !candidate || isActive;
   useProfileButton.disabled = !candidate || isActive;
   for (const button of [copyProfileButton, showQrButton, exportProfileButton]) {
     button.disabled = !isActive;
@@ -145,12 +160,12 @@ async function initializeProfile() {
     return;
   }
   try {
-    await saveProfile(candidate, { collapse: !linkedCode });
+    await saveProfile(candidate, { collapse: true });
     if (linkedCode) {
-      profilePanel.open = true;
       profileSummary.textContent = "Profile received and ready";
       setProfileStatus("This Profile Code came from your QR link and is now active on this device.", "success");
       setStatus("Profile received. You're ready to go.", "success");
+      showToast("Profile loaded and ready.");
       history.replaceState(null, "", location.pathname + location.search);
     } else {
       setProfileStatus("This Profile Code is active on this device.", "success");
@@ -202,12 +217,11 @@ useProfileButton.addEventListener("click", async () => {
   }
 
   try {
-    await saveProfile(code);
+    await saveProfile(code, { collapse: true });
     profileSummary.textContent = "Profile active on this device";
     setProfileStatus("This code is now active. Mimi can reproduce the same passwords here.", "success");
-    setButtonLabel(useProfileButton, "Active ✓");
-    setTimeout(() => setButtonLabel(useProfileButton, "Use this code"), 1800);
     setStatus("Profile is active. You're ready to go.", "success");
+    showToast("Profile loaded and ready.");
   } catch (error) {
     profilePanel.open = true;
     setProfileStatus(error.message, "error");
@@ -303,10 +317,11 @@ profileFileInput.addEventListener("change", async () => {
   if (!file) return;
   try {
     const code = parseProfileFile(await file.text());
-    await saveProfile(code);
+    await saveProfile(code, { collapse: true });
     profileSummary.textContent = "Profile loaded from file";
     setProfileStatus("Loaded from file — Mimi will reproduce the same passwords here.", "success");
     setStatus("Profile loaded from file. You're ready to go.", "success");
+    showToast("Profile file loaded and active.");
   } catch (error) {
     setProfileStatus(error.message, "error");
     setStatus(error.message, "error");
@@ -476,6 +491,7 @@ document.querySelector("#update-dismiss").addEventListener("click", () => {
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./service-worker.js").then((registration) => {
+    serviceWorkerRegistration = registration;
     // Only prompt when a new worker supersedes one already controlling the page.
     if (registration.waiting && navigator.serviceWorker.controller) {
       showUpdateBanner(registration);
@@ -500,6 +516,24 @@ if ("serviceWorker" in navigator) {
     location.reload();
   });
 }
+
+versionButton.addEventListener("click", async () => {
+  if (!serviceWorkerRegistration) {
+    showToast("Update checking is unavailable right now.", "error");
+    return;
+  }
+  showToast("Checking for updates…", "info");
+  try {
+    await serviceWorkerRegistration.update();
+    if (serviceWorkerRegistration.waiting) {
+      showUpdateBanner(serviceWorkerRegistration);
+    } else {
+      showToast(`Mimi v${packageMetadata.version} is up to date.`);
+    }
+  } catch {
+    showToast("Couldn't check for an update. Try again when online.", "error");
+  }
+});
 
 lengthInput.min = String(MIN_LENGTH);
 lengthInput.max = String(MAX_LENGTH);

@@ -225,12 +225,14 @@ v13 service-worker cache makes the update visible to installed clients. Both
 builds, all 28 tests, dark/mobile tooltip behavior, and uncached live HTML were
 verified.
 
-App version `1.3.2` is prepared for release. It switches to Traveling Spark,
+App version `1.3.2` is live at `https://austin-pan.github.io/mimi/`, published by
+the `deploy.yml` workflow (gh-pages commit `1eb57a5`, source `b36981d`). It switches to Traveling Spark,
 removes password type from the everyday recipe while preserving it under Older
 password settings, clarifies Username and Secret help, adds compact iPhone QR
 handoff steps beside the QR, and decorates wide-screen result whitespace. The
 native Expo/React Native architecture is specified in
-`docs/native-mobile-plan.md`; the v14 cache advertises this update.
+`docs/native-mobile-plan.md`; the v14 cache advertises this update. Both builds,
+all 28 tests, wide/QR browser layouts, and uncached live HTML were verified.
 
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, pin each action to a reviewed commit SHA,

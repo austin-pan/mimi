@@ -117,7 +117,8 @@ Automatic branch publishing is intentionally deferred because it requires a
 persistent `contents: write` workflow permission.
 
 The compact 2026-08-29 release is live at `https://austin-pan.github.io/mimi/`
-from `gh-pages` commit `61cf5ca`. Its HTML, light/dark themes, install guide,
+from `gh-pages` commit `3618f00` as app version `1.1.0`. Its HTML, recommended
+and specific length modes, offline-only status, light/dark themes, install guide,
 profile-import flow, manifest, service-worker cache version, local Argon2id
 generation, responsive layout, and zero-console-error browser smoke test were
 verified.
@@ -175,7 +176,11 @@ that it has.
   Chrome; service-worker behavior cannot be fully proven by Node unit tests.
 - [ ] Add QR display/scanning and `.mimi-profile` import/export without adding
   network dependencies or encoding the master secret.
-- [ ] Add an explicit update screen/version display and document rollback.
+- [ ] Add an explicit update-available screen and document rollback.
+- [ ] Define style-specific recommended lengths from a documented generator
+  search-space target; do not score the apparent entropy of one generated sample.
+- [ ] Design a V3 compatibility-policy model for minimum uppercase, digit,
+  special, and distinct-special counts without changing released V2 outputs.
 - [ ] Commission an independent cryptographic review before recommending Mimi
   for high-value credentials.
 - [ ] Build the Manifest V3 extension from the same V2 core after the PWA format

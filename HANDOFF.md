@@ -15,7 +15,9 @@ After a trusted release is installed, generation works without a network.
 
 The interface should feel like a calm utility rather than a security dashboard.
 Keep the everyday path compact: collapse profile transfer once configured, keep
-password type and rotation version visible because both change the output, and use a
+rotation version visible, and hide the redundant historical password-type input
+under “Older password settings” solely so non-default existing outputs remain
+reproducible. Use a
 side-by-side generator/result workspace on wider screens. Phone layouts may keep
 short related fields paired until the screen is too narrow for comfortable use.
 
@@ -223,6 +225,13 @@ v13 service-worker cache makes the update visible to installed clients. Both
 builds, all 28 tests, dark/mobile tooltip behavior, and uncached live HTML were
 verified.
 
+App version `1.3.2` is prepared for release. It switches to Traveling Spark,
+removes password type from the everyday recipe while preserving it under Older
+password settings, clarifies Username and Secret help, adds compact iPhone QR
+handoff steps beside the QR, and decorates wide-screen result whitespace. The
+native Expo/React Native architecture is specified in
+`docs/native-mobile-plan.md`; the v14 cache advertises this update.
+
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, pin each action to a reviewed commit SHA,
 enable branch protection, require review for workflow/core changes, and protect
@@ -312,7 +321,7 @@ that it has. `docs/security-review.md` records an internal review only.
 - [x] Made profile application transactional and quiet: manual code, QR link,
   and file load all activate immediately, collapse the panel, and confirm with a
   toast; the activation button only exists while a changed candidate needs action.
-- [x] Added targeted field help, visible password type/version controls, and a
+- [x] Added targeted field help, visible rotation-version controls, and a
   tappable footer version that checks the service worker for updates.
 
 ### Next

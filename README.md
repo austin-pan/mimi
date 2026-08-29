@@ -60,7 +60,9 @@ The app supports:
 
 See [the visual identity guide](docs/visual-identity.md) for the shared design
 language, and [the browser extension implementation plan](docs/browser-extension-plan.md)
-for the Manifest V3 companion and shared-core architecture.
+for the Manifest V3 companion and shared-core architecture. The
+[native mobile implementation plan](docs/native-mobile-plan.md) specifies the
+React Native/Expo iOS and Android architecture.
 
 ## GitHub Pages
 

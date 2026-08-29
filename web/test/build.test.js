@@ -33,6 +33,7 @@ test("built PWA contains the complete offline shell and no remote generator", as
   assert.match(html, /id=save-profile[^>]*hidden[^>]*disabled/i);
   assert.match(html, /class=pb-label>Apply code/i);
   assert.match(html, /id=toast/);
-  assert.match(html, /Password type/);
+  assert.match(html, /Older password settings/);
+  assert.match(html, /Legacy password type/i);
   assert.match(html, /Check for a Mimi update/);
 });

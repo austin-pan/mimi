@@ -75,7 +75,8 @@ enhancement over the system sans fallback; do not block on a web font.
 - **Radii:** inputs/small controls `10–11px`; panels `24px`; profile panel and
   dialog `18–24px`; pills and QR chips `999px`; QR card `16px`.
 - **The brand mark** is a `46px` rounded square (`15px` radius), plum background,
-  white italic serif lowercase "m".
+  white italic serif lowercase "m", and one restrained blush traveling spark at
+  the upper right.
 - **Elevation** is soft and low-contrast: e.g. panels
   `0 18px 55px rgba(65, 53, 73, 0.09)`; buttons
   `0 10px 22px rgba(73, 61, 88, 0.22)`. No hard shadows.
@@ -109,7 +110,8 @@ enhancement over the system sans fallback; do not block on a web font.
   joins, `24`-unit viewBox, rendered around `18px`.
 - Decorative sparkles (`✦`) and ambient glyphs may remain as text flourishes,
   but functional controls get real icons.
-- The app icon / brand mark is the italic serif "m" on plum.
+- The app icon / brand mark is the italic serif "m" on plum with one blush
+  traveling spark. Do not add constellation dots or security symbols.
 
 ## Theming rules
 

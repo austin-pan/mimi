@@ -18,7 +18,7 @@
   <main>
     <header class="topbar">
       <div class="brand">
-        <div class="brand-mark" aria-hidden="true"><span class="brand-letter">m</span><span class="brand-star">✦</span><span class="brand-dot brand-dot-one"></span><span class="brand-dot brand-dot-two"></span></div>
+        <div class="brand-mark" aria-hidden="true"><span class="brand-letter">m</span><span class="brand-star">✦</span></div>
         <div>
           <h1>Mimi</h1>
           <p>A little password magic, wherever you sign in.</p>
@@ -83,7 +83,12 @@
         </div>
         <figure id="profile-qr" class="profile-qr" hidden>
           <div id="profile-qr-canvas" class="profile-qr-canvas"></div>
-          <figcaption>Scan with any phone camera to open Mimi there. Android may hand the link to the installed app. On iPhone, copy the active code from Safari, then apply it inside installed Mimi. It carries no secret.</figcaption>
+          <figcaption class="qr-guidance">
+            <strong>Moving to a phone</strong>
+            <span>Scan with its camera. Android may open installed Mimi directly.</span>
+            <span><b>iPhone:</b> in Safari tap Copy active, open installed Mimi, paste, then Apply code.</span>
+            <small>The profile contains no secret.</small>
+          </figcaption>
         </figure>
         <p id="profile-status" class="microcopy" aria-live="polite">Paste a saved Profile Code above, then choose Apply code. Mimi does not read your clipboard automatically.</p>
       </div>
@@ -105,11 +110,11 @@
             <input name="application" required autocomplete="off" autocapitalize="none" placeholder="example.com or My MacBook">
           </label>
           <label>
-            <span class="label-line">Username <span class="help-tip" tabindex="0" aria-label="Help for username" data-tip="Use the same username each time you recreate this password.">?</span></span>
+            <span class="label-line">Username <span class="help-tip" tabindex="0" aria-label="Help for username" data-tip="The email address, account name, or user ID you enter when signing in. Use the same form each time you recreate this password.">?</span></span>
             <input name="username" required autocomplete="off" autocapitalize="none" placeholder="name@example.com">
           </label>
           <label class="full">
-            <span class="label-line">Your secret <span class="help-tip" tabindex="0" aria-label="Help for your secret" data-tip="Use a unique passphrase of at least five randomly chosen, unrelated words. Avoid names, dates, quotes, lyrics, and reused passwords. Mimi never stores it.">?</span></span>
+            <span class="label-line">Your secret <span class="help-tip" tabindex="0" aria-label="Help for your secret" data-tip="The private master passphrase Mimi combines with your profile and account details. Use at least five randomly chosen, unrelated words; avoid names, dates, quotes, lyrics, and reused passwords. Mimi never stores it.">?</span></span>
             <span class="input-with-action">
               <input id="secret" name="secret" type="password" required autocomplete="off" autocapitalize="none" placeholder="Your memorable secret">
               <button id="toggle-secret" type="button" class="text-button">Show</button>
@@ -133,15 +138,6 @@
             <select name="separator">
               <option value="-">Hyphen —</option>
               <option value=".">Period ·</option>
-            </select>
-          </label>
-          <label>
-            <span class="label-line">Password type <span class="help-tip" tabindex="0" aria-label="Help for password type" data-tip="Part of the password recipe. Choose the same type later to recreate the same password.">?</span></span>
-            <select name="kind">
-              <option value="website">Website or app</option>
-              <option value="device-login">Laptop or device login</option>
-              <option value="wifi">Wi-Fi</option>
-              <option value="other">Something else</option>
             </select>
           </label>
           <label>
@@ -169,6 +165,19 @@
               <span id="length-guidance-summary">Mimi's comfortable default for Friendly words.</span>
             </div>
           </fieldset>
+          <details class="legacy-options full">
+            <summary>Older password settings</summary>
+            <label>
+              Legacy password type
+              <select name="kind">
+                <option value="website">Website or app</option>
+                <option value="device-login">Laptop or device login</option>
+                <option value="wifi">Wi-Fi</option>
+                <option value="other">Something else</option>
+              </select>
+              <small>Leave this alone unless recreating a password previously made with a different type.</small>
+            </label>
+          </details>
         </div>
 
         <p id="legacy-warning" class="notice" hidden>Compatibility mode recreates passwords from an earlier Mimi version.</p>
@@ -198,7 +207,7 @@
       </aside>
     </div>
 
-    <footer><span class="footer-brand">Mimi</span> · <button type="button" id="app-version" class="version-button" title="Check for a Mimi update">v1.3.1</button> · made to travel lightly</footer>
+    <footer><span class="footer-brand">Mimi</span> · <button type="button" id="app-version" class="version-button" title="Check for a Mimi update">v1.3.2</button> · made to travel lightly</footer>
   </main>
 
   <div id="update-banner" class="update-banner" role="status" aria-live="polite" hidden>

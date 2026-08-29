@@ -11,6 +11,8 @@ import {
 } from "./core/legacy.js";
 import { createProfile, parseProfileCode } from "./core/profile.js";
 import { loadWordBank } from "./core/word-bank.js";
+import { resolvePasswordLength } from "./core/generation-settings.js";
+import packageMetadata from "../package.json";
 
 const PROFILE_STORAGE_KEY = "mimi.profile.v1";
 const THEME_STORAGE_KEY = "mimi.theme.v1";
@@ -26,6 +28,8 @@ const status = document.querySelector("#status");
 const generateButton = document.querySelector("#generate");
 const lengthInput = document.querySelector("#length");
 const lengthOutput = document.querySelector("#length-value");
+const specificLength = document.querySelector("#specific-length");
+const lengthModes = document.querySelectorAll('input[name="length-mode"]');
 const styleInput = document.querySelector("#style");
 const separatorRow = document.querySelector("#separator-row");
 const legacyWarning = document.querySelector("#legacy-warning");
@@ -33,6 +37,8 @@ const installButton = document.querySelector("#install-app");
 const installDialog = document.querySelector("#install-dialog");
 const themeButton = document.querySelector("#theme-toggle");
 const themeColor = document.querySelector("#theme-color");
+
+document.querySelector("#app-version").textContent = `v${packageMetadata.version}`;
 
 let activePassword = "";
 let deferredInstallPrompt = null;
@@ -170,6 +176,12 @@ lengthInput.addEventListener("input", () => {
   lengthOutput.value = lengthInput.value;
 });
 
+for (const mode of lengthModes) {
+  mode.addEventListener("change", () => {
+    specificLength.hidden = document.querySelector('input[name="length-mode"]:checked').value !== "specific";
+  });
+}
+
 styleInput.addEventListener("change", () => {
   const isWords = styleInput.value.includes("words");
   separatorRow.hidden = !isWords;
@@ -186,7 +198,7 @@ form.addEventListener("submit", async (event) => {
   try {
     const data = new FormData(form);
     const style = data.get("style");
-    const length = Number(data.get("length"));
+    const length = resolvePasswordLength(data.get("length-mode"), data.get("length"));
     const baseInput = {
       application: data.get("application"),
       username: data.get("username"),
@@ -223,10 +235,13 @@ form.addEventListener("submit", async (event) => {
   }
 });
 
-const networkState = document.querySelector("#network-state");
-networkState.textContent = navigator.onLine ? "Online" : "Offline";
-addEventListener("online", () => { networkState.textContent = "Online"; });
-addEventListener("offline", () => { networkState.textContent = "Offline"; });
+const networkIndicator = document.querySelector("#network-indicator");
+function updateNetworkIndicator() {
+  networkIndicator.hidden = navigator.onLine;
+}
+updateNetworkIndicator();
+addEventListener("online", updateNetworkIndicator);
+addEventListener("offline", updateNetworkIndicator);
 
 const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 if (standalone) installButton.hidden = true;

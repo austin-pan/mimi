@@ -134,4 +134,5 @@ test("v2 word bank adds portable pronouns without changing v1", () => {
   }
   assert.equal(wordsV1.length, 10_000);
   assert.equal(wordsV2.length, 10_014);
+  assert.equal(new Set(wordsV2.map((word) => word.trim().toLocaleLowerCase("en-US"))).size, 10_014);
 });

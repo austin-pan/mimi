@@ -163,6 +163,9 @@ that it has.
   platform-aware fallback guide; clarified profile importing with inline status.
 - [x] Added a pleasant dark theme that follows the initial system preference and
   remembers an explicit light/dark choice locally.
+- [x] Added visible app release versioning, made connectivity status offline-only,
+  and changed password length to recommended-by-default with an explicit custom
+  12–64 character option. Recommended currently maps to V2 length 32.
 
 ### Next
 

@@ -30,7 +30,7 @@
         <button type="button" id="theme-toggle" class="theme-button" aria-label="Use dark mode" title="Use dark mode">
           <span aria-hidden="true">☾</span>
         </button>
-        <div class="presence"><span></span><span id="network-state">Checking</span></div>
+        <div id="network-indicator" class="presence" hidden><span></span><span id="network-state">Offline</span></div>
       </div>
     </header>
 
@@ -103,10 +103,23 @@
               <option value=".">Period ·</option>
             </select>
           </label>
-          <label class="full length-control">
-            <span>Password length <output id="length-value">32</output></span>
-            <input id="length" name="length" type="range" min="12" max="64" value="32">
-          </label>
+          <fieldset class="full length-settings">
+            <legend>Password length</legend>
+            <div class="length-modes">
+              <label>
+                <input type="radio" name="length-mode" value="recommended" checked>
+                <span><strong>Recommended</strong><small>32 characters</small></span>
+              </label>
+              <label>
+                <input type="radio" name="length-mode" value="specific">
+                <span><strong>Specific</strong><small>Choose 12–64</small></span>
+              </label>
+            </div>
+            <label id="specific-length" class="length-control" hidden>
+              <span>Specific length <output id="length-value">32</output></span>
+              <input id="length" name="length" type="range" min="12" max="64" value="32">
+            </label>
+          </fieldset>
         </div>
 
         <details class="more-options">
@@ -151,7 +164,7 @@
       </aside>
     </div>
 
-    <footer><span>Mimi</span> · made to travel lightly</footer>
+    <footer><span class="footer-brand">Mimi</span> · <span id="app-version">v1.1.0</span> · made to travel lightly</footer>
   </main>
 
   <dialog id="install-dialog" class="install-dialog" aria-labelledby="install-title">

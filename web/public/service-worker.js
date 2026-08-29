@@ -1,4 +1,4 @@
-const CACHE_NAME = "mimi-pwa-2026-08-29-v4";
+const CACHE_NAME = "mimi-pwa-2026-08-29-v5";
 const CORE_FILES = [
   "./",
   "./main.js",

@@ -123,6 +123,8 @@ h1 { margin-bottom: 0.05rem; font: 700 2rem/1 Georgia, serif; letter-spacing: -0
   font-weight: 700;
 }
 .presence > span:first-child { width: 7px; height: 7px; border-radius: 50%; background: #82a98d; }
+.presence[hidden] { display: none; }
+#network-indicator > span:first-child { background: #d18b7c; }
 
 .profile-panel {
   margin-bottom: 0.9rem;
@@ -231,6 +233,26 @@ input:focus, select:focus { border-color: #9b88ac; box-shadow: 0 0 0 3px rgba(15
   font-weight: 800;
 }
 
+.length-settings { min-width: 0; margin: 0; padding: 0; border: 0; }
+.length-settings legend { margin-bottom: 0.35rem; color: #5d5561; font-size: 0.76rem; font-weight: 750; }
+.length-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+.length-modes label {
+  display: flex;
+  min-width: 0;
+  padding: 0.55rem 0.65rem;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: #fff;
+  cursor: pointer;
+}
+.length-modes label:has(input:checked) { border-color: #9b88ac; background: rgba(232, 222, 239, 0.45); }
+.length-modes input { width: auto; min-height: auto; margin: 0; padding: 0; accent-color: var(--plum); }
+.length-modes span { display: grid; min-width: 0; gap: 0.05rem; }
+.length-modes strong { color: var(--ink); font-size: 0.76rem; }
+.length-modes small { color: var(--muted); font-size: 0.67rem; font-weight: 600; }
+.length-control { margin-top: 0.65rem; }
 .length-control > span { display: flex; justify-content: space-between; align-items: center; }
 .length-control output {
   min-width: 2rem;
@@ -324,7 +346,8 @@ input[type="range"] { min-height: 24px; padding: 0; accent-color: var(--plum); }
 .soft-tip p { margin: 0; font-size: 0.76rem; line-height: 1.45; }
 
 footer { padding: 0.8rem 0 0; color: #8b828e; text-align: center; font-size: 0.72rem; }
-footer span { font-family: Georgia, serif; font-weight: 700; }
+footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
+#app-version { font-variant-numeric: tabular-nums; }
 
 .install-dialog {
   width: min(570px, calc(100% - 2rem));
@@ -392,6 +415,9 @@ footer span { font-family: Georgia, serif; font-weight: 700; }
 [data-theme="dark"] label { color: #c7bdc9; }
 [data-theme="dark"] input,
 [data-theme="dark"] select { background: #211c25; color: var(--ink); }
+[data-theme="dark"] .length-settings legend { color: #c7bdc9; }
+[data-theme="dark"] .length-modes label { background: #211c25; }
+[data-theme="dark"] .length-modes label:has(input:checked) { background: rgba(61, 51, 69, 0.72); }
 [data-theme="dark"] .more-options { border-top-color: #403743; }
 [data-theme="dark"] .eyebrow { color: #d9a293; }
 [data-theme="dark"] .sparkle { color: #d5a092; }
@@ -444,6 +470,7 @@ footer span { font-family: Georgia, serif; font-weight: 700; }
 @media (max-width: 350px) {
   .form-grid { grid-template-columns: 1fr; }
   .full { grid-column: auto; }
+  .length-modes { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {

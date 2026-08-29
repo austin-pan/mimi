@@ -20,6 +20,10 @@ test("built PWA contains the complete offline shell and no remote generator", as
     await assert.doesNotReject(fs.access(new URL(`../dist/${name}`, import.meta.url)));
   }
   const bundle = await fs.readFile(new URL("../dist/main.js", import.meta.url), "utf8");
+  const html = await fs.readFile(new URL("../dist/index.html", import.meta.url), "utf8");
   assert.doesNotMatch(bundle, /\/api\/generate|mimi-zeta-ten|vercel\.app/);
   assert.doesNotMatch(bundle, /\/\/[#@]\s*sourceMappingURL=/);
+  assert.match(html, /id=install-app/);
+  assert.match(html, /id=install-dialog/);
+  assert.match(html, /paste your copied code above and choose Import/i);
 });

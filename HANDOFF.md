@@ -158,6 +158,8 @@ that it has.
 - [x] Published and smoke-tested the first backend-free GitHub Pages release.
 - [x] Reworked the PWA into a warmer, compact design with collapsible profile and
   advanced controls, a two-column desktop workspace, and reduced mobile height.
+- [x] Added a contextual install control with native Chromium prompting and a
+  platform-aware fallback guide; clarified profile importing with inline status.
 
 ### Next
 

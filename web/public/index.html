@@ -23,7 +23,12 @@
           <p>A little password magic, wherever you sign in.</p>
         </div>
       </div>
-      <div class="presence"><span></span><span id="network-state">Checking</span></div>
+      <div class="header-actions">
+        <button type="button" id="install-app" class="install-button">
+          <span aria-hidden="true">↓</span><span>Install</span>
+        </button>
+        <div class="presence"><span></span><span id="network-state">Checking</span></div>
+      </div>
     </header>
 
     <details id="profile-panel" class="profile-panel">
@@ -38,14 +43,14 @@
       <div class="profile-content">
         <label>
           Profile code
-          <input id="profile-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="MIMI1-…">
+          <input id="profile-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Paste MIMI1-…">
         </label>
         <div class="compact-actions">
           <button type="button" id="create-profile">Create</button>
           <button type="button" id="save-profile" class="quiet">Import</button>
           <button type="button" id="copy-profile" class="quiet">Copy</button>
         </div>
-        <p class="microcopy">Keep this code somewhere handy so Mimi feels the same on every device.</p>
+        <p id="profile-status" class="microcopy" aria-live="polite">To move devices, paste your copied code above and choose Import.</p>
       </div>
     </details>
 
@@ -145,5 +150,31 @@
 
     <footer><span>Mimi</span> · made to travel lightly</footer>
   </main>
+
+  <dialog id="install-dialog" class="install-dialog" aria-labelledby="install-title">
+    <div class="dialog-heading">
+      <div>
+        <span class="eyebrow">Keep Mimi close</span>
+        <h2 id="install-title">Install on this device</h2>
+      </div>
+      <button type="button" id="close-install" class="dialog-close" aria-label="Close install instructions">×</button>
+    </div>
+    <p class="dialog-intro">Mimi can live on your home screen and keep working offline after your first visit.</p>
+    <div class="install-steps">
+      <section data-platform="ios">
+        <strong>iPhone or iPad</strong>
+        <p>Open Mimi in Safari, tap Share, then Add to Home Screen and Add.</p>
+      </section>
+      <section data-platform="android">
+        <strong>Android</strong>
+        <p>Open Chrome’s menu, choose Install and create shortcut, then Install.</p>
+      </section>
+      <section data-platform="desktop">
+        <strong>Computer</strong>
+        <p>In Chrome, use the install icon in the address bar or choose Install page as app from the menu.</p>
+      </section>
+    </div>
+    <p class="dialog-note">Moving to a new device? Import your Profile Code there too.</p>
+  </dialog>
 </body>
 </html>

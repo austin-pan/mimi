@@ -58,6 +58,23 @@ h1, h2, p { margin-top: 0; }
 h1 { margin-bottom: 0.05rem; font: 700 2rem/1 Georgia, serif; letter-spacing: -0.04em; }
 .brand p { margin-bottom: 0; color: var(--muted); font-size: 0.88rem; }
 
+.header-actions { display: flex; align-items: center; gap: 0.55rem; }
+.install-button {
+  display: flex;
+  min-height: 36px;
+  padding: 0.4rem 0.7rem;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid rgba(95, 81, 110, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 253, 248, 0.72);
+  color: var(--plum);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+.install-button:hover, .install-button[data-ready="true"] { background: var(--lavender); }
+.install-button[hidden] { display: none; }
+
 .presence {
   display: flex;
   align-items: center;
@@ -111,6 +128,8 @@ h1 { margin-bottom: 0.05rem; font: 700 2rem/1 Georgia, serif; letter-spacing: -0
   padding: 0 1rem 1rem 3.65rem;
 }
 .microcopy { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 0.75rem; }
+.microcopy[data-type="error"] { color: #a44747; }
+.microcopy[data-type="success"] { color: #52765c; }
 
 .workspace {
   display: grid;
@@ -272,6 +291,57 @@ input[type="range"] { min-height: 24px; padding: 0; accent-color: var(--plum); }
 footer { padding: 0.8rem 0 0; color: #8b828e; text-align: center; font-size: 0.72rem; }
 footer span { font-family: Georgia, serif; font-weight: 700; }
 
+.install-dialog {
+  width: min(570px, calc(100% - 2rem));
+  max-height: min(680px, calc(100dvh - 2rem));
+  padding: 1.25rem;
+  overflow: auto;
+  border: 1px solid rgba(95, 81, 110, 0.16);
+  border-radius: 24px;
+  background: var(--cream);
+  color: var(--ink);
+  box-shadow: 0 24px 80px rgba(48, 42, 53, 0.28);
+}
+.install-dialog::backdrop { background: rgba(48, 42, 53, 0.32); backdrop-filter: blur(4px); }
+.dialog-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.dialog-close {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--lavender);
+  color: var(--plum);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+.dialog-intro { margin: 0.65rem 0 1rem; color: var(--muted); font-size: 0.84rem; line-height: 1.5; }
+.install-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.55rem; }
+.install-steps section {
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #fff;
+}
+.install-steps strong { color: var(--plum-dark); font-size: 0.78rem; }
+.install-steps p { margin: 0.3rem 0 0; color: var(--muted); font-size: 0.72rem; line-height: 1.45; }
+.install-dialog[data-platform="ios"] [data-platform="ios"],
+.install-dialog[data-platform="android"] [data-platform="android"],
+.install-dialog[data-platform="desktop"] [data-platform="desktop"] {
+  border-color: #b7a5c6;
+  background: rgba(232, 222, 239, 0.45);
+}
+.dialog-note {
+  margin: 0.8rem 0 0;
+  padding: 0.65rem 0.75rem;
+  border-radius: 11px;
+  background: rgba(242, 203, 189, 0.3);
+  color: #6c5b57;
+  font-size: 0.74rem;
+}
+
 @media (max-width: 840px) {
   main { width: min(720px, calc(100% - 1.25rem)); }
   .workspace { grid-template-columns: 1fr; }
@@ -289,6 +359,8 @@ footer span { font-family: Georgia, serif; font-weight: 700; }
   .generator-panel, .result-panel { padding: 1rem; border-radius: 20px; }
   .result-panel { order: 2; }
   #password-result { min-height: 96px; }
+  .install-dialog { width: calc(100% - 1rem); margin-bottom: 0.5rem; border-radius: 22px; }
+  .install-steps { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 350px) {

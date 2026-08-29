@@ -17,6 +17,8 @@ const form = document.querySelector("#generator-form");
 const profileInput = document.querySelector("#profile-code");
 const profilePanel = document.querySelector("#profile-panel");
 const profileSummary = document.querySelector("#profile-summary");
+const profileStatus = document.querySelector("#profile-status");
+const importProfileButton = document.querySelector("#save-profile");
 const secretInput = document.querySelector("#secret");
 const result = document.querySelector("#password-result");
 const status = document.querySelector("#status");
@@ -26,12 +28,20 @@ const lengthOutput = document.querySelector("#length-value");
 const styleInput = document.querySelector("#style");
 const separatorRow = document.querySelector("#separator-row");
 const legacyWarning = document.querySelector("#legacy-warning");
+const installButton = document.querySelector("#install-app");
+const installDialog = document.querySelector("#install-dialog");
 
 let activePassword = "";
+let deferredInstallPrompt = null;
 
 function setStatus(message, type = "info") {
   status.textContent = message;
   status.dataset.type = type;
+}
+
+function setProfileStatus(message, type = "info") {
+  profileStatus.textContent = message;
+  profileStatus.dataset.type = type;
 }
 
 async function saveProfile(code, { collapse = false } = {}) {
@@ -55,6 +65,8 @@ async function initializeProfile() {
     if (fragment) history.replaceState(null, "", location.pathname + location.search);
   } catch (error) {
     localStorage.removeItem(PROFILE_STORAGE_KEY);
+    profilePanel.open = true;
+    setProfileStatus(error.message, "error");
     setStatus(error.message, "error");
   }
 }
@@ -65,14 +77,30 @@ document.querySelector("#create-profile").addEventListener("click", async () => 
   profileInput.value = profile.code;
   profilePanel.open = true;
   profileSummary.textContent = "New profile — keep a copy";
+  setProfileStatus("Created here. Copy this code before setting up another device.", "success");
   setStatus("Your new profile is ready.", "success");
 });
 
-document.querySelector("#save-profile").addEventListener("click", async () => {
+importProfileButton.addEventListener("click", async () => {
+  const code = profileInput.value.trim();
+  if (!code) {
+    profilePanel.open = true;
+    setProfileStatus("Paste your saved Profile Code above, then choose Import.", "error");
+    profileInput.focus();
+    return;
+  }
+
   try {
-    await saveProfile(profileInput.value, { collapse: true });
+    await saveProfile(code);
+    profileSummary.textContent = "Profile imported on this device";
+    setProfileStatus("Imported — Mimi will now reproduce the same passwords here.", "success");
+    importProfileButton.textContent = "Imported ✓";
+    setTimeout(() => { importProfileButton.textContent = "Import"; }, 1800);
     setStatus("Profile imported. You're ready to go.", "success");
   } catch (error) {
+    profilePanel.open = true;
+    setProfileStatus(error.message, "error");
+    profileInput.focus();
     setStatus(error.message, "error");
   }
 });
@@ -81,10 +109,16 @@ document.querySelector("#copy-profile").addEventListener("click", async () => {
   try {
     const profile = await parseProfileCode(profileInput.value);
     await navigator.clipboard.writeText(profile.code);
+    setProfileStatus("Copied — paste this code into Mimi on your other device.", "success");
     setStatus("Profile code copied.", "success");
   } catch (error) {
+    setProfileStatus(error.message, "error");
     setStatus(error.message, "error");
   }
+});
+
+profileInput.addEventListener("input", () => {
+  setProfileStatus("Choose Import after pasting the complete Profile Code.");
 });
 
 document.querySelector("#toggle-secret").addEventListener("click", () => {
@@ -160,6 +194,43 @@ const networkState = document.querySelector("#network-state");
 networkState.textContent = navigator.onLine ? "Online" : "Offline";
 addEventListener("online", () => { networkState.textContent = "Online"; });
 addEventListener("offline", () => { networkState.textContent = "Offline"; });
+
+const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+if (standalone) installButton.hidden = true;
+
+const userAgent = navigator.userAgent;
+const isIOS = /iPad|iPhone|iPod/i.test(userAgent)
+  || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+installDialog.dataset.platform = isIOS ? "ios" : (/Android/i.test(userAgent) ? "android" : "desktop");
+
+addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  installButton.dataset.ready = "true";
+});
+
+installButton.addEventListener("click", async () => {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    const { outcome } = await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    delete installButton.dataset.ready;
+    if (outcome === "accepted") installButton.hidden = true;
+    return;
+  }
+  installDialog.showModal();
+});
+
+document.querySelector("#close-install").addEventListener("click", () => installDialog.close());
+installDialog.addEventListener("click", (event) => {
+  if (event.target === installDialog) installDialog.close();
+});
+
+addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  installButton.hidden = true;
+  if (installDialog.open) installDialog.close();
+});
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./service-worker.js").catch(() => {

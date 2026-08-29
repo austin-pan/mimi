@@ -117,9 +117,9 @@ Automatic branch publishing is intentionally deferred because it requires a
 persistent `contents: write` workflow permission.
 
 The compact 2026-08-29 release is live at `https://austin-pan.github.io/mimi/`
-from `gh-pages` commit `d61e1f8`. Its HTML, manifest, service-worker cache
-version, local Argon2id generation, responsive layout, and zero-console-error
-production smoke test were verified after propagation.
+from `gh-pages` commit `1fc7b2f`. Its HTML, install guide, profile-import flow,
+manifest, service-worker cache version, local Argon2id generation, responsive
+layout, and zero-console-error browser smoke test were verified.
 
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, pin each action to a reviewed commit SHA,

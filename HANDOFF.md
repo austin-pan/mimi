@@ -133,6 +133,10 @@ profile-import flow, manifest, service-worker cache version, local Argon2id
 generation, responsive layout, and zero-console-error browser smoke test were
 verified.
 
+App version `1.2.0` (style-specific strength guidance) is built and tested on
+`master` but has not yet been pushed to `gh-pages`. Deploy it by building
+`web/dist` and replacing the `gh-pages` branch root after CI passes.
+
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, pin each action to a reviewed commit SHA,
 enable branch protection, require review for workflow/core changes, and protect
@@ -184,6 +188,8 @@ that it has.
 
 ### Next
 
+- [ ] Deploy `1.2.0` to `gh-pages` (style-specific strength guidance is built
+  and tested on `master` but not yet live).
 - [ ] Decide whether to grant CI `contents: write` for automatic `gh-pages`
   publishing or keep the safer manual release step.
 - [ ] Perform clean-install and offline browser testing on iOS Safari and Android
@@ -195,5 +201,7 @@ that it has.
   special, and distinct-special counts without changing released V2 outputs.
 - [ ] Commission an independent cryptographic review before recommending Mimi
   for high-value credentials.
-- [ ] Build the Manifest V3 extension according to
-  `docs/browser-extension-plan.md`, preserving all shared golden vectors.
+- [ ] Build the Manifest V3 extension on branch
+  `claude/browser-extension-plan-iy0cq6`, following
+  `docs/browser-extension-plan.md` and preserving all shared golden vectors.
+  Phase 1 (shared core extraction) is the gating step before any popup work.

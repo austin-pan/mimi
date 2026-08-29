@@ -193,6 +193,15 @@ suite, and a zero-console-error Chromium smoke test were verified. The
 service-worker cache is `mimi-pwa-2026-08-29-v10`. `master` is at the same
 source and green.
 
+App version `1.2.1` is live at `https://austin-pan.github.io/mimi/`, published by
+the `deploy.yml` workflow (gh-pages commit `ae89b49`, source `0321928`). It fixes
+QR deep links on already-open pages, visibly confirms the active scanned code,
+preserves an existing profile after a malformed link, replaces the ambiguous
+“Import” action with explicit “Use this code” state, and reorganizes the mobile
+Profile toolbar. Both PWA and extension builds, all 28 tests, the v11 service-
+worker cache, mobile layout, same-document valid/invalid QR flows, and the live
+GitHub Pages release were verified with zero browser console warnings/errors.
+
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, pin each action to a reviewed commit SHA,
 enable branch protection, require review for workflow/core changes, and protect
@@ -285,6 +294,9 @@ that it has. `docs/security-review.md` records an internal review only.
 - [ ] Perform the `docs/testing-and-release.md` manual checklist on real iOS
   Safari and Android Chrome devices (service worker, install, native-camera QR
   import, offline) — cannot be proven by Node unit tests.
+- [ ] Update `actions/checkout` and `actions/setup-node` from v4 when their
+  reviewed successor is adopted; GitHub currently emits a Node 20 deprecation
+  annotation while transparently running those actions on Node 24.
 - [ ] Extension Phase 4: load-unpacked verification in real Chrome/Edge (popup
   lifecycle, keyboard/AX, zoom, themes), then Firefox packaging via a
   `webextension-polyfill` adapter. Consider a PSL-based registrable-domain

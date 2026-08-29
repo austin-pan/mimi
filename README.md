@@ -60,10 +60,10 @@ for the Manifest V3 companion and shared-core architecture.
 ## GitHub Pages
 
 `.github/workflows/pages.yml` runs a read-only build and compatibility gate on
-pushes. The current site is published from the root of the existing `gh-pages`
-branch. Build `web/dist`, replace that branch's contents, and push it only after
-the checks pass. Automatic branch publishing would require granting the workflow
-`contents: write`; that permission is intentionally not enabled yet.
+pushes. Publishing is human-triggered through the **Deploy Mimi to Pages**
+workflow (`deploy.yml`), which rebuilds, tests, and then replaces the `gh-pages`
+branch. It is the only workflow with `contents: write`; ordinary push CI remains
+read-only. See [the testing and release guide](docs/testing-and-release.md).
 
 The PWA uses only relative URLs, so it works both at a project path such as
 `https://austin-pan.github.io/mimi/` and at a custom-domain root.

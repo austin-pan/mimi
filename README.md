@@ -26,6 +26,11 @@ The first-time flow creates a public, random Mimi Profile Code. Back it up and
 import it on each device. It contains no master secret, but losing every copy
 changes all `argon2id-v2` outputs.
 
+To reuse a code, paste it into the Profile Code field and choose **Use this
+code**; Mimi does not read the clipboard automatically. A link or external QR
+code using `#profile=…` applies the profile locally and removes the fragment from
+the visible URL after validation.
+
 The app supports:
 
 - `words-v2`: exact-length words separated by `-` or `.`, ending in a random

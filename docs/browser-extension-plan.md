@@ -32,7 +32,7 @@ Phases 0–3 are implemented on branch `claude/browser-extension-plan-iy0cq6`:
 
 | Capability | PWA | Extension plan |
 | --- | --- | --- |
-| Create, import, copy, and locally retain a Profile Code | Yes | Same behavior in the options/profile page |
+| Create, apply, copy, and locally retain a Profile Code | Yes | Same explicit “Use this code” behavior in the options/profile page |
 | App/device label and username | Manual entry | Editable; offer the current site's registrable host as a convenience, never a hidden input |
 | Master secret | Entered for each derivation; cleared on generate | Same; clear field in a `finally` block after generation |
 | Friendly words / Compact characters | Yes | Same shared formatters and word bank |
@@ -160,7 +160,7 @@ The popup:
 ### Options/profile page
 
 A full-page extension options document for:
-- Profile Code creation, import, copy, and backup guidance.
+- Profile Code creation, explicit apply-after-paste, copy, and backup guidance.
 - Credential preset management (create/edit/delete label+username presets).
 - Theme preference.
 - Version information.
@@ -338,7 +338,8 @@ derive both styles and match shared golden vectors.
 
 ### Phase 3 — options/profile page
 
-- Implement create/import/copy and clear inline feedback.
+- Implement create/apply/copy and clear inline feedback; applying a typed or
+  pasted code must be an explicit action.
 - Add recovery and cross-device instructions.
 - Implement credential preset management (list, create, edit, delete).
 - Verify corrupted Profile Codes fail without overwriting the valid saved code.

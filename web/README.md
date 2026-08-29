@@ -52,3 +52,11 @@ banks, are packaged on the same origin. The service worker caches the complete
 shell. When changing cached filenames or behavior, bump `CACHE_NAME` in
 `public/service-worker.js` and test a clean install plus an upgrade from the
 previous release.
+
+## Profile links
+
+Mimi accepts a Profile Code in a URL fragment such as
+`#profile=MIMI1-…`. Fragments are not sent to GitHub Pages. The app processes the
+fragment on initial load, same-document `hashchange`, and browser-cache restore,
+then validates and stores the canonical code locally and removes the fragment.
+An invalid linked code must never erase a valid locally stored profile.

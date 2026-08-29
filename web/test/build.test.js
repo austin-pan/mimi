@@ -29,5 +29,7 @@ test("built PWA contains the complete offline shell and no remote generator", as
   assert.match(html, /id=install-dialog/);
   assert.match(html, /id=theme-toggle/);
   assert.match(html, new RegExp(`id=app-version>v${packageMetadata.version.replaceAll(".", "\\.")}`));
-  assert.match(html, /paste your copied code above and choose Import/i);
+  assert.match(html, /does not read your clipboard automatically/i);
+  assert.match(html, /id=save-profile[^>]*disabled/i);
+  assert.match(html, /class=pb-label>Use this code/i);
 });

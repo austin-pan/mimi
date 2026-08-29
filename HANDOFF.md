@@ -28,13 +28,18 @@ Each user has:
 3. Credential inputs: kind, application/device label, username, rotation slot,
    style, separator, and exact length.
 
-The profile code is stored locally and can be copied/imported on other devices.
+The profile code is stored locally and can be copied/applied on other devices.
 It is safe to print or encode in a QR code, but users must retain a recovery copy:
 losing every copy changes all V2 passwords. The UI supports transfer by QR
 display (scannable with a phone's native camera), `.mimi-profile` file, and
 copy/paste. An in-app camera scanner was intentionally dropped to keep the
 third-party supply chain minimal — the native camera plus the deep-link QR
 already cover it.
+
+Deep-link fragments are handled on initial load, same-document `hashchange`, and
+browser-cache restore. A valid linked code opens the Profile panel and confirms
+that it is active without requiring a refresh. An invalid linked code must never
+erase an existing valid local profile.
 
 For a laptop login, a user opens the installed PWA on a phone—optionally in
 airplane mode—selects `Laptop / device login`, enters a stable user-chosen device
@@ -54,6 +59,7 @@ core plus assets live in `shared/`, imported by both clients.
 | `shared/core/derive-v2.js` | Argon2id V2 input encoding, deterministic byte expansion, and exact-length word/character formatters. |
 | `shared/core/legacy.js` | Frozen V1 web-generator compatibility implementation. |
 | `shared/core/profile.js` | Random 128-bit profile creation, Base32 representation, and checksum validation. |
+| `shared/core/profile-link.js` | Extracts Profile Codes from privacy-preserving URL fragments used by QR deep links. |
 | `shared/core/qr.js` | Renders the public Profile Code (as an auto-import deep link) to a scannable dark-on-light SVG QR. |
 | `shared/core/profile-file.js` | Builds and parses the `.mimi-profile` transfer file, which carries only the public code. |
 | `shared/core/generation-settings.js` | Style-specific recommended lengths and descriptive strength guidance. |
@@ -269,6 +275,10 @@ that it has. `docs/security-review.md` records an internal review only.
   *scanning* (`jsqr`). Remaining runtime deps are `hash-wasm` (Argon2, essential)
   and `qrcode-generator` (QR display of the public code). Transfer is by QR
   display + native phone camera, `.mimi-profile` file, and copy/paste.
+- [x] Made QR deep links activate on already-open pages without a refresh,
+  protected valid local profiles from malformed links, renamed paste activation
+  to “Use this code,” added active/edited button states, and organized the PWA's
+  mobile Profile toolbar into two-column action groups.
 
 ### Next
 

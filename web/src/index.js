@@ -10,6 +10,7 @@ import {
   legacySeed,
 } from "../../shared/core/legacy.js";
 import { createProfile, parseProfileCode } from "../../shared/core/profile.js";
+import { profileCodeFromHash } from "../../shared/core/profile-link.js";
 import { profileQrSvg } from "../../shared/core/qr.js";
 import { buildProfileFile, parseProfileFile } from "../../shared/core/profile-file.js";
 import { loadWordBankFrom } from "../../shared/core/word-bank.js";
@@ -31,7 +32,8 @@ const profileInput = document.querySelector("#profile-code");
 const profilePanel = document.querySelector("#profile-panel");
 const profileSummary = document.querySelector("#profile-summary");
 const profileStatus = document.querySelector("#profile-status");
-const importProfileButton = document.querySelector("#save-profile");
+const useProfileButton = document.querySelector("#save-profile");
+const copyProfileButton = document.querySelector("#copy-profile");
 const showQrButton = document.querySelector("#show-qr");
 const profileQr = document.querySelector("#profile-qr");
 const profileQrCanvas = document.querySelector("#profile-qr-canvas");
@@ -64,7 +66,9 @@ const themeColor = document.querySelector("#theme-color");
 document.querySelector("#app-version").textContent = `v${packageMetadata.version}`;
 
 let activePassword = "";
+let activeProfileCode = "";
 let deferredInstallPrompt = null;
+let profileInitialization = Promise.resolve();
 
 function setStatus(message, type = "info") {
   status.textContent = message;
@@ -74,6 +78,20 @@ function setStatus(message, type = "info") {
 function setProfileStatus(message, type = "info") {
   profileStatus.textContent = message;
   profileStatus.dataset.type = type;
+}
+
+function setButtonLabel(button, label) {
+  button.querySelector(".pb-label").textContent = label;
+}
+
+function updateProfileActions() {
+  const candidate = profileInput.value.trim();
+  const isActive = Boolean(activeProfileCode) && candidate === activeProfileCode;
+  useProfileButton.disabled = !candidate || isActive;
+  for (const button of [copyProfileButton, showQrButton, exportProfileButton]) {
+    button.disabled = !isActive;
+  }
+  if (!isActive && !profileQr.hidden) hideProfileQr();
 }
 
 const themePreference = matchMedia("(prefers-color-scheme: dark)");
@@ -108,59 +126,88 @@ themePreference.addEventListener("change", (event) => {
 async function saveProfile(code, { collapse = false } = {}) {
   const profile = await parseProfileCode(code);
   localStorage.setItem(PROFILE_STORAGE_KEY, profile.code);
+  activeProfileCode = profile.code;
   profileInput.value = profile.code;
   profileSummary.textContent = "Ready on this device";
   if (collapse) profilePanel.open = false;
   if (!profileQr.hidden) refreshQr();
+  updateProfileActions();
   return profile;
 }
 
 async function initializeProfile() {
-  const fragment = new URLSearchParams(location.hash.slice(1)).get("profile");
-  const saved = fragment || localStorage.getItem(PROFILE_STORAGE_KEY);
-  if (!saved) {
+  const linkedCode = profileCodeFromHash(location.hash);
+  const storedCode = localStorage.getItem(PROFILE_STORAGE_KEY);
+  const candidate = linkedCode || storedCode;
+  if (!candidate) {
     profilePanel.open = true;
+    updateProfileActions();
     return;
   }
   try {
-    await saveProfile(saved, { collapse: true });
-    if (fragment) history.replaceState(null, "", location.pathname + location.search);
+    await saveProfile(candidate, { collapse: !linkedCode });
+    if (linkedCode) {
+      profilePanel.open = true;
+      profileSummary.textContent = "Profile received and ready";
+      setProfileStatus("This Profile Code came from your QR link and is now active on this device.", "success");
+      setStatus("Profile received. You're ready to go.", "success");
+      history.replaceState(null, "", location.pathname + location.search);
+    } else {
+      setProfileStatus("This Profile Code is active on this device.", "success");
+    }
   } catch (error) {
-    localStorage.removeItem(PROFILE_STORAGE_KEY);
+    if (linkedCode) {
+      if (storedCode) {
+        try {
+          await saveProfile(storedCode);
+        } catch {
+          localStorage.removeItem(PROFILE_STORAGE_KEY);
+          activeProfileCode = "";
+          profileInput.value = "";
+        }
+      }
+      history.replaceState(null, "", location.pathname + location.search);
+    } else {
+      localStorage.removeItem(PROFILE_STORAGE_KEY);
+      activeProfileCode = "";
+      profileInput.value = "";
+    }
     profilePanel.open = true;
     setProfileStatus(error.message, "error");
     setStatus(error.message, "error");
+    updateProfileActions();
   }
+}
+
+function scheduleProfileInitialization() {
+  profileInitialization = profileInitialization.then(initializeProfile, initializeProfile);
 }
 
 document.querySelector("#create-profile").addEventListener("click", async () => {
   const profile = await createProfile();
-  localStorage.setItem(PROFILE_STORAGE_KEY, profile.code);
-  profileInput.value = profile.code;
+  await saveProfile(profile.code);
   profilePanel.open = true;
   profileSummary.textContent = "New profile — keep a copy";
-  if (!profileQr.hidden) refreshQr();
-  setProfileStatus("Created here. Copy this code before setting up another device.", "success");
+  setProfileStatus("This new Profile Code is already active. Copy, scan, or save it before setting up another device.", "success");
   setStatus("Your new profile is ready.", "success");
 });
 
-importProfileButton.addEventListener("click", async () => {
+useProfileButton.addEventListener("click", async () => {
   const code = profileInput.value.trim();
   if (!code) {
     profilePanel.open = true;
-    setProfileStatus("Paste your saved Profile Code above, then choose Import.", "error");
+    setProfileStatus("Paste a saved Profile Code above, then choose Use this code.", "error");
     profileInput.focus();
     return;
   }
 
   try {
     await saveProfile(code);
-    profileSummary.textContent = "Profile imported on this device";
-    setProfileStatus("Imported — Mimi will now reproduce the same passwords here.", "success");
-    const importLabel = importProfileButton.querySelector(".pb-label");
-    importLabel.textContent = "Imported ✓";
-    setTimeout(() => { importLabel.textContent = "Import"; }, 1800);
-    setStatus("Profile imported. You're ready to go.", "success");
+    profileSummary.textContent = "Profile active on this device";
+    setProfileStatus("This code is now active. Mimi can reproduce the same passwords here.", "success");
+    setButtonLabel(useProfileButton, "Active ✓");
+    setTimeout(() => setButtonLabel(useProfileButton, "Use this code"), 1800);
+    setStatus("Profile is active. You're ready to go.", "success");
   } catch (error) {
     profilePanel.open = true;
     setProfileStatus(error.message, "error");
@@ -169,9 +216,9 @@ importProfileButton.addEventListener("click", async () => {
   }
 });
 
-document.querySelector("#copy-profile").addEventListener("click", async () => {
+copyProfileButton.addEventListener("click", async () => {
   try {
-    const profile = await parseProfileCode(profileInput.value);
+    const profile = await parseProfileCode(activeProfileCode);
     await navigator.clipboard.writeText(profile.code);
     setProfileStatus("Copied — paste this code into Mimi on your other device.", "success");
     setStatus("Profile code copied.", "success");
@@ -182,12 +229,25 @@ document.querySelector("#copy-profile").addEventListener("click", async () => {
 });
 
 profileInput.addEventListener("input", () => {
-  setProfileStatus("Choose Import after pasting the complete Profile Code.");
-  if (!profileQr.hidden) refreshQr();
+  updateProfileActions();
+  if (!profileInput.value.trim()) {
+    setProfileStatus("Paste a saved Profile Code here, then choose Use this code.");
+  } else if (profileInput.value.trim() === activeProfileCode) {
+    setProfileStatus("This Profile Code is already active on this device.", "success");
+  } else {
+    setProfileStatus("Choose Use this code to make the pasted Profile Code active.");
+  }
 });
 
 function profileImportUrl(code) {
   return `${location.origin}${location.pathname}#profile=${encodeURIComponent(code)}`;
+}
+
+function hideProfileQr() {
+  profileQr.hidden = true;
+  profileQrCanvas.innerHTML = "";
+  setButtonLabel(showQrButton, "QR");
+  showQrButton.setAttribute("aria-expanded", "false");
 }
 
 async function refreshQr() {
@@ -211,16 +271,13 @@ showQrButton.addEventListener("click", async () => {
     showQrButton.querySelector(".pb-label").textContent = "Hide";
     showQrButton.setAttribute("aria-expanded", "true");
   } else {
-    profileQr.hidden = true;
-    profileQrCanvas.innerHTML = "";
-    showQrButton.querySelector(".pb-label").textContent = "QR";
-    showQrButton.setAttribute("aria-expanded", "false");
+    hideProfileQr();
   }
 });
 
 exportProfileButton.addEventListener("click", async () => {
   try {
-    const profile = await parseProfileCode(profileInput.value);
+    const profile = await parseProfileCode(activeProfileCode);
     const file = buildProfileFile(profile.code);
     const blob = new Blob([file.contents], { type: file.mime });
     const url = URL.createObjectURL(blob);
@@ -247,11 +304,9 @@ profileFileInput.addEventListener("change", async () => {
   try {
     const code = parseProfileFile(await file.text());
     await saveProfile(code);
-    profileInput.value = code;
     profileSummary.textContent = "Profile loaded from file";
     setProfileStatus("Loaded from file — Mimi will reproduce the same passwords here.", "success");
     setStatus("Profile loaded from file. You're ready to go.", "success");
-    if (!profileQr.hidden) refreshQr();
   } catch (error) {
     setProfileStatus(error.message, "error");
     setStatus(error.message, "error");
@@ -449,4 +504,8 @@ if ("serviceWorker" in navigator) {
 lengthInput.min = String(MIN_LENGTH);
 lengthInput.max = String(MAX_LENGTH);
 updateLengthGuidance();
-initializeProfile();
+scheduleProfileInitialization();
+addEventListener("hashchange", scheduleProfileInitialization);
+addEventListener("pageshow", (event) => {
+  if (event.persisted) scheduleProfileInitialization();
+});

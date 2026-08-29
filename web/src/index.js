@@ -11,7 +11,11 @@ import {
 } from "./core/legacy.js";
 import { createProfile, parseProfileCode } from "./core/profile.js";
 import { loadWordBank } from "./core/word-bank.js";
-import { resolvePasswordLength } from "./core/generation-settings.js";
+import {
+  getRecommendedLength,
+  getStrengthGuidance,
+  resolvePasswordLength,
+} from "./core/generation-settings.js";
 import packageMetadata from "../package.json";
 
 const PROFILE_STORAGE_KEY = "mimi.profile.v1";
@@ -33,6 +37,13 @@ const lengthModes = document.querySelectorAll('input[name="length-mode"]');
 const styleInput = document.querySelector("#style");
 const separatorRow = document.querySelector("#separator-row");
 const legacyWarning = document.querySelector("#legacy-warning");
+const recommendedLength = document.querySelector("#recommended-length");
+const lengthGuidance = document.querySelector("#length-guidance");
+const lengthGuidanceLabel = document.querySelector("#length-guidance-label");
+const lengthGuidanceSummary = document.querySelector("#length-guidance-summary");
+const passwordStrength = document.querySelector("#password-strength");
+const passwordStrengthLabel = document.querySelector("#password-strength-label");
+const passwordStrengthDetails = document.querySelector("#password-strength-details");
 const installButton = document.querySelector("#install-app");
 const installDialog = document.querySelector("#install-dialog");
 const themeButton = document.querySelector("#theme-toggle");
@@ -174,18 +185,36 @@ document.querySelector("#copy-password").addEventListener("click", async () => {
 
 lengthInput.addEventListener("input", () => {
   lengthOutput.value = lengthInput.value;
+  updateLengthGuidance();
 });
 
 for (const mode of lengthModes) {
   mode.addEventListener("change", () => {
     specificLength.hidden = document.querySelector('input[name="length-mode"]:checked').value !== "specific";
+    updateLengthGuidance();
   });
+}
+
+function activeLength() {
+  const mode = document.querySelector('input[name="length-mode"]:checked').value;
+  return resolvePasswordLength(mode, lengthInput.value, styleInput.value);
+}
+
+function updateLengthGuidance() {
+  const style = styleInput.value;
+  const suggestion = getRecommendedLength(style);
+  const guidance = getStrengthGuidance(style, activeLength());
+  recommendedLength.textContent = `${suggestion} characters`;
+  lengthGuidance.dataset.level = guidance.level;
+  lengthGuidanceLabel.textContent = guidance.label;
+  lengthGuidanceSummary.textContent = guidance.summary;
 }
 
 styleInput.addEventListener("change", () => {
   const isWords = styleInput.value.includes("words");
   separatorRow.hidden = !isWords;
   legacyWarning.hidden = !styleInput.value.endsWith("v1");
+  updateLengthGuidance();
 });
 
 form.addEventListener("submit", async (event) => {
@@ -198,7 +227,7 @@ form.addEventListener("submit", async (event) => {
   try {
     const data = new FormData(form);
     const style = data.get("style");
-    const length = resolvePasswordLength(data.get("length-mode"), data.get("length"));
+    const length = resolvePasswordLength(data.get("length-mode"), data.get("length"), style);
     const baseInput = {
       application: data.get("application"),
       username: data.get("username"),
@@ -224,6 +253,13 @@ form.addEventListener("submit", async (event) => {
     }
 
     result.textContent = activePassword;
+    const guidance = getStrengthGuidance(style, length);
+    passwordStrength.hidden = false;
+    passwordStrength.dataset.level = guidance.level;
+    passwordStrengthLabel.textContent = guidance.label;
+    passwordStrengthDetails.textContent = style.endsWith("v1")
+      ? "Legacy output · exact settings required"
+      : "Upper & lowercase · number · symbol";
     setStatus(`All set · ${activePassword.length} characters`, "success");
   } catch (error) {
     result.textContent = "No password generated";
@@ -288,4 +324,5 @@ if ("serviceWorker" in navigator) {
 
 lengthInput.min = String(MIN_LENGTH);
 lengthInput.max = String(MAX_LENGTH);
+updateLengthGuidance();
 initializeProfile();

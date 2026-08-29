@@ -34,7 +34,15 @@ The app supports:
   lowercase, digit, and common-special coverage.
 - Frozen `words-v1` and `characters-v1` compatibility modes for passwords made
   by the earlier web generator.
-- Lengths from 12 through 64 characters and per-credential rotation slots.
+- Style-specific recommended lengths (42 for Friendly words and 20 for Compact
+  characters), optional exact lengths from 12 through 64, and per-credential
+  rotation slots.
+- Plain-language strength guidance based on the selected generator and length,
+  plus confirmation of the character classes V2 guarantees. Mimi deliberately
+  does not score the apparent randomness of an individual output.
+
+See [the browser extension implementation plan](docs/browser-extension-plan.md)
+for the planned Manifest V3 companion and shared-core architecture.
 
 ## GitHub Pages
 

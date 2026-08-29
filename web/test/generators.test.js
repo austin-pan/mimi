@@ -84,6 +84,14 @@ test("argon2id-v2 production parameters and outputs are frozen", async () => {
     await generateCharactersV2({ ...v2Input, style: "characters-v2" }),
     "UAhyTJRz4fPkKn7PmMDVukj3c#iFLk@4",
   );
+  assert.equal(
+    await generateWordsV2({ ...v2Input, length: 42 }, wordsV2),
+    "depends-popcorn-topical-divided-baptism-N7",
+  );
+  assert.equal(
+    await generateCharactersV2({ ...v2Input, length: 20, style: "characters-v2" }),
+    "Dr?R!Y3?gfw!ojAuUeeE",
+  );
 });
 
 test("v2 outputs are deterministic and input-separated", async () => {

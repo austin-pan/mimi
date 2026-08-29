@@ -46,6 +46,7 @@ hardware identifiers.
 | `web/src/core/derive-v2.js` | Argon2id V2 input encoding, deterministic byte expansion, and exact-length word/character formatters. |
 | `web/src/core/legacy.js` | Frozen V1 web-generator compatibility implementation. |
 | `web/src/core/profile.js` | Random 128-bit profile creation, Base32 representation, and checksum validation. |
+| `web/src/core/generation-settings.js` | Style-specific recommended lengths and descriptive strength guidance shared by future clients. |
 | `web/public/word-bank-v1.txt` | Frozen original list; changing it breaks V1 outputs. |
 | `web/public/word-bank-v2.txt` | V2 list, including added pronouns; immutable after release. |
 | `web/public/service-worker.js` | Same-origin offline shell caching. Bump its cache name for cache-layout changes. |
@@ -80,6 +81,15 @@ Never modify a released algorithm, parameter, word-bank order, normalization
 rule, encoding, or alphabet. Introduce `v3` instead. Golden vectors in
 `web/test/generators.test.js` are recovery-critical and must not be casually
 updated to make a failing change pass.
+
+Recommended mode is presentation policy, not an additional KDF input. It maps
+`words-v2` to 42 characters (five 7-letter words plus the uppercase/digit
+suffix, about 65 bits of output-format search space for a fixed separator) and
+`characters-v2` to 20 characters. The UI may call 32-character word-style or
+16-character compact outputs “Good,” but shorter choices are explicitly below
+Mimi's recommendation. Do not
+show an apparent-entropy score for one generated sample: the generator's known
+distribution and the user's master-secret strength are what matter.
 
 V1 compatibility intentionally preserves the earlier space-joined seed and
 weak ARC4-style `seedrandom` construction. It is exposed only so existing users
@@ -166,7 +176,11 @@ that it has.
   remembers an explicit light/dark choice locally.
 - [x] Added visible app release versioning, made connectivity status offline-only,
   and changed password length to recommended-by-default with an explicit custom
-  12–64 character option. Recommended currently maps to V2 length 32.
+  12–64 character option.
+- [x] Added style-specific defaults (42 Friendly words, 20 Compact characters),
+  concise design-based strength guidance, and golden outputs for both defaults.
+- [x] Added a detailed Manifest V3 browser extension plan that mirrors PWA
+  functionality and extracts one shared derivation/settings core.
 
 ### Next
 
@@ -177,11 +191,9 @@ that it has.
 - [ ] Add QR display/scanning and `.mimi-profile` import/export without adding
   network dependencies or encoding the master secret.
 - [ ] Add an explicit update-available screen and document rollback.
-- [ ] Define style-specific recommended lengths from a documented generator
-  search-space target; do not score the apparent entropy of one generated sample.
 - [ ] Design a V3 compatibility-policy model for minimum uppercase, digit,
   special, and distinct-special counts without changing released V2 outputs.
 - [ ] Commission an independent cryptographic review before recommending Mimi
   for high-value credentials.
-- [ ] Build the Manifest V3 extension from the same V2 core after the PWA format
-  and vectors are treated as released.
+- [ ] Build the Manifest V3 extension according to
+  `docs/browser-extension-plan.md`, preserving all shared golden vectors.

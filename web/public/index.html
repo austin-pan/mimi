@@ -108,7 +108,7 @@
             <div class="length-modes">
               <label>
                 <input type="radio" name="length-mode" value="recommended" checked>
-                <span><strong>Recommended</strong><small>32 characters</small></span>
+                <span><strong>Recommended</strong><small id="recommended-length">42 characters</small></span>
               </label>
               <label>
                 <input type="radio" name="length-mode" value="specific">
@@ -119,6 +119,10 @@
               <span>Specific length <output id="length-value">32</output></span>
               <input id="length" name="length" type="range" min="12" max="64" value="32">
             </label>
+            <div id="length-guidance" class="length-guidance" data-level="recommended">
+              <strong id="length-guidance-label">Recommended</strong>
+              <span id="length-guidance-summary">Mimi's comfortable default for Friendly words.</span>
+            </div>
           </fieldset>
         </div>
 
@@ -156,6 +160,10 @@
           <button id="copy-password" type="button" class="copy-button">Copy</button>
         </div>
         <pre id="password-result">Your password will appear here</pre>
+        <div id="password-strength" class="password-strength" hidden>
+          <strong id="password-strength-label">Recommended</strong>
+          <span id="password-strength-details">Upper &amp; lowercase · number · symbol</span>
+        </div>
         <p id="status">Fill in the details, then let Mimi do the rest.</p>
         <div class="soft-tip">
           <span aria-hidden="true">☼</span>
@@ -164,7 +172,7 @@
       </aside>
     </div>
 
-    <footer><span class="footer-brand">Mimi</span> · <span id="app-version">v1.1.0</span> · made to travel lightly</footer>
+    <footer><span class="footer-brand">Mimi</span> · <span id="app-version">v1.2.0</span> · made to travel lightly</footer>
   </main>
 
   <dialog id="install-dialog" class="install-dialog" aria-labelledby="install-title">

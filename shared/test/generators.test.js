@@ -1,53 +1,28 @@
 import assert from "node:assert/strict";
-import fs from "node:fs/promises";
 import test from "node:test";
 
 import {
   ARGON2_PARAMETERS,
   generateCharactersV2,
   generateWordsV2,
-} from "../src/core/derive-v2.js";
+} from "../core/derive-v2.js";
 import {
   generateCharactersV1,
   generateWordsV1,
   legacySeed,
-} from "../src/core/legacy.js";
+} from "../core/legacy.js";
+import {
+  FAST_TEST_PARAMETERS,
+  PROFILE_SALT_FIXTURE,
+  legacyVectors,
+  loadWordBankAsset,
+  v2BaseInput,
+  v2FrozenVectors,
+} from "./vectors.js";
 
-const FAST_TEST_PARAMETERS = {
-  iterations: 1,
-  memorySize: 512,
-  parallelism: 1,
-  hashLength: 32,
-};
-
-const profileSalt = Uint8Array.from({ length: 16 }, (_, index) => index);
-const wordsV1 = (await fs.readFile(new URL("../public/word-bank-v1.txt", import.meta.url), "utf8"))
-  .split(/\r?\n/).filter(Boolean);
-const wordsV2 = (await fs.readFile(new URL("../public/word-bank-v2.txt", import.meta.url), "utf8"))
-  .split(/\r?\n/).filter(Boolean);
-
-const legacyVectors = [
-  {
-    input: {
-      username: "alice@example.com",
-      application: "example.com",
-      secret: "correct horse battery staple",
-      length: 32,
-    },
-    characters: "?QL ]d#jpY}UfO`G*z]yl@5[sLnCp>bJ",
-    words: "servant sold amir staff lana 2&I",
-  },
-  {
-    input: { username: "用户", application: "例子.测试", secret: "秘密🔐", length: 24 },
-    characters: "13xCqoh<q(V'{xQ,O1FN1VK(",
-    words: "across pierce jackie 7*L",
-  },
-  {
-    input: { username: "a b", application: "c", secret: "d", length: 16 },
-    characters: "^cL`7ex~|t-f[oNj",
-    words: "imprint judy V*9",
-  },
-];
+const wordsV1 = await loadWordBankAsset("v1");
+const wordsV2 = await loadWordBankAsset("v2");
+const v2Input = { ...v2BaseInput, profileSalt: PROFILE_SALT_FIXTURE };
 
 test("legacy algorithms retain their checked-in outputs", () => {
   for (const vector of legacyVectors) {
@@ -57,18 +32,6 @@ test("legacy algorithms retain their checked-in outputs", () => {
   }
 });
 
-const v2Input = {
-  profileSalt,
-  secret: "correct horse battery staple",
-  application: "example.com",
-  username: "alice@example.com",
-  kind: "website",
-  slot: 1,
-  length: 32,
-  separator: "-",
-  style: "words-v2",
-};
-
 test("argon2id-v2 production parameters and outputs are frozen", async () => {
   assert.deepEqual(ARGON2_PARAMETERS, {
     iterations: 3,
@@ -76,21 +39,18 @@ test("argon2id-v2 production parameters and outputs are frozen", async () => {
     parallelism: 1,
     hashLength: 64,
   });
-  assert.equal(
-    await generateWordsV2(v2Input, wordsV2),
-    "selfish-general-repay-telling-V6",
-  );
+  assert.equal(await generateWordsV2(v2Input, wordsV2), v2FrozenVectors.words32);
   assert.equal(
     await generateCharactersV2({ ...v2Input, style: "characters-v2" }),
-    "UAhyTJRz4fPkKn7PmMDVukj3c#iFLk@4",
+    v2FrozenVectors.chars32,
   );
   assert.equal(
     await generateWordsV2({ ...v2Input, length: 42 }, wordsV2),
-    "depends-popcorn-topical-divided-baptism-N7",
+    v2FrozenVectors.words42,
   );
   assert.equal(
     await generateCharactersV2({ ...v2Input, length: 20, style: "characters-v2" }),
-    "Dr?R!Y3?gfw!ojAuUeeE",
+    v2FrozenVectors.chars20,
   );
 });
 

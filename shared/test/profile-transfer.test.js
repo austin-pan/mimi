@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { profileQrSvg } from "../src/core/qr.js";
+import { profileQrSvg } from "../core/qr.js";
 import {
   PROFILE_FILE_EXTENSION,
   buildProfileFile,
   parseProfileFile,
-} from "../src/core/profile-file.js";
+} from "../core/profile-file.js";
 
 const SAMPLE_CODE = "MIMI1-ABCDE-FGHJK-LMNPQ-RSTUV-WXYZ2-34567";
 

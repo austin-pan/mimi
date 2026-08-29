@@ -3,22 +3,26 @@ import {
   generateWordsV2,
   MAX_LENGTH,
   MIN_LENGTH,
-} from "./core/derive-v2.js";
+} from "../../shared/core/derive-v2.js";
 import {
   generateCharactersV1,
   generateWordsV1,
   legacySeed,
-} from "./core/legacy.js";
-import { createProfile, parseProfileCode } from "./core/profile.js";
-import { profileQrSvg } from "./core/qr.js";
-import { buildProfileFile, parseProfileFile } from "./core/profile-file.js";
-import { loadWordBank } from "./core/word-bank.js";
+} from "../../shared/core/legacy.js";
+import { createProfile, parseProfileCode } from "../../shared/core/profile.js";
+import { profileQrSvg } from "../../shared/core/qr.js";
+import { buildProfileFile, parseProfileFile } from "../../shared/core/profile-file.js";
+import { loadWordBankFrom } from "../../shared/core/word-bank.js";
 import {
   getRecommendedLength,
   getStrengthGuidance,
   resolvePasswordLength,
-} from "./core/generation-settings.js";
-import packageMetadata from "../package.json";
+} from "../../shared/core/generation-settings.js";
+
+function wordBankUrl(version) {
+  return new URL(`word-bank-${version}.txt`, document.baseURI);
+}
+import packageMetadata from "../../package.json";
 
 const PROFILE_STORAGE_KEY = "mimi.profile.v1";
 const THEME_STORAGE_KEY = "mimi.theme.v1";
@@ -326,13 +330,13 @@ form.addEventListener("submit", async (event) => {
     if (style.endsWith("v1")) {
       const seed = legacySeed(baseInput);
       activePassword = style === "words-v1"
-        ? generateWordsV1(seed, length, await loadWordBank("v1"))
+        ? generateWordsV1(seed, length, await loadWordBankFrom(wordBankUrl("v1")))
         : generateCharactersV1(seed, length);
     } else {
       const profile = await saveProfile(profileInput.value, { collapse: true });
       const input = { ...baseInput, profileSalt: profile.profileSalt };
       activePassword = style === "words-v2"
-        ? await generateWordsV2(input, await loadWordBank("v2"))
+        ? await generateWordsV2(input, await loadWordBankFrom(wordBankUrl("v2")))
         : await generateCharactersV2(input);
     }
 

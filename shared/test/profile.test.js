@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { formatProfileCode, parseProfileCode } from "../src/core/profile.js";
+import { formatProfileCode, parseProfileCode } from "../core/profile.js";
 
 test("profile code round-trips with a frozen representation", async () => {
   const salt = Uint8Array.from({ length: 16 }, (_, index) => index);

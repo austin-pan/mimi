@@ -6,7 +6,7 @@ import {
   getStrengthGuidance,
   RECOMMENDED_LENGTHS,
   resolvePasswordLength,
-} from "../src/core/generation-settings.js";
+} from "../core/generation-settings.js";
 
 test("recommended lengths are style-specific and stable", () => {
   assert.deepEqual(RECOMMENDED_LENGTHS, {

@@ -213,12 +213,15 @@ Home Screen apps and Safari keep separate profile storage. Both builds, all 28
 tests, the v12 cache, profile activation flow, and the 390px mobile layout were
 verified locally, and the uncached live HTML was confirmed at v1.3.0.
 
-App version `1.3.1` is prepared for release. It adopts the Quiet Constellation
+App version `1.3.1` is live at `https://austin-pan.github.io/mimi/`, published by
+the `deploy.yml` workflow (gh-pages commit `a28f16d`, source `23ff33f`). It adopts the Quiet Constellation
 brand mark, replaces the green ambient glow with lavender-plum, positions field
 help in the viewport so it cannot clip, fixes dark tooltip contrast, adds
 passphrase advice to Secret help, gives selects more arrow clearance, and
 renames the pending profile action to “Apply code” with an enter-arrow icon. The
-v13 service-worker cache will make the update visible to installed clients.
+v13 service-worker cache makes the update visible to installed clients. Both
+builds, all 28 tests, dark/mobile tooltip behavior, and uncached live HTML were
+verified.
 
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, pin each action to a reviewed commit SHA,

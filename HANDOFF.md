@@ -15,9 +15,7 @@ After a trusted release is installed, generation works without a network.
 
 The interface should feel like a calm utility rather than a security dashboard.
 Keep the everyday path compact: collapse profile transfer once configured, keep
-rotation version visible, and hide the redundant historical password-type input
-under “Older password settings” solely so non-default existing outputs remain
-reproducible. Use a
+rotation version visible. Use a
 side-by-side generator/result workspace on wider screens. Phone layouts may keep
 short related fields paired until the screen is too narrow for comfortable use.
 
@@ -27,7 +25,7 @@ Each user has:
 
 1. A strong private master secret that is never stored or transmitted.
 2. A random public Mimi Profile Code containing a 128-bit salt and checksum.
-3. Credential inputs: kind, application/device label, username, rotation slot,
+3. Credential inputs: application/device label, username, rotation slot,
    style, separator, and exact length.
 
 The profile code is stored locally and can be copied/applied on other devices.
@@ -59,7 +57,7 @@ core plus assets live in `shared/`, imported by both clients.
 | Path | Responsibility |
 | --- | --- |
 | `shared/core/derive-v2.js` | Argon2id V2 input encoding, deterministic byte expansion, and exact-length word/character formatters. |
-| `shared/core/legacy.js` | Frozen V1 web-generator compatibility implementation. |
+| `shared/core/legacy.js` | Frozen V1 web-generator compatibility implementation. No longer exposed in the PWA UI (removed pre-adoption, no existing user passwords); retained for the extension options page and future reference. |
 | `shared/core/profile.js` | Random 128-bit profile creation, Base32 representation, and checksum validation. |
 | `shared/core/profile-link.js` | Extracts Profile Codes from privacy-preserving URL fragments used by QR deep links. |
 | `shared/core/qr.js` | Renders the public Profile Code (as an auto-import deep link) to a scannable dark-on-light SVG QR. |
@@ -103,8 +101,8 @@ vectors as the PWA (verified in a Chromium DOM smoke test).
 
 - A 16-byte random profile salt.
 - NFKC normalization of the master secret, application, and username.
-- Canonical JSON-array context containing protocol name, version, credential
-  kind, application, username, rotation slot, length, style, and separator.
+- Canonical JSON-array context containing protocol name, version, application,
+  username, rotation slot, length, style, and separator.
 - Context-specific Argon2 salt derived with SHA-256.
 - Argon2id: 64 MiB memory, 3 iterations, parallelism 1, 64 output bytes.
 - SHA-256 counter expansion and rejection sampling for unbiased selections.
@@ -138,8 +136,8 @@ show an apparent-entropy score for one generated sample: the generator's known
 distribution and the user's master-secret strength are what matter.
 
 V1 compatibility intentionally preserves the earlier space-joined seed and
-weak ARC4-style `seedrandom` construction. It is exposed only so existing users
-can reproduce passwords; new profiles default to V2.
+weak ARC4-style `seedrandom` construction. It is retained in `shared/core/legacy.js`
+for any future tooling or migration needs; new profiles always use V2.
 
 ## Setup and verification
 
@@ -234,10 +232,22 @@ native Expo/React Native architecture is specified in
 `docs/native-mobile-plan.md`; the v14 cache advertises this update. Both builds,
 all 28 tests, wide/QR browser layouts, and uncached live HTML were verified.
 
+App version `1.3.3` deployed (source `c2fd3fb`→`e1295ad`). Removes the V1
+compatibility style options (no existing user passwords; V1 code retained in
+`shared/core/` for future tooling), removes `input.kind` from the argon2id-v2
+context (pre-adoption correction; recomputed golden vectors), reorganises the
+recipe row (style spans full width, separator + version share the row below),
+softens the "Your secret" tooltip to recommendations rather than requirements,
+improves the offline indicator tooltip, tightens the "New profile" de-emphasis
+when a profile is active, fixes the iPad `.mimi-profile` file-picker by adding
+`application/octet-stream` to the accept list, updates CI to Node 24, and pins
+`actions/checkout` and `actions/setup-node` to reviewed v7 commit SHAs. iOS
+Safari QR import and offline generation verified on device. All 28 tests pass.
+
 The build and compatibility suite gate every deployment. Do not bypass them.
-For stronger supply-chain protection, pin each action to a reviewed commit SHA,
-enable branch protection, require review for workflow/core changes, and protect
-the GitHub account with passkeys or two-factor authentication.
+For stronger supply-chain protection, enable branch protection, require review
+for workflow/core changes, and protect the GitHub account with passkeys or
+two-factor authentication.
 
 ## Security boundaries
 
@@ -328,16 +338,17 @@ that it has. `docs/security-review.md` records an internal review only.
 
 ### Next
 
-- [ ] Perform the `docs/testing-and-release.md` manual checklist on real iOS
-  Safari and Android Chrome devices (service worker, install, native-camera QR
-  import, offline) — cannot be proven by Node unit tests.
-- [ ] Update `actions/checkout` and `actions/setup-node` from v4 when their
-  reviewed successor is adopted; GitHub currently emits a Node 20 deprecation
-  annotation while transparently running those actions on Node 24.
+- [x] Performed the `docs/testing-and-release.md` manual checklist on real iOS
+  Safari: service worker, install, native-camera QR import, and offline
+  generation all verified.
+- [x] Pinned `actions/checkout` and `actions/setup-node` to reviewed v7 commit
+  SHAs; upgraded CI to Node 24.
 - [ ] Extension Phase 4: load-unpacked verification in real Chrome/Edge (popup
   lifecycle, keyboard/AX, zoom, themes), then Firefox packaging via a
   `webextension-polyfill` adapter. Consider a PSL-based registrable-domain
   helper to replace the current `www.`-stripping host heuristic.
+- [ ] Perform the manual checklist on Android Chrome (service worker, install,
+  native-camera QR import, offline).
 - [ ] Bring the shared design tokens (`tokens.css`) to the extension options
   page so both surfaces load one stylesheet.
 - [ ] Design a V3 compatibility-policy model for minimum uppercase, digit,

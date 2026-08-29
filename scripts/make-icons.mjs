@@ -17,7 +17,7 @@ function brandSvg({ size, fullBleed }) {
     : `<rect width="${size}" height="${size}" rx="${radius}" fill="${PLUM}"/>`;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" role="img" aria-label="Mimi">`
     + bg
-    + `<path d="M ${size * 0.82} ${size * 0.12} C ${size * 0.83} ${size * 0.18}, ${size * 0.86} ${size * 0.21}, ${size * 0.92} ${size * 0.22} C ${size * 0.86} ${size * 0.23}, ${size * 0.83} ${size * 0.26}, ${size * 0.82} ${size * 0.32} C ${size * 0.81} ${size * 0.26}, ${size * 0.78} ${size * 0.23}, ${size * 0.72} ${size * 0.22} C ${size * 0.78} ${size * 0.21}, ${size * 0.81} ${size * 0.18}, ${size * 0.82} ${size * 0.12} Z" fill="${BLUSH}"/>`
+    + `<path d="M ${size * 0.77} ${size * 0.16} C ${size * 0.78} ${size * 0.21}, ${size * 0.81} ${size * 0.24}, ${size * 0.86} ${size * 0.25} C ${size * 0.81} ${size * 0.26}, ${size * 0.78} ${size * 0.29}, ${size * 0.77} ${size * 0.34} C ${size * 0.76} ${size * 0.29}, ${size * 0.73} ${size * 0.26}, ${size * 0.68} ${size * 0.25} C ${size * 0.73} ${size * 0.24}, ${size * 0.76} ${size * 0.21}, ${size * 0.77} ${size * 0.16} Z" fill="${BLUSH}"/>`
     + `<text x="47%" y="57%" dy="0.02em" text-anchor="middle" dominant-baseline="central"`
     + ` font-family="Georgia, 'Times New Roman', 'Liberation Serif', serif"`
     + ` font-style="italic" font-weight="700" font-size="${Math.round(size * 0.60)}"`

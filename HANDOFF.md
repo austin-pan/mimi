@@ -171,14 +171,14 @@ profile-import flow, manifest, service-worker cache version, local Argon2id
 generation, responsive layout, and zero-console-error browser smoke test were
 verified.
 
-App version `1.2.0` is live at `https://austin-pan.github.io/mimi/` from
-`gh-pages` commit `b1cf4a5`. This build adds style-specific strength guidance,
-QR-code and `.mimi-profile` transfer of the public Profile Code, inline SVG
-theme icons, brand-matched app icons, a redesigned profile toolbar, and the
-15,000-entry `words-v2` bank. Its build, 27-test suite, and a zero-console-error
-Chromium smoke test were verified before deployment. The service-worker cache is
-`mimi-pwa-2026-08-29-v8`. `master` is at the same source (`bf074b2`) and its CI
-run is green.
+App version `1.2.0` is live at `https://austin-pan.github.io/mimi/`, published by
+the `deploy.yml` workflow (gh-pages commit `6e3c979`, source `ec78381`). This
+build adds style-specific strength guidance, QR-code / `.mimi-profile` / camera
+transfer of the public Profile Code, inline SVG theme icons, brand-matched app
+icons, a redesigned profile toolbar, the refined 15,000-entry `words-v2` bank,
+shared `tokens.css`, and an update-available prompt. Its build, 29-test suite,
+and a zero-console-error Chromium smoke test were verified. The service-worker
+cache is `mimi-pwa-2026-08-29-v9`. `master` is at the same source and green.
 
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, pin each action to a reviewed commit SHA,

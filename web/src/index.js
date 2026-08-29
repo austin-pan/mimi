@@ -64,6 +64,7 @@ const themeButton = document.querySelector("#theme-toggle");
 const themeColor = document.querySelector("#theme-color");
 const toast = document.querySelector("#toast");
 const versionButton = document.querySelector("#app-version");
+const fieldTooltip = document.querySelector("#field-tooltip");
 
 versionButton.textContent = `v${packageMetadata.version}`;
 
@@ -83,6 +84,61 @@ function showToast(message, type = "success") {
     toast.hidden = true;
   }, 3200);
 }
+
+let activeHelpTip = null;
+
+function showFieldTooltip(target) {
+  activeHelpTip = target;
+  fieldTooltip.textContent = target.dataset.tip;
+  fieldTooltip.hidden = false;
+  fieldTooltip.style.left = "0";
+  fieldTooltip.style.top = "0";
+  requestAnimationFrame(() => {
+    const anchor = target.getBoundingClientRect();
+    const box = fieldTooltip.getBoundingClientRect();
+    const gap = 8;
+    const edge = 10;
+    const left = Math.min(
+      innerWidth - box.width - edge,
+      Math.max(edge, anchor.left + anchor.width / 2 - box.width / 2),
+    );
+    const above = anchor.top - box.height - gap;
+    const top = above >= edge ? above : anchor.bottom + gap;
+    fieldTooltip.style.left = `${left}px`;
+    fieldTooltip.style.top = `${Math.min(top, innerHeight - box.height - edge)}px`;
+  });
+}
+
+function hideFieldTooltip(target) {
+  if (activeHelpTip !== target) return;
+  fieldTooltip.hidden = true;
+  activeHelpTip = null;
+}
+
+for (const tip of document.querySelectorAll(".help-tip")) {
+  tip.setAttribute("role", "button");
+  tip.addEventListener("pointerenter", (event) => {
+    if (event.pointerType !== "touch") showFieldTooltip(tip);
+  });
+  tip.addEventListener("pointerleave", () => hideFieldTooltip(tip));
+  tip.addEventListener("focus", () => showFieldTooltip(tip));
+  tip.addEventListener("blur", () => hideFieldTooltip(tip));
+  tip.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    showFieldTooltip(tip);
+  });
+  tip.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      hideFieldTooltip(tip);
+      tip.blur();
+    }
+  });
+}
+
+addEventListener("resize", () => {
+  if (activeHelpTip) showFieldTooltip(activeHelpTip);
+});
 
 function setStatus(message, type = "info") {
   status.textContent = message;
@@ -211,7 +267,7 @@ useProfileButton.addEventListener("click", async () => {
   const code = profileInput.value.trim();
   if (!code) {
     profilePanel.open = true;
-    setProfileStatus("Paste a saved Profile Code above, then choose Use this code.", "error");
+    setProfileStatus("Paste a saved Profile Code above, then choose Apply code.", "error");
     profileInput.focus();
     return;
   }
@@ -245,11 +301,11 @@ copyProfileButton.addEventListener("click", async () => {
 profileInput.addEventListener("input", () => {
   updateProfileActions();
   if (!profileInput.value.trim()) {
-    setProfileStatus("Paste a saved Profile Code here, then choose Use this code.");
+    setProfileStatus("Paste a saved Profile Code here, then choose Apply code.");
   } else if (profileInput.value.trim() === activeProfileCode) {
     setProfileStatus("This Profile Code is already active on this device.", "success");
   } else {
-    setProfileStatus("Choose Use this code to make the pasted Profile Code active.");
+    setProfileStatus("Choose Apply code to make the pasted Profile Code active.");
   }
 });
 

@@ -39,7 +39,7 @@ color a single definition that only exists in one theme.
 | `--peach` | `#f2cbbd` | `#684a45` | Warm accent (tips, ambient glow) |
 
 Page background is `#f2eee8` (light) / `#1d1921` (dark) with two soft radial
-glows — peach at top-left, sage-green at bottom-right — at low opacity.
+glows — peach at top-left and lavender-plum at bottom-right — at low opacity.
 
 ### Semantic / status colors
 

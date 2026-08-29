@@ -26,7 +26,7 @@ The first-time flow creates a public, random Mimi Profile Code. Back it up and
 apply it on each device. It contains no master secret, but losing every copy
 changes all `argon2id-v2` outputs.
 
-To reuse a code, paste it into the Profile Code field and choose **Use this
+To reuse a code, paste it into the Profile Code field and choose **Apply
 code**; Mimi does not read the clipboard automatically. A link or external QR
 code using `#profile=…` applies the profile locally and removes the fragment from
 the visible URL after validation. Loading a `.mimi-profile` file also activates
@@ -50,8 +50,10 @@ The app supports:
   does not score the apparent randomness of an individual output.
 - Public Profile Code transfer by QR code, `.mimi-profile` file, and copy/paste.
   The QR encodes an auto-import deep link, so scanning it with a phone's built-in
-  camera opens Mimi and imports the profile — no in-app scanner needed. Nothing
-  transferred carries a secret.
+  camera opens Mimi and applies the profile — no in-app scanner needed. Android
+  may route the scoped link into an installed PWA. iOS opens it in Safari, whose
+  profile storage is separate; copy the active code there and apply it once in
+  installed Mimi. Nothing transferred carries a secret.
 - An in-app "new version is ready" prompt when an updated service worker is
   waiting, so updates apply on an explicit refresh rather than silently. Tap the
   version number in the footer to check manually.

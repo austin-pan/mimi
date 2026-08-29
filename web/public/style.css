@@ -9,14 +9,14 @@ body {
   margin: 0;
   background:
     radial-gradient(circle at 8% 5%, rgba(242, 203, 189, 0.62), transparent 27rem),
-    radial-gradient(circle at 92% 92%, rgba(201, 218, 205, 0.7), transparent 30rem),
+    radial-gradient(circle at 92% 92%, rgba(211, 198, 226, 0.72), transparent 30rem),
     #f2eee8;
 }
 
 [data-theme="dark"] body {
   background:
     radial-gradient(circle at 8% 5%, rgba(112, 72, 84, 0.42), transparent 27rem),
-    radial-gradient(circle at 92% 92%, rgba(54, 84, 67, 0.42), transparent 30rem),
+    radial-gradient(circle at 92% 92%, rgba(87, 63, 101, 0.52), transparent 30rem),
     #1d1921;
 }
 
@@ -39,6 +39,7 @@ main {
 
 .brand { display: flex; align-items: center; gap: 0.8rem; }
 .brand-mark {
+  position: relative;
   display: grid;
   width: 46px;
   height: 46px;
@@ -48,7 +49,13 @@ main {
   color: white;
   font: italic 700 2rem/1 Georgia, serif;
   box-shadow: 0 8px 20px rgba(73, 61, 88, 0.24);
+  overflow: hidden;
 }
+.brand-letter { transform: translate(-0.08rem, 0.08rem); }
+.brand-star { position: absolute; top: 4px; right: 5px; color: #d8c9e6; font: 700 0.52rem/1 sans-serif; }
+.brand-dot { position: absolute; border-radius: 50%; }
+.brand-dot-one { top: 6px; right: 16px; width: 3px; height: 3px; background: #fff8e8; }
+.brand-dot-two { top: 15px; right: 3px; width: 3px; height: 3px; background: #e7b4ae; }
 
 h1, h2, p { margin-top: 0; }
 h1 { margin-bottom: 0.05rem; font: 700 2rem/1 Georgia, serif; letter-spacing: -0.04em; }
@@ -194,29 +201,24 @@ label { display: grid; gap: 0.32rem; color: #5d5561; font-size: 0.76rem; font-we
   font-size: 0.65rem;
   line-height: 1;
 }
-.help-tip::after {
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 0.5rem);
-  z-index: 30;
-  width: max-content;
-  max-width: min(240px, 72vw);
-  padding: 0.5rem 0.6rem;
-  transform: translate(-50%, 0.2rem);
-  border-radius: 9px;
-  background: var(--plum-dark);
-  color: #fff;
-  box-shadow: 0 8px 24px rgba(48, 42, 53, 0.22);
-  content: attr(data-tip);
-  font-size: 0.7rem;
-  font-weight: 600;
-  line-height: 1.4;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 120ms ease, transform 120ms ease;
-}
-.help-tip:hover::after, .help-tip:focus::after { opacity: 1; transform: translate(-50%, 0); }
 .help-tip:focus { outline: 2px solid rgba(155, 136, 172, 0.45); outline-offset: 2px; }
+.field-tooltip {
+  position: fixed;
+  z-index: 50;
+  width: max-content;
+  max-width: min(260px, calc(100vw - 20px));
+  padding: 0.55rem 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  background: #493d58;
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(48, 42, 53, 0.3);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.45;
+  pointer-events: none;
+}
+[data-theme="dark"] .field-tooltip { background: #17131a; color: #f8f2f8; border-color: rgba(232, 222, 239, 0.25); }
 
 input, select {
   width: 100%;
@@ -229,6 +231,7 @@ input, select {
   color: var(--ink);
   transition: border-color 140ms ease, box-shadow 140ms ease;
 }
+select { padding-right: 2.2rem; }
 input:focus, select:focus { border-color: #9b88ac; box-shadow: 0 0 0 3px rgba(155, 136, 172, 0.16); }
 
 .input-with-action { position: relative; display: block; }

@@ -32,7 +32,7 @@ Phases 0–3 are implemented on branch `claude/browser-extension-plan-iy0cq6`:
 
 | Capability | PWA | Extension plan |
 | --- | --- | --- |
-| Create, apply, copy, and locally retain a Profile Code | Yes | Same explicit “Use this code” behavior in the options/profile page |
+| Create, apply, copy, and locally retain a Profile Code | Yes | Same explicit “Apply code” behavior in the options/profile page |
 | App/device label and username | Manual entry | Editable; offer the current site's registrable host as a convenience, never a hidden input |
 | Master secret | Entered for each derivation; cleared on generate | Same; clear field in a `finally` block after generation |
 | Friendly words / Compact characters | Yes | Same shared formatters and word bank |

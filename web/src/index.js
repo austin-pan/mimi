@@ -4,11 +4,6 @@ import {
   MAX_LENGTH,
   MIN_LENGTH,
 } from "../../shared/core/derive-v2.js";
-import {
-  generateCharactersV1,
-  generateWordsV1,
-  legacySeed,
-} from "../../shared/core/legacy.js";
 import { createProfile, parseProfileCode } from "../../shared/core/profile.js";
 import { profileCodeFromHash } from "../../shared/core/profile-link.js";
 import { profileQrSvg } from "../../shared/core/qr.js";
@@ -33,6 +28,7 @@ const profilePanel = document.querySelector("#profile-panel");
 const profileSummary = document.querySelector("#profile-summary");
 const profileStatus = document.querySelector("#profile-status");
 const useProfileButton = document.querySelector("#save-profile");
+const createProfileButton = document.querySelector("#create-profile");
 const copyProfileButton = document.querySelector("#copy-profile");
 const showQrButton = document.querySelector("#show-qr");
 const profileQr = document.querySelector("#profile-qr");
@@ -50,7 +46,6 @@ const specificLength = document.querySelector("#specific-length");
 const lengthModes = document.querySelectorAll('input[name="length-mode"]');
 const styleInput = document.querySelector("#style");
 const separatorRow = document.querySelector("#separator-row");
-const legacyWarning = document.querySelector("#legacy-warning");
 const recommendedLength = document.querySelector("#recommended-length");
 const lengthGuidance = document.querySelector("#length-guidance");
 const lengthGuidanceLabel = document.querySelector("#length-guidance-label");
@@ -115,7 +110,7 @@ function hideFieldTooltip(target) {
   activeHelpTip = null;
 }
 
-for (const tip of document.querySelectorAll(".help-tip")) {
+for (const tip of document.querySelectorAll(".help-tip, .has-tooltip")) {
   tip.setAttribute("role", "button");
   tip.addEventListener("pointerenter", (event) => {
     if (event.pointerType !== "touch") showFieldTooltip(tip);
@@ -162,6 +157,11 @@ function updateProfileActions() {
   for (const button of [copyProfileButton, showQrButton, exportProfileButton]) {
     button.disabled = !isActive;
   }
+  createProfileButton.classList.toggle("pb-subtle", Boolean(activeProfileCode));
+  createProfileButton.classList.toggle("pb-solid", !activeProfileCode);
+  createProfileButton.title = activeProfileCode
+    ? "Replace the active profile with a newly created one"
+    : "Create and activate a new Mimi profile";
   if (!isActive && !profileQr.hidden) hideProfileQr();
 }
 
@@ -198,6 +198,7 @@ async function saveProfile(code, { collapse = false } = {}) {
   const profile = await parseProfileCode(code);
   localStorage.setItem(PROFILE_STORAGE_KEY, profile.code);
   activeProfileCode = profile.code;
+  profileInput.setAttribute("aria-invalid", "false");
   profileInput.value = profile.code;
   profileSummary.textContent = "Ready on this device";
   if (collapse) profilePanel.open = false;
@@ -244,6 +245,7 @@ async function initializeProfile() {
       profileInput.value = "";
     }
     profilePanel.open = true;
+    profileInput.setAttribute("aria-invalid", "true");
     setProfileStatus(error.message, "error");
     setStatus(error.message, "error");
     updateProfileActions();
@@ -280,6 +282,7 @@ useProfileButton.addEventListener("click", async () => {
     showToast("Profile loaded and ready.");
   } catch (error) {
     profilePanel.open = true;
+    profileInput.setAttribute("aria-invalid", "true");
     setProfileStatus(error.message, "error");
     profileInput.focus();
     setStatus(error.message, "error");
@@ -299,6 +302,7 @@ copyProfileButton.addEventListener("click", async () => {
 });
 
 profileInput.addEventListener("input", () => {
+  profileInput.removeAttribute("aria-invalid");
   updateProfileActions();
   if (!profileInput.value.trim()) {
     setProfileStatus("Paste a saved Profile Code here, then choose Apply code.");
@@ -379,6 +383,7 @@ profileFileInput.addEventListener("change", async () => {
     setStatus("Profile loaded from file. You're ready to go.", "success");
     showToast("Profile file loaded and active.");
   } catch (error) {
+    profileInput.setAttribute("aria-invalid", "true");
     setProfileStatus(error.message, "error");
     setStatus(error.message, "error");
   } finally {
@@ -427,9 +432,7 @@ function updateLengthGuidance() {
 }
 
 styleInput.addEventListener("change", () => {
-  const isWords = styleInput.value.includes("words");
-  separatorRow.hidden = !isWords;
-  legacyWarning.hidden = !styleInput.value.endsWith("v1");
+  separatorRow.hidden = !styleInput.value.includes("words");
   updateLengthGuidance();
 });
 
@@ -448,34 +451,24 @@ form.addEventListener("submit", async (event) => {
       application: data.get("application"),
       username: data.get("username"),
       secret: data.get("secret"),
-      kind: data.get("kind"),
       slot: Number(data.get("slot")),
       length,
       separator: data.get("separator"),
       style,
     };
 
-    if (style.endsWith("v1")) {
-      const seed = legacySeed(baseInput);
-      activePassword = style === "words-v1"
-        ? generateWordsV1(seed, length, await loadWordBankFrom(wordBankUrl("v1")))
-        : generateCharactersV1(seed, length);
-    } else {
-      const profile = await saveProfile(profileInput.value, { collapse: true });
-      const input = { ...baseInput, profileSalt: profile.profileSalt };
-      activePassword = style === "words-v2"
-        ? await generateWordsV2(input, await loadWordBankFrom(wordBankUrl("v2")))
-        : await generateCharactersV2(input);
-    }
+    const profile = await saveProfile(profileInput.value, { collapse: true });
+    const input = { ...baseInput, profileSalt: profile.profileSalt };
+    activePassword = style === "words-v2"
+      ? await generateWordsV2(input, await loadWordBankFrom(wordBankUrl("v2")))
+      : await generateCharactersV2(input);
 
     result.textContent = activePassword;
     const guidance = getStrengthGuidance(style, length);
     passwordStrength.hidden = false;
     passwordStrength.dataset.level = guidance.level;
     passwordStrengthLabel.textContent = guidance.label;
-    passwordStrengthDetails.textContent = style.endsWith("v1")
-      ? "Legacy output · exact settings required"
-      : "Upper & lowercase · number · symbol";
+    passwordStrengthDetails.textContent = "Upper & lowercase · number · symbol";
     setStatus(`All set · ${activePassword.length} characters`, "success");
   } catch (error) {
     result.textContent = "No password generated";

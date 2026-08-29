@@ -4,18 +4,21 @@ Static, offline-capable password derivation with no application backend.
 
 ## Development
 
+Run npm from the repository root (tooling is hoisted there):
+
 ```bash
 npm ci
-npm run build
+npm run build          # → web/dist
 npm test
-python3 -m http.server 8080 --directory dist
+python3 -m http.server 8080 --directory web/dist
 ```
 
 Open `http://127.0.0.1:8080`. `npm run watch` rebuilds during development.
 
-`public/` contains the app shell, PWA manifest, service worker, icon, and
-versioned word banks. Webpack bundles `src/index.js` and the local derivation
-core, then copies `public/` into `dist/`.
+`web/public/` contains the app shell, PWA manifest, service worker, and icon.
+The derivation core and word banks live in the repo-root `shared/`. Webpack
+bundles `web/src/index.js` with the shared core, then copies `web/public/` and
+`shared/assets/` into `web/dist/`.
 
 ## Compatibility contract
 

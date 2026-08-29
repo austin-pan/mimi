@@ -11,6 +11,21 @@ The first release targets Chromium browsers. Firefox support follows once the
 shared UI and core are stable; browser-specific code must stay behind a narrow
 platform adapter rather than touching the derivation core.
 
+## Status (2026-08-29)
+
+Phases 0–3 are implemented on branch `claude/browser-extension-plan-iy0cq6`:
+
+- **Shared core extracted** to a repo-root `shared/` (core, assets, tokens,
+  golden vectors); npm tooling hoisted to the root. The PWA imports it unchanged.
+- **Popup and options built** (`npm run build:ext` → `extension/dist`), reusing
+  the shared core and visual language. Active-tab autofill fills the app label
+  and (via per-site presets) the username; `Alt+Shift+M` opens the popup.
+- **Parity verified**: the built popup reproduces the shared 42-char golden
+  vector byte-for-byte in a Chromium DOM smoke test; adapter and manifest have
+  unit tests. Remaining work is Phase 4 (load-unpacked/browser hardening,
+  Firefox) and Phase 5 (signed release). The implemented layout differs from the
+  original sketch below only in that npm tooling lives at the repo root.
+
 ---
 
 ## Feature parity

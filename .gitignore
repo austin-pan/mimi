@@ -6,6 +6,7 @@
 .vscode
 node_modules
 web/dist
+extension/dist
 .venv
 __pycache__
 *.pyc

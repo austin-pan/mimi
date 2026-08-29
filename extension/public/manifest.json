@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Mimi",
+  "version": "1.2.0",
+  "description": "Create memorable passwords wherever you sign in. Fully local, offline, and backend-free.",
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Mimi",
+    "default_icon": {
+      "128": "icons/mimi-192.png"
+    }
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+M",
+        "mac": "Alt+Shift+M"
+      },
+      "description": "Open Mimi"
+    }
+  },
+  "icons": {
+    "128": "icons/mimi-192.png",
+    "512": "icons/mimi-512.png"
+  },
+  "permissions": ["storage", "activeTab"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  }
+}

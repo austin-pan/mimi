@@ -11,15 +11,16 @@ The primary application is a static Progressive Web App in `web/`. It can be
 hosted on GitHub Pages and installed on a phone or computer for offline use.
 
 ```bash
-cd web
 npm ci
 npm run build
 npm test
-python3 -m http.server 8080 --directory dist
+python3 -m http.server 8080 --directory web/dist
 ```
 
 Open `http://127.0.0.1:8080`. Service workers require HTTP(S); do not open the
-HTML through a `file://` URL.
+HTML through a `file://` URL. Run these from the repository root; npm tooling and
+the shared derivation core live at the root (`shared/`), with the PWA in `web/`
+and the Manifest V3 extension in `extension/` (`npm run build:ext`).
 
 The first-time flow creates a public, random Mimi Profile Code. Back it up and
 import it on each device. It contains no master secret, but losing every copy

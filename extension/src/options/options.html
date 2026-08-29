@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="options.css">
+  <title>Mimi settings</title>
+</head>
+<body>
+  <main class="page">
+    <header class="bar">
+      <div class="brand">
+        <span class="mark" aria-hidden="true">m</span>
+        <div>
+          <h1>Mimi</h1>
+          <p>Your profile lives on this device and never leaves it.</p>
+        </div>
+      </div>
+      <button type="button" id="theme-toggle" class="icon-btn" aria-label="Use dark mode" title="Use dark mode"></button>
+    </header>
+
+    <section class="panel">
+      <span class="eyebrow">Your Mimi profile</span>
+      <h2>Profile Code</h2>
+      <p class="lead">The Profile Code is a public salt shared across your devices. It holds no
+        secret, but if you lose every copy your <code>argon2id-v2</code> passwords change — keep a backup.</p>
+
+      <label>Profile code
+        <input id="profile-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Paste MIMI1-…">
+      </label>
+      <div class="actions">
+        <button type="button" id="create-profile">Create</button>
+        <button type="button" id="import-profile" class="quiet">Import</button>
+        <button type="button" id="copy-profile" class="quiet">Copy</button>
+      </div>
+      <div class="transfer">
+        <button type="button" id="show-qr" class="pill" aria-expanded="false" aria-controls="profile-qr">Show QR</button>
+        <button type="button" id="export-profile" class="pill">Save file</button>
+        <button type="button" id="import-file" class="pill">Load file</button>
+        <input id="profile-file-input" type="file" accept=".mimi-profile,application/json,text/plain" hidden>
+      </div>
+      <figure id="profile-qr" class="qr" hidden>
+        <div id="profile-qr-canvas" class="qr-canvas"></div>
+        <figcaption>Scan with a phone camera to open the Mimi web app there and import this profile.</figcaption>
+      </figure>
+      <p id="profile-status" class="microcopy" aria-live="polite"></p>
+    </section>
+
+    <section class="panel">
+      <span class="eyebrow">Moving devices</span>
+      <h2>Set up another device</h2>
+      <p class="lead">Install Mimi on the other device, then transfer this Profile Code by QR,
+        by <code>.mimi-profile</code> file, or by copy and paste. Enter the same master secret on
+        each device — it is never stored or transferred.</p>
+    </section>
+
+    <footer>Local &amp; offline · <span id="app-version"></span></footer>
+  </main>
+  <script src="index.js"></script>
+</body>
+</html>

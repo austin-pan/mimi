@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="popup.css">
+  <title>Mimi</title>
+</head>
+<body>
+  <main class="popup">
+    <header class="bar">
+      <div class="brand">
+        <span class="mark" aria-hidden="true">m</span>
+        <strong>Mimi</strong>
+      </div>
+      <button type="button" id="theme-toggle" class="icon-btn" aria-label="Use dark mode" title="Use dark mode"></button>
+    </header>
+
+    <button type="button" id="manage-profile" class="profile-row">
+      <span class="dot" id="profile-dot" data-state="none" aria-hidden="true"></span>
+      <span id="profile-summary">Checking profile…</span>
+      <span class="manage-link">Manage</span>
+    </button>
+
+    <form id="generator-form">
+      <div id="site-hint" class="site-hint" hidden></div>
+
+      <label>App or device
+        <input name="application" required autocomplete="off" autocapitalize="none" placeholder="example.com or My MacBook">
+      </label>
+      <label>Username
+        <input name="username" required autocomplete="off" autocapitalize="none" placeholder="name@example.com">
+      </label>
+      <label>Your secret
+        <span class="with-action">
+          <input id="secret" name="secret" type="password" required autocomplete="off" autocapitalize="none" placeholder="Your memorable secret">
+          <button type="button" id="toggle-secret" class="text-btn">Show</button>
+        </span>
+      </label>
+
+      <div class="two">
+        <label>Style
+          <select id="style" name="style">
+            <optgroup label="Recommended">
+              <option value="words-v2">Friendly words</option>
+              <option value="characters-v2">Compact characters</option>
+            </optgroup>
+            <optgroup label="Compatibility">
+              <option value="words-v1">Legacy words-v1</option>
+              <option value="characters-v1">Legacy characters-v1</option>
+            </optgroup>
+          </select>
+        </label>
+        <label id="separator-row">Separator
+          <select name="separator">
+            <option value="-">Hyphen —</option>
+            <option value=".">Period ·</option>
+          </select>
+        </label>
+      </div>
+
+      <fieldset class="length">
+        <div class="length-modes">
+          <label>
+            <input type="radio" name="length-mode" value="recommended" checked>
+            <span><strong>Recommended</strong><small id="recommended-length">42 characters</small></span>
+          </label>
+          <label>
+            <input type="radio" name="length-mode" value="specific">
+            <span><strong>Specific</strong><small>Choose 12–64</small></span>
+          </label>
+        </div>
+        <label id="specific-length" class="length-control" hidden>
+          <span>Length <output id="length-value">32</output></span>
+          <input id="length" name="length" type="range" min="12" max="64" value="32">
+        </label>
+        <div id="length-guidance" class="guidance" data-level="recommended">
+          <strong id="length-guidance-label">Recommended</strong>
+          <span id="length-guidance-summary"></span>
+        </div>
+      </fieldset>
+
+      <details class="more">
+        <summary>More options</summary>
+        <div class="two">
+          <label>Use for
+            <select name="kind">
+              <option value="website">Website</option>
+              <option value="device-login">Laptop / device login</option>
+              <option value="wifi">Wi-Fi</option>
+              <option value="other">Something else</option>
+            </select>
+          </label>
+          <label>Version
+            <input name="slot" type="number" min="1" max="9999" value="1" required>
+          </label>
+        </div>
+      </details>
+
+      <p id="legacy-warning" class="warn" hidden>Compatibility mode recreates passwords from an earlier Mimi version.</p>
+      <button type="submit" id="generate" class="primary">Make my password</button>
+    </form>
+
+    <section class="result" aria-live="polite">
+      <div class="result-top">
+        <span class="eyebrow">Your password</span>
+        <button type="button" id="copy-password" class="ghost">Copy</button>
+      </div>
+      <pre id="password-result">Fill in the details above.</pre>
+      <div id="password-strength" class="strength" hidden>
+        <strong id="password-strength-label"></strong>
+        <span id="password-strength-details"></span>
+      </div>
+      <p id="status"></p>
+    </section>
+
+    <footer>Local &amp; offline · <span id="app-version"></span></footer>
+  </main>
+  <script src="index.js"></script>
+</body>
+</html>

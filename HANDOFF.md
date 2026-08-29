@@ -41,25 +41,44 @@ hardware identifiers.
 
 ## Repository architecture
 
+Since 2026-08-29 the repository is a small monorepo: npm tooling
+(`package.json`, `package-lock.json`, `webpack.config.cjs`,
+`webpack.extension.cjs`, `node_modules`) lives at the root, and the derivation
+core plus assets live in `shared/`, imported by both clients.
+
 | Path | Responsibility |
 | --- | --- |
-| `web/src/core/derive-v2.js` | Argon2id V2 input encoding, deterministic byte expansion, and exact-length word/character formatters. |
-| `web/src/core/legacy.js` | Frozen V1 web-generator compatibility implementation. |
-| `web/src/core/profile.js` | Random 128-bit profile creation, Base32 representation, and checksum validation. |
-| `web/src/core/qr.js` | Renders the public Profile Code (as an auto-import deep link) to a scannable dark-on-light SVG QR. |
-| `web/src/core/profile-file.js` | Builds and parses the `.mimi-profile` transfer file, which carries only the public code. |
-| `web/src/core/generation-settings.js` | Style-specific recommended lengths and descriptive strength guidance shared by future clients. |
+| `shared/core/derive-v2.js` | Argon2id V2 input encoding, deterministic byte expansion, and exact-length word/character formatters. |
+| `shared/core/legacy.js` | Frozen V1 web-generator compatibility implementation. |
+| `shared/core/profile.js` | Random 128-bit profile creation, Base32 representation, and checksum validation. |
+| `shared/core/qr.js` | Renders the public Profile Code (as an auto-import deep link) to a scannable dark-on-light SVG QR. |
+| `shared/core/profile-file.js` | Builds and parses the `.mimi-profile` transfer file, which carries only the public code. |
+| `shared/core/generation-settings.js` | Style-specific recommended lengths and descriptive strength guidance. |
+| `shared/core/word-bank.js` | Platform-neutral word-bank loader (`loadWordBankFrom(url)`); no DOM/extension coupling. |
+| `shared/assets/word-bank-v1.txt` | Frozen original list; changing it breaks V1 outputs. |
+| `shared/assets/word-bank-v2.txt` | V2 list, including added pronouns; immutable after release. |
+| `shared/styles/tokens.css` | Canonical design tokens (palette) consumed by the extension. |
+| `shared/test/` | Single golden-vector source (`vectors.js`) plus generators, profile, settings, and transfer suites. |
+| `web/src/index.js` | PWA UI wiring; imports the shared core and passes word-bank URLs relative to `document.baseURI`. |
+| `web/public/` | PWA-only shell: `index.html`, `style.css`, `service-worker.js`, `manifest.webmanifest`, icons. |
+| `web/test/build.test.js` | Build-boundary check on the built `web/dist`. |
+| `extension/public/manifest.json` | Manifest V3: `storage`+`activeTab` only, `wasm-unsafe-eval` CSP, `Alt+Shift+M` shortcut. |
+| `extension/src/platform/chrome.js` | The only browser-specific module: storage, version, word-bank URL, active-tab host. |
+| `extension/src/popup/` | Everyday popup: shared form + generation, active-tab autofill of app/username, per-site presets. |
+| `extension/src/options/` | Profile create/import/copy, QR, and `.mimi-profile` transfer, using the shared modules. |
+| `extension/test/` | Adapter and manifest (permission/CSP/shortcut) tests. |
 | `docs/visual-identity.md` | Shared design language (palette, type, components, voice) for the PWA and extension. |
-| `web/public/word-bank-v1.txt` | Frozen original list; changing it breaks V1 outputs. |
-| `web/public/word-bank-v2.txt` | V2 list, including added pronouns; immutable after release. |
-| `web/public/service-worker.js` | Same-origin offline shell caching. Bump its cache name for cache-layout changes. |
-| `web/public/manifest.webmanifest` | Relative-scope PWA manifest compatible with GitHub project Pages and custom domains. |
-| `web/test/` | Golden vectors, property/boundary tests, profile tests, and build-boundary checks. |
-| `.github/workflows/pages.yml` | Read-only CI build and compatibility gate. |
+| `.github/workflows/pages.yml` | Read-only CI build and compatibility gate (runs from the repo root). |
 | `password.py` | Separate original CLI retained for existing users; it is not compatible with web V1/V2. |
 
 There is no application backend, API, Vercel configuration, Python web runtime,
 account system, remote analytics, or secret synchronization.
+
+The extension is built with `npm run build:ext` (or `build:all` for both) into
+`extension/dist`, loadable unpacked. It ships Argon2 WASM and both word banks
+locally, so setup and generation make no network request. It reuses the shared
+core byte-for-byte: loading the unpacked popup reproduces the same golden
+vectors as the PWA (verified in a Chromium DOM smoke test).
 
 ## V2 compatibility contract
 
@@ -100,12 +119,14 @@ can reproduce passwords; new profiles default to V2.
 
 ## Setup and verification
 
+Run from the repository root (npm tooling is hoisted there):
+
 ```bash
-cd web
 npm ci
-npm run build
-npm test
-python3 -m http.server 8080 --directory dist
+npm run build          # PWA → web/dist
+npm run build:ext      # extension → extension/dist
+npm test               # shared, web, and extension suites
+python3 -m http.server 8080 --directory web/dist
 ```
 
 Required release checks:
@@ -195,9 +216,21 @@ that it has.
   (no secret), with the QR encoding the app's own auto-import deep link.
 - [x] Replaced the light/dark toggle emoji with inline SVG sun/moon icons.
 - [x] Documented the shared visual identity in `docs/visual-identity.md`.
+- [x] Extracted the derivation core, word banks, tokens, and golden vectors to a
+  repo-root `shared/` and hoisted npm tooling to the root (behavior-preserving).
+- [x] Scaffolded the Manifest V3 extension (popup + options) reusing the shared
+  core and visual language, with active-tab autofill of app label and username,
+  per-site presets, profile QR/file transfer, and an `Alt+Shift+M` shortcut.
+  Verified byte-for-byte parity with the PWA in a Chromium DOM smoke test.
 
 ### Next
 
+- [ ] Extension Phase 4: load-unpacked verification in real Chrome/Edge (popup
+  lifecycle, keyboard/AX, zoom, themes), then Firefox packaging via a
+  `webextension-polyfill` adapter. Consider a PSL-based registrable-domain
+  helper to replace the current `www.`-stripping host heuristic.
+- [ ] Fold `shared/styles/tokens.css` into the web build so the PWA and
+  extension share one token file instead of mirroring values.
 - [ ] Decide whether to grant CI `contents: write` for automatic `gh-pages`
   publishing or keep the safer manual release step.
 - [ ] Perform clean-install and offline browser testing on iOS Safari and Android
@@ -209,7 +242,5 @@ that it has.
   special, and distinct-special counts without changing released V2 outputs.
 - [ ] Commission an independent cryptographic review before recommending Mimi
   for high-value credentials.
-- [ ] Build the Manifest V3 extension on branch
-  `claude/browser-extension-plan-iy0cq6`, following
-  `docs/browser-extension-plan.md` and preserving all shared golden vectors.
-  Phase 1 (shared core extraction) is the gating step before any popup work.
+- [ ] Consider direct password-field autofill (content script) for the
+  extension — explicitly deferred in the plan behind a larger trust boundary.

@@ -25,5 +25,6 @@ test("built PWA contains the complete offline shell and no remote generator", as
   assert.doesNotMatch(bundle, /\/\/[#@]\s*sourceMappingURL=/);
   assert.match(html, /id=install-app/);
   assert.match(html, /id=install-dialog/);
+  assert.match(html, /id=theme-toggle/);
   assert.match(html, /paste your copied code above and choose Import/i);
 });

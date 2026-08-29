@@ -160,6 +160,8 @@ that it has.
   advanced controls, a two-column desktop workspace, and reduced mobile height.
 - [x] Added a contextual install control with native Chromium prompting and a
   platform-aware fallback guide; clarified profile importing with inline status.
+- [x] Added a pleasant dark theme that follows the initial system preference and
+  remembers an explicit light/dark choice locally.
 
 ### Next
 

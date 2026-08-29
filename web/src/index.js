@@ -13,6 +13,7 @@ import { createProfile, parseProfileCode } from "./core/profile.js";
 import { loadWordBank } from "./core/word-bank.js";
 
 const PROFILE_STORAGE_KEY = "mimi.profile.v1";
+const THEME_STORAGE_KEY = "mimi.theme.v1";
 const form = document.querySelector("#generator-form");
 const profileInput = document.querySelector("#profile-code");
 const profilePanel = document.querySelector("#profile-panel");
@@ -30,6 +31,8 @@ const separatorRow = document.querySelector("#separator-row");
 const legacyWarning = document.querySelector("#legacy-warning");
 const installButton = document.querySelector("#install-app");
 const installDialog = document.querySelector("#install-dialog");
+const themeButton = document.querySelector("#theme-toggle");
+const themeColor = document.querySelector("#theme-color");
 
 let activePassword = "";
 let deferredInstallPrompt = null;
@@ -43,6 +46,36 @@ function setProfileStatus(message, type = "info") {
   profileStatus.textContent = message;
   profileStatus.dataset.type = type;
 }
+
+const themePreference = matchMedia("(prefers-color-scheme: dark)");
+let explicitTheme = ["light", "dark"].includes(localStorage.getItem(THEME_STORAGE_KEY));
+
+function applyTheme(theme, { persist = false } = {}) {
+  document.documentElement.dataset.theme = theme;
+  themeButton.querySelector("span").textContent = theme === "dark" ? "☀" : "☾";
+  const nextTheme = theme === "dark" ? "light" : "dark";
+  const label = `Use ${nextTheme} mode`;
+  themeButton.setAttribute("aria-label", label);
+  themeButton.title = label;
+  themeColor.content = theme === "dark" ? "#1d1921" : "#5f516e";
+  if (persist) {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    explicitTheme = true;
+  }
+}
+
+applyTheme(explicitTheme
+  ? localStorage.getItem(THEME_STORAGE_KEY)
+  : (themePreference.matches ? "dark" : "light"));
+
+themeButton.addEventListener("click", () => {
+  const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  applyTheme(nextTheme, { persist: true });
+});
+
+themePreference.addEventListener("change", (event) => {
+  if (!explicitTheme) applyTheme(event.matches ? "dark" : "light");
+});
 
 async function saveProfile(code, { collapse = false } = {}) {
   const profile = await parseProfileCode(code);

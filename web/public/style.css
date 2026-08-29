@@ -13,6 +13,20 @@
   --peach: #f2cbbd;
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  color: #f2ebf2;
+  background: #1d1921;
+  --ink: #f2ebf2;
+  --muted: #b8aebb;
+  --plum: #c2a9d0;
+  --plum-dark: #dfd0e6;
+  --lavender: #3d3345;
+  --cream: #29232d;
+  --line: #4b424f;
+  --peach: #684a45;
+}
+
 * { box-sizing: border-box; }
 
 body {
@@ -22,6 +36,13 @@ body {
     radial-gradient(circle at 8% 5%, rgba(242, 203, 189, 0.62), transparent 27rem),
     radial-gradient(circle at 92% 92%, rgba(201, 218, 205, 0.7), transparent 30rem),
     #f2eee8;
+}
+
+[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at 8% 5%, rgba(112, 72, 84, 0.42), transparent 27rem),
+    radial-gradient(circle at 92% 92%, rgba(54, 84, 67, 0.42), transparent 30rem),
+    #1d1921;
 }
 
 button, input, select { font: inherit; }
@@ -74,6 +95,20 @@ h1 { margin-bottom: 0.05rem; font: 700 2rem/1 Georgia, serif; letter-spacing: -0
 }
 .install-button:hover, .install-button[data-ready="true"] { background: var(--lavender); }
 .install-button[hidden] { display: none; }
+
+.theme-button {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(95, 81, 110, 0.2);
+  border-radius: 50%;
+  background: rgba(255, 253, 248, 0.72);
+  color: var(--plum);
+  font-size: 1rem;
+}
+.theme-button:hover { background: var(--lavender); }
 
 .presence {
   display: flex;
@@ -341,6 +376,49 @@ footer span { font-family: Georgia, serif; font-weight: 700; }
   color: #6c5b57;
   font-size: 0.74rem;
 }
+
+[data-theme="dark"] .brand-mark,
+[data-theme="dark"] .compact-actions button:not(.quiet),
+[data-theme="dark"] .generate-button { background: #725d7f; color: #fff; }
+[data-theme="dark"] .generate-button:hover { background: #836d90; }
+[data-theme="dark"] .install-button,
+[data-theme="dark"] .theme-button,
+[data-theme="dark"] .presence,
+[data-theme="dark"] .profile-panel {
+  background: rgba(41, 35, 45, 0.82);
+  border-color: rgba(194, 169, 208, 0.2);
+}
+[data-theme="dark"] .panel { background: rgba(41, 35, 45, 0.94); border-color: rgba(194, 169, 208, 0.18); }
+[data-theme="dark"] label { color: #c7bdc9; }
+[data-theme="dark"] input,
+[data-theme="dark"] select { background: #211c25; color: var(--ink); }
+[data-theme="dark"] .more-options { border-top-color: #403743; }
+[data-theme="dark"] .eyebrow { color: #d9a293; }
+[data-theme="dark"] .sparkle { color: #d5a092; }
+[data-theme="dark"] .notice { background: #4b4127; color: #e4cf91; }
+[data-theme="dark"] .result-panel {
+  background:
+    linear-gradient(145deg, rgba(61, 51, 69, 0.92), rgba(41, 35, 45, 0.97) 55%),
+    var(--cream);
+}
+[data-theme="dark"] #password-result { background: rgba(26, 22, 29, 0.72); border-color: rgba(194, 169, 208, 0.2); }
+[data-theme="dark"] #status[data-type="error"],
+[data-theme="dark"] .microcopy[data-type="error"] { color: #ef9999; }
+[data-theme="dark"] #status[data-type="success"],
+[data-theme="dark"] .microcopy[data-type="success"] { color: #9bc7a4; }
+[data-theme="dark"] .soft-tip { background: rgba(112, 74, 67, 0.34); color: #ddbeb7; }
+[data-theme="dark"] .soft-tip span { color: #d8a092; }
+[data-theme="dark"] footer { color: #a99eac; }
+[data-theme="dark"] .install-dialog { background: #29232d; border-color: rgba(194, 169, 208, 0.22); }
+[data-theme="dark"] .install-dialog::backdrop { background: rgba(10, 8, 12, 0.62); }
+[data-theme="dark"] .install-steps section { background: #211c25; }
+[data-theme="dark"] .install-dialog[data-platform="ios"] [data-platform="ios"],
+[data-theme="dark"] .install-dialog[data-platform="android"] [data-platform="android"],
+[data-theme="dark"] .install-dialog[data-platform="desktop"] [data-platform="desktop"] {
+  border-color: #8c729b;
+  background: rgba(61, 51, 69, 0.72);
+}
+[data-theme="dark"] .dialog-note { background: rgba(112, 74, 67, 0.3); color: #ddbeb7; }
 
 @media (max-width: 840px) {
   main { width: min(720px, calc(100% - 1.25rem)); }

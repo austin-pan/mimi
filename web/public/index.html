@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#5f516e">
+  <meta id="theme-color" name="theme-color" content="#5f516e">
   <meta name="description" content="Create memorable passwords wherever you are.">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <link rel="manifest" href="./manifest.webmanifest">
@@ -26,6 +26,9 @@
       <div class="header-actions">
         <button type="button" id="install-app" class="install-button">
           <span aria-hidden="true">↓</span><span>Install</span>
+        </button>
+        <button type="button" id="theme-toggle" class="theme-button" aria-label="Use dark mode" title="Use dark mode">
+          <span aria-hidden="true">☾</span>
         </button>
         <div class="presence"><span></span><span id="network-state">Checking</span></div>
       </div>

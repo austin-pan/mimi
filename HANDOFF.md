@@ -202,7 +202,8 @@ Profile toolbar. Both PWA and extension builds, all 28 tests, the v11 service-
 worker cache, mobile layout, same-document valid/invalid QR flows, and the live
 GitHub Pages release were verified with zero browser console warnings/errors.
 
-App version `1.3.0` is prepared for release. It hides “Use this code” until the
+App version `1.3.0` is live at `https://austin-pan.github.io/mimi/`, published by
+the `deploy.yml` workflow (gh-pages commit `4084a24`, source `078a470`). It hides “Use this code” until the
 field contains a non-active candidate; activates QR links and `.mimi-profile`
 files immediately; collapses the Profile panel and shows a toast after successful
 activation; adds concise button titles and tap/focus/hover field help; promotes
@@ -210,8 +211,7 @@ password type and rotation version to the main form; and makes the footer versio
 an explicit service-worker update check. The install guide now explains that iOS
 Home Screen apps and Safari keep separate profile storage. Both builds, all 28
 tests, the v12 cache, profile activation flow, and the 390px mobile layout were
-verified locally. Replace this paragraph's release status with source/gh-pages
-commits after deployment.
+verified locally, and the uncached live HTML was confirmed at v1.3.0.
 
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, pin each action to a reviewed commit SHA,

@@ -13,6 +13,7 @@ test("built PWA contains the complete offline shell and no remote generator", as
     "manifest.webmanifest",
     "service-worker.js",
     "style.css",
+    "tokens.css",
     "word-bank-v1.txt",
     "word-bank-v2.txt",
   ];

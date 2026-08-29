@@ -1,8 +1,9 @@
-const CACHE_NAME = "mimi-pwa-2026-08-29-v8";
+const CACHE_NAME = "mimi-pwa-2026-08-29-v9";
 const CORE_FILES = [
   "./",
   "./main.js",
   "./manifest.webmanifest",
+  "./tokens.css",
   "./style.css",
   "./icons/mimi.svg",
   "./icons/mimi-192.png",
@@ -12,8 +13,13 @@ const CORE_FILES = [
 ];
 
 self.addEventListener("install", (event) => {
+  // Do not skipWaiting automatically: a new worker waits so the page can offer
+  // an explicit "refresh to update" prompt, then activates on SKIP_WAITING.
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_FILES)));
-  self.skipWaiting();
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data === "SKIP_WAITING") self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {

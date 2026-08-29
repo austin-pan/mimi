@@ -51,9 +51,9 @@ export const v2BaseInput = {
 };
 
 export const v2FrozenVectors = {
-  words32: "shuandeent-cuvogaend-i-tumble-H5",
+  words32: "shocilliia-iostadan-it-tumble-H5",
   chars32: "UAhyTJRz4fPkKn7PmMDVukj3c#iFLk@4",
-  words42: "quiet-vicar-chiasseil-anthony-streinash-N7",
+  words42: "she-pinelim-cedar-miostusice-ciabureant-H6",
   chars20: "Dr?R!Y3?gfw!ojAuUeeE",
 };
 

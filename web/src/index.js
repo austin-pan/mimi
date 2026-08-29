@@ -11,7 +11,12 @@ import {
 } from "../../shared/core/legacy.js";
 import { createProfile, parseProfileCode } from "../../shared/core/profile.js";
 import { profileQrSvg } from "../../shared/core/qr.js";
-import { buildProfileFile, parseProfileFile } from "../../shared/core/profile-file.js";
+import {
+  buildProfileFile,
+  extractProfileReference,
+  parseProfileFile,
+} from "../../shared/core/profile-file.js";
+import jsQR from "jsqr";
 import { loadWordBankFrom } from "../../shared/core/word-bank.js";
 import {
   getRecommendedLength,
@@ -260,6 +265,86 @@ profileFileInput.addEventListener("change", async () => {
   }
 });
 
+const scanButton = document.querySelector("#scan-qr");
+const scanDialog = document.querySelector("#scan-dialog");
+const scanVideo = document.querySelector("#scan-video");
+const scanHint = document.querySelector("#scan-hint");
+const scanCanvas = document.createElement("canvas");
+const scanContext = scanCanvas.getContext("2d", { willReadFrequently: true });
+const SCAN_PROMPT = "Point your camera at the QR shown in Mimi on another device. It carries no secret.";
+let scanStream = null;
+let scanRaf = 0;
+
+function stopScan() {
+  if (scanRaf) cancelAnimationFrame(scanRaf);
+  scanRaf = 0;
+  if (scanStream) {
+    for (const track of scanStream.getTracks()) track.stop();
+    scanStream = null;
+  }
+  scanVideo.srcObject = null;
+}
+
+async function processScan(text) {
+  try {
+    await saveProfile(extractProfileReference(text));
+    stopScan();
+    if (scanDialog.open) scanDialog.close();
+    profileSummary.textContent = "Profile scanned in";
+    setProfileStatus("Scanned — Mimi will reproduce the same passwords here.", "success");
+    setStatus("Profile scanned. You're ready to go.", "success");
+    if (!profileQr.hidden) refreshQr();
+  } catch (error) {
+    scanHint.textContent = `${error.message}. Keep the QR steady in frame.`;
+    scanHint.dataset.type = "error";
+    scanRaf = requestAnimationFrame(scanLoop);
+  }
+}
+
+function scanLoop() {
+  if (scanVideo.readyState === scanVideo.HAVE_ENOUGH_DATA) {
+    scanCanvas.width = scanVideo.videoWidth;
+    scanCanvas.height = scanVideo.videoHeight;
+    scanContext.drawImage(scanVideo, 0, 0, scanCanvas.width, scanCanvas.height);
+    const image = scanContext.getImageData(0, 0, scanCanvas.width, scanCanvas.height);
+    const found = jsQR(image.data, image.width, image.height, { inversionAttempts: "dontInvert" });
+    if (found && found.data) {
+      processScan(found.data);
+      return;
+    }
+  }
+  scanRaf = requestAnimationFrame(scanLoop);
+}
+
+async function startScan() {
+  scanHint.textContent = SCAN_PROMPT;
+  delete scanHint.dataset.type;
+  if (!navigator.mediaDevices?.getUserMedia) {
+    scanHint.textContent = "This browser can't open the camera. Use Load file or paste instead.";
+    scanHint.dataset.type = "error";
+    return;
+  }
+  try {
+    scanStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+    scanVideo.srcObject = scanStream;
+    await scanVideo.play();
+    scanRaf = requestAnimationFrame(scanLoop);
+  } catch {
+    scanHint.textContent = "Camera permission was declined. Use Load file or paste instead.";
+    scanHint.dataset.type = "error";
+  }
+}
+
+scanButton.addEventListener("click", () => {
+  scanDialog.showModal();
+  startScan();
+});
+document.querySelector("#close-scan").addEventListener("click", () => scanDialog.close());
+scanDialog.addEventListener("close", stopScan);
+scanDialog.addEventListener("click", (event) => {
+  if (event.target === scanDialog) scanDialog.close();
+});
+
 document.querySelector("#toggle-secret").addEventListener("click", () => {
   const showing = secretInput.type === "text";
   secretInput.type = showing ? "password" : "text";
@@ -405,9 +490,43 @@ addEventListener("appinstalled", () => {
   if (installDialog.open) installDialog.close();
 });
 
+const updateBanner = document.querySelector("#update-banner");
+
+function showUpdateBanner(registration) {
+  updateBanner.hidden = false;
+  document.querySelector("#update-now").onclick = () => {
+    if (registration.waiting) registration.waiting.postMessage("SKIP_WAITING");
+  };
+}
+
+document.querySelector("#update-dismiss").addEventListener("click", () => {
+  updateBanner.hidden = true;
+});
+
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./service-worker.js").catch(() => {
+  navigator.serviceWorker.register("./service-worker.js").then((registration) => {
+    // Only prompt when a new worker supersedes one already controlling the page.
+    if (registration.waiting && navigator.serviceWorker.controller) {
+      showUpdateBanner(registration);
+    }
+    registration.addEventListener("updatefound", () => {
+      const installing = registration.installing;
+      if (!installing) return;
+      installing.addEventListener("statechange", () => {
+        if (installing.state === "installed" && navigator.serviceWorker.controller) {
+          showUpdateBanner(registration);
+        }
+      });
+    });
+  }).catch(() => {
     setStatus("Offline installation is unavailable in this browser.", "error");
+  });
+
+  let reloading = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (reloading) return;
+    reloading = true;
+    location.reload();
   });
 }
 

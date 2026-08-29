@@ -71,6 +71,8 @@ core plus assets live in `shared/`, imported by both clients.
 | `extension/test/` | Adapter and manifest (permission/CSP/shortcut) tests. |
 | `docs/visual-identity.md` | Shared design language (palette, type, components, voice) for the PWA and extension. |
 | `.github/workflows/pages.yml` | Read-only CI build and compatibility gate (runs from the repo root). |
+| `.github/workflows/deploy.yml` | Manual-dispatch gh-pages publish; the only `contents: write` workflow. |
+| `docs/testing-and-release.md` | Automated-check commands, deploy/rollback steps, and the manual device checklist. |
 | `password.py` | Separate original CLI retained for existing users; it is not compatible with web V1/V2. |
 
 There is no application backend, API, Vercel configuration, Python web runtime,
@@ -142,8 +144,8 @@ Required release checks:
 
 - All golden vectors and supported-length properties pass.
 - `npm audit` reports no known dependency vulnerabilities.
-- `dist/` contains the manifest, service worker, icon, stylesheet, both word
-  banks, HTML, `.nojekyll`, and bundle.
+- `dist/` contains the manifest, service worker, icon, `tokens.css`, stylesheet,
+  both word banks, HTML, `.nojekyll`, and bundle.
 - The bundle contains no `/api/generate`, Vercel hostname, inline source map,
   third-party request, secret logging, or analytics.
 - A clean browser can install the PWA and generate after going offline.
@@ -152,12 +154,15 @@ Required release checks:
 
 ## GitHub Pages deployment
 
-The workflow triggers on pushes to `main` or `master` and on manual dispatch.
-Repository Settings → Pages uses the root of the `gh-pages` branch. CI uses the
-official checkout and Node actions with read-only repository permission. The
-current release is published manually from the tested `web/dist` artifact.
-Automatic branch publishing is intentionally deferred because it requires a
-persistent `contents: write` workflow permission.
+Two workflows, split by permission. `pages.yml` runs the build and test suite
+read-only on every push to `master`/`main` — it never publishes. `deploy.yml`
+is the only workflow with `contents: write` and is **manual-dispatch only**: run
+"Deploy Mimi to Pages" from the Actions tab and it builds, tests, and
+force-publishes `web/dist` to the `gh-pages` branch. This resolved the earlier
+"grant CI write access?" question — automatic pushes stay read-only, while the
+one-click deploy removes the manual worktree step. Roll back by running the same
+workflow against an earlier tag/commit. Repository Settings → Pages serves the
+root of `gh-pages`. See `docs/testing-and-release.md`.
 
 The compact 2026-08-29 release is live at `https://austin-pan.github.io/mimi/`
 from `gh-pages` commit `3618f00` as app version `1.1.0`. Its HTML, recommended
@@ -236,23 +241,28 @@ that it has.
 - [x] Regenerated the PWA/extension icons to match the plum italic-"m" brand
   mark, and redesigned the profile actions into a grouped, icon-labeled toolbar.
 - [x] Expanded the `words-v2` bank to 15,000 word-like entries (pre-adoption,
-  authorized) and regenerated the golden word vectors.
+  authorized) and regenerated the golden word vectors; later refined the
+  generator's phonotactics for more name/word-like tokens.
+- [x] Folded `shared/styles/tokens.css` into the web build so the PWA and
+  extension consume one token file.
+- [x] Added a service-worker update flow with an in-app "refresh to update"
+  banner; documented rollback in `docs/testing-and-release.md`.
+- [x] Added offline QR *scanning* (bundled jsQR + camera) to import a profile
+  from another device's QR, with a graceful no-camera fallback.
+- [x] Added a manual-dispatch `deploy.yml` (the only `contents: write` workflow)
+  and a manual device/extension test checklist.
 
 ### Next
 
+- [ ] Perform the `docs/testing-and-release.md` manual checklist on real iOS
+  Safari and Android Chrome devices (service worker, install, camera scan,
+  offline) — cannot be proven by Node unit tests.
 - [ ] Extension Phase 4: load-unpacked verification in real Chrome/Edge (popup
   lifecycle, keyboard/AX, zoom, themes), then Firefox packaging via a
   `webextension-polyfill` adapter. Consider a PSL-based registrable-domain
   helper to replace the current `www.`-stripping host heuristic.
-- [ ] Fold `shared/styles/tokens.css` into the web build so the PWA and
-  extension share one token file instead of mirroring values.
-- [ ] Decide whether to grant CI `contents: write` for automatic `gh-pages`
-  publishing or keep the safer manual release step.
-- [ ] Perform clean-install and offline browser testing on iOS Safari and Android
-  Chrome; service-worker behavior cannot be fully proven by Node unit tests.
-- [ ] Add QR *scanning* (camera) to complement QR display, if a suitable
-  same-origin decoder can be bundled without network dependencies.
-- [ ] Add an explicit update-available screen and document rollback.
+- [ ] Bring QR scanning and the shared design tokens to the extension too
+  (options page), reusing the same jsQR path and `tokens.css`.
 - [ ] Design a V3 compatibility-policy model for minimum uppercase, digit,
   special, and distinct-special counts without changing released V2 outputs.
 - [ ] Commission an independent cryptographic review before recommending Mimi

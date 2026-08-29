@@ -1,31 +1,5 @@
-:root {
-  color-scheme: light;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #302a35;
-  background: #f2eee8;
-  --ink: #302a35;
-  --muted: #786f7c;
-  --plum: #5f516e;
-  --plum-dark: #493d58;
-  --lavender: #e8deef;
-  --cream: #fffdf8;
-  --line: #ded7d2;
-  --peach: #f2cbbd;
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  color: #f2ebf2;
-  background: #1d1921;
-  --ink: #f2ebf2;
-  --muted: #b8aebb;
-  --plum: #c2a9d0;
-  --plum-dark: #dfd0e6;
-  --lavender: #3d3345;
-  --cream: #29232d;
-  --line: #4b424f;
-  --peach: #684a45;
-}
+/* Design tokens (palette, type) come from the shared tokens.css, loaded first in
+   index.html and shared with the browser extension. See docs/visual-identity.md. */
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -528,6 +502,84 @@ footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
   background: rgba(61, 51, 69, 0.72);
 }
 [data-theme="dark"] .dialog-note { background: rgba(112, 74, 67, 0.3); color: #ddbeb7; }
+
+.scan-dialog {
+  width: min(460px, calc(100% - 2rem));
+  padding: 1.25rem;
+  border: 1px solid rgba(95, 81, 110, 0.16);
+  border-radius: 24px;
+  background: var(--cream);
+  color: var(--ink);
+  box-shadow: 0 24px 80px rgba(48, 42, 53, 0.28);
+}
+.scan-dialog::backdrop { background: rgba(48, 42, 53, 0.4); backdrop-filter: blur(4px); }
+.scan-viewport {
+  position: relative;
+  margin: 0.9rem 0 0;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #14121a;
+}
+.scan-viewport video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.scan-frame {
+  position: absolute;
+  inset: 16%;
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  border-radius: 14px;
+  box-shadow: 0 0 0 100vmax rgba(20, 18, 26, 0.35);
+}
+#scan-hint[data-type="error"] { background: rgba(190, 103, 103, 0.14); color: #a44747; }
+[data-theme="dark"] #scan-hint[data-type="error"] { color: #ef9999; }
+[data-theme="dark"] .scan-dialog { background: #29232d; border-color: rgba(194, 169, 208, 0.22); }
+[data-theme="dark"] .scan-dialog::backdrop { background: rgba(10, 8, 12, 0.62); }
+
+.update-banner {
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  max-width: calc(100% - 1.5rem);
+  padding: 0.6rem 0.7rem 0.6rem 1rem;
+  transform: translateX(-50%);
+  border: 1px solid rgba(95, 81, 110, 0.18);
+  border-radius: 14px;
+  background: var(--cream);
+  box-shadow: 0 16px 44px rgba(48, 42, 53, 0.24);
+  font-size: 0.8rem;
+}
+.update-banner[hidden] { display: none; }
+.update-text { color: var(--ink); font-weight: 700; }
+.update-refresh {
+  min-height: 34px;
+  padding: 0.4rem 0.9rem;
+  border: 0;
+  border-radius: 9px;
+  background: var(--plum);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+.update-refresh:hover { background: var(--plum-dark); }
+.update-dismiss {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+.update-dismiss:hover { background: var(--lavender); color: var(--plum); }
+[data-theme="dark"] .update-banner { background: #29232d; border-color: rgba(194, 169, 208, 0.22); }
+[data-theme="dark"] .update-refresh { background: #725d7f; }
 
 @media (max-width: 840px) {
   main { width: min(720px, calc(100% - 1.25rem)); }

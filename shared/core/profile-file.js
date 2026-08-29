@@ -28,6 +28,22 @@ export function buildProfileFile(code) {
   };
 }
 
+// Extract a Profile Code from scanned QR text, which may be either the app's
+// import deep link (…#profile=MIMI1-…) or a bare code. Returns the raw candidate
+// string; the caller still validates its checksum with parseProfileCode.
+export function extractProfileReference(text) {
+  if (typeof text !== "string" || !text.trim()) {
+    throw new Error("Nothing was scanned");
+  }
+  const trimmed = text.trim();
+  const hashIndex = trimmed.indexOf("#");
+  if (hashIndex !== -1) {
+    const fragment = new URLSearchParams(trimmed.slice(hashIndex + 1)).get("profile");
+    if (fragment) return fragment.trim();
+  }
+  return trimmed;
+}
+
 export function parseProfileFile(text) {
   if (typeof text !== "string" || !text.trim()) {
     throw new Error("The profile file is empty");

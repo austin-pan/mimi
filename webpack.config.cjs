@@ -15,6 +15,7 @@ module.exports = {
       patterns: [
         { from: "web/public", to: "." },
         { from: "shared/assets", to: "." },
+        { from: "shared/styles/tokens.css", to: "tokens.css" },
       ],
     }),
   ],

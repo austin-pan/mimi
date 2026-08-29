@@ -41,9 +41,12 @@ The app supports:
 - Plain-language strength guidance based on the selected generator and length,
   plus confirmation of the character classes V2 guarantees. Mimi deliberately
   does not score the apparent randomness of an individual output.
-- Public Profile Code transfer by QR code and `.mimi-profile` file, in addition
-  to copy/paste. The QR encodes an auto-import deep link, so scanning it with a
-  phone camera opens Mimi and imports the profile. Neither carries a secret.
+- Public Profile Code transfer by QR code, `.mimi-profile` file, in-app camera
+  QR scanning (bundled, offline), and copy/paste. The QR encodes an auto-import
+  deep link, so scanning it with a phone camera opens Mimi and imports the
+  profile. Nothing transferred carries a secret.
+- An in-app "new version is ready" prompt when an updated service worker is
+  waiting, so updates apply on an explicit refresh rather than silently.
 
 See [the visual identity guide](docs/visual-identity.md) for the shared design
 language, and [the browser extension implementation plan](docs/browser-extension-plan.md)

@@ -9,6 +9,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/mimi.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icons/mimi-192.png">
+  <link rel="stylesheet" href="./tokens.css">
   <link rel="stylesheet" href="./style.css">
   <script src="./main.js" defer></script>
   <title>Mimi — your password companion</title>
@@ -76,6 +77,10 @@
             <button type="button" id="import-file" class="pb">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V9M8 13l4-4 4 4M4 3h16"/></svg>
               <span class="pb-label">Load file</span>
+            </button>
+            <button type="button" id="scan-qr" class="pb">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M3 12h18"/></svg>
+              <span class="pb-label">Scan</span>
             </button>
             <input id="profile-file-input" type="file" accept=".mimi-profile,application/json,text/plain" hidden>
           </div>
@@ -206,6 +211,12 @@
     <footer><span class="footer-brand">Mimi</span> · <span id="app-version">v1.2.0</span> · made to travel lightly</footer>
   </main>
 
+  <div id="update-banner" class="update-banner" role="status" aria-live="polite" hidden>
+    <span class="update-text">A new version of Mimi is ready.</span>
+    <button type="button" id="update-now" class="update-refresh">Refresh</button>
+    <button type="button" id="update-dismiss" class="update-dismiss" aria-label="Dismiss update notice">×</button>
+  </div>
+
   <dialog id="install-dialog" class="install-dialog" aria-labelledby="install-title">
     <div class="dialog-heading">
       <div>
@@ -230,6 +241,21 @@
       </section>
     </div>
     <p class="dialog-note">Moving to a new device? Import your Profile Code there too.</p>
+  </dialog>
+
+  <dialog id="scan-dialog" class="scan-dialog" aria-labelledby="scan-title">
+    <div class="dialog-heading">
+      <div>
+        <span class="eyebrow">Import by camera</span>
+        <h2 id="scan-title">Scan a Mimi QR</h2>
+      </div>
+      <button type="button" id="close-scan" class="dialog-close" aria-label="Close scanner">×</button>
+    </div>
+    <div class="scan-viewport">
+      <video id="scan-video" playsinline muted></video>
+      <div class="scan-frame" aria-hidden="true"></div>
+    </div>
+    <p id="scan-hint" class="dialog-note">Point your camera at the QR shown in Mimi on another device. It carries no secret.</p>
   </dialog>
 </body>
 </html>

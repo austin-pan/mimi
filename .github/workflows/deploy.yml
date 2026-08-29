@@ -1,0 +1,48 @@
+name: Deploy Mimi to Pages
+
+# Human-triggered only. The test workflow (pages.yml) stays read-only; this is
+# the one place that holds contents: write, and it never runs automatically on a
+# push. Run it from the Actions tab, optionally choosing an earlier ref to roll
+# back — it rebuilds that source and republishes web/dist to gh-pages.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Build offline PWA
+        run: npm run build
+      - name: Run compatibility and security-boundary tests
+        run: npm test
+      - name: Publish web/dist to gh-pages
+        run: |
+          set -euo pipefail
+          cd web/dist
+          touch .nojekyll
+          git init -q
+          git checkout -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Deploy ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

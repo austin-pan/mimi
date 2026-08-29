@@ -46,7 +46,10 @@ hardware identifiers.
 | `web/src/core/derive-v2.js` | Argon2id V2 input encoding, deterministic byte expansion, and exact-length word/character formatters. |
 | `web/src/core/legacy.js` | Frozen V1 web-generator compatibility implementation. |
 | `web/src/core/profile.js` | Random 128-bit profile creation, Base32 representation, and checksum validation. |
+| `web/src/core/qr.js` | Renders the public Profile Code (as an auto-import deep link) to a scannable dark-on-light SVG QR. |
+| `web/src/core/profile-file.js` | Builds and parses the `.mimi-profile` transfer file, which carries only the public code. |
 | `web/src/core/generation-settings.js` | Style-specific recommended lengths and descriptive strength guidance shared by future clients. |
+| `docs/visual-identity.md` | Shared design language (palette, type, components, voice) for the PWA and extension. |
 | `web/public/word-bank-v1.txt` | Frozen original list; changing it breaks V1 outputs. |
 | `web/public/word-bank-v2.txt` | V2 list, including added pronouns; immutable after release. |
 | `web/public/service-worker.js` | Same-origin offline shell caching. Bump its cache name for cache-layout changes. |
@@ -185,17 +188,19 @@ that it has.
   concise design-based strength guidance, and golden outputs for both defaults.
 - [x] Added a detailed Manifest V3 browser extension plan that mirrors PWA
   functionality and extracts one shared derivation/settings core.
+- [x] Added QR-code and `.mimi-profile` file transfer of the public Profile Code
+  (no secret), with the QR encoding the app's own auto-import deep link.
+- [x] Replaced the light/dark toggle emoji with inline SVG sun/moon icons.
+- [x] Documented the shared visual identity in `docs/visual-identity.md`.
 
 ### Next
 
-- [ ] Deploy `1.2.0` to `gh-pages` (style-specific strength guidance is built
-  and tested on `master` but not yet live).
 - [ ] Decide whether to grant CI `contents: write` for automatic `gh-pages`
   publishing or keep the safer manual release step.
 - [ ] Perform clean-install and offline browser testing on iOS Safari and Android
   Chrome; service-worker behavior cannot be fully proven by Node unit tests.
-- [ ] Add QR display/scanning and `.mimi-profile` import/export without adding
-  network dependencies or encoding the master secret.
+- [ ] Add QR *scanning* (camera) to complement QR display, if a suitable
+  same-origin decoder can be bundled without network dependencies.
 - [ ] Add an explicit update-available screen and document rollback.
 - [ ] Design a V3 compatibility-policy model for minimum uppercase, digit,
   special, and distinct-special counts without changing released V2 outputs.

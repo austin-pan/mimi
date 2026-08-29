@@ -52,7 +52,7 @@ main {
   overflow: hidden;
 }
 .brand-letter { transform: translate(-0.08rem, 0.08rem); }
-.brand-star { position: absolute; top: 11px; right: 9px; color: #d8c9e6; font: 700 0.52rem/1 sans-serif; }
+.brand-star { position: absolute; top: 4px; right: 5px; color: #d8c9e6; font: 700 0.52rem/1 sans-serif; }
 
 h1, h2, p { margin-top: 0; }
 h1 { margin-bottom: 0.05rem; font: 700 2rem/1 Georgia, serif; letter-spacing: -0.04em; }

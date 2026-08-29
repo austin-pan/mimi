@@ -1,0 +1,24 @@
+{
+  "name": "mimi",
+  "version": "1.0.0",
+  "description": "Offline-first deterministic password derivation PWA",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "build": "webpack --config webpack.config.cjs",
+    "watch": "webpack --config webpack.config.cjs --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "copy-webpack-plugin": "^14.0.0",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "hash-wasm": "^4.12.0",
+    "seedrandom": "^3.0.5"
+  }
+}

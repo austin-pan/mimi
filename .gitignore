@@ -1,5 +1,14 @@
 .DS_Store
 *.iml
+.claude
+.codex
 .idea
 .vscode
 node_modules
+web/dist
+.venv
+__pycache__
+*.pyc
+.vercel
+.vercel_python_packages
+.env*

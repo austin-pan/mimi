@@ -13,6 +13,12 @@ online availability dependency.
 GitHub Pages serves static files only. All sensitive computation occurs locally.
 After a trusted release is installed, generation works without a network.
 
+The interface should feel like a calm utility rather than a security dashboard.
+Keep the everyday path compact: collapse profile transfer once configured, place
+secondary compatibility/rotation settings under “More options,” and use a
+side-by-side generator/result workspace on wider screens. Phone layouts may keep
+short related fields paired until the screen is too narrow for comfortable use.
+
 ## User model
 
 Each user has:
@@ -149,6 +155,8 @@ that it has.
 - [x] Preserved V1 algorithms and word bank with golden vectors.
 - [x] Added offline PWA shell and GitHub Pages deployment workflow.
 - [x] Published and smoke-tested the first backend-free GitHub Pages release.
+- [x] Reworked the PWA into a warmer, compact design with collapsible profile and
+  advanced controls, a two-column desktop workspace, and reduced mobile height.
 
 ### Next
 

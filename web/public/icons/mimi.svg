@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Mimi">
-  <rect width="512" height="512" rx="112" fill="#286947"/>
-  <path d="M126 364V174c0-22 18-40 40-40 14 0 27 7 34 19l56 88 56-88a40 40 0 0 1 74 21v190h-61V250l-42 66h-54l-42-66v114z" fill="#f4f0e8"/>
+  <rect width="512" height="512" rx="112" fill="#5f516e"/>
+  <circle cx="406" cy="105" r="38" fill="#f2cbbd"/>
+  <path d="M126 364V174c0-22 18-40 40-40 14 0 27 7 34 19l56 88 56-88a40 40 0 0 1 74 21v190h-61V250l-42 66h-54l-42-66v114z" fill="#fffdf8"/>
 </svg>

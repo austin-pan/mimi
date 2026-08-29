@@ -3,105 +3,147 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#286947">
-  <meta name="description" content="Derive portable passwords locally and offline.">
+  <meta name="theme-color" content="#5f516e">
+  <meta name="description" content="Create memorable passwords wherever you are.">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/mimi.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icons/mimi-192.png">
   <link rel="stylesheet" href="./style.css">
   <script src="./main.js" defer></script>
-  <title>Mimi — local password derivation</title>
+  <title>Mimi — your password companion</title>
 </head>
 <body>
   <main>
-    <header>
-      <span class="privacy">Local-only · <span id="network-state">Checking network</span></span>
-      <h1>Mimi</h1>
-      <p class="lede">Derive the same strong password wherever you are. Your master secret and generated passwords never leave this device.</p>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">m</div>
+        <div>
+          <h1>Mimi</h1>
+          <p>A little password magic, wherever you sign in.</p>
+        </div>
+      </div>
+      <div class="presence"><span></span><span id="network-state">Checking</span></div>
     </header>
 
-    <section class="card" aria-labelledby="profile-title">
-      <h2 id="profile-title">Portable profile</h2>
-      <p class="hint">This public recovery code makes your passwords unique. Back it up; it contains no master secret.</p>
-      <label>
-        Mimi Profile Code
-        <input id="profile-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="MIMI1-…">
-      </label>
-      <div class="actions">
-        <button type="button" id="create-profile">Create new profile</button>
-        <button type="button" id="save-profile" class="secondary">Import / save</button>
-        <button type="button" id="copy-profile" class="secondary">Copy code</button>
+    <details id="profile-panel" class="profile-panel">
+      <summary>
+        <span class="profile-icon" aria-hidden="true">✦</span>
+        <span class="profile-heading">
+          <strong>Your Mimi profile</strong>
+          <small id="profile-summary">Set up once, use anywhere</small>
+        </span>
+        <span class="disclosure" aria-hidden="true">⌄</span>
+      </summary>
+      <div class="profile-content">
+        <label>
+          Profile code
+          <input id="profile-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="MIMI1-…">
+        </label>
+        <div class="compact-actions">
+          <button type="button" id="create-profile">Create</button>
+          <button type="button" id="save-profile" class="quiet">Import</button>
+          <button type="button" id="copy-profile" class="quiet">Copy</button>
+        </div>
+        <p class="microcopy">Keep this code somewhere handy so Mimi feels the same on every device.</p>
       </div>
-    </section>
+    </details>
 
-    <form id="generator-form" class="card">
-      <div class="grid">
-        <label>
-          Credential type
-          <select name="kind">
-            <option value="website">Website</option>
-            <option value="device-login">Laptop / device login</option>
-            <option value="wifi">Wi-Fi</option>
-            <option value="other">Other</option>
-          </select>
-        </label>
-        <label>
-          Application or device
-          <input name="application" required autocomplete="off" autocapitalize="none" placeholder="example.com or Austin MacBook">
-        </label>
-        <label>
-          Username
-          <input name="username" required autocomplete="off" autocapitalize="none">
-        </label>
-        <label>
-          Credential version
-          <input name="slot" type="number" min="1" max="9999" value="1" required>
-          <span class="hint">Increment this when rotating one password.</span>
-        </label>
-        <label class="full">
-          Master secret
-          <span class="inline">
-            <input id="secret" name="secret" type="password" required autocomplete="off" autocapitalize="none">
-            <button id="toggle-secret" type="button" class="secondary">Show</button>
-          </span>
-        </label>
-        <label>
-          Password style
-          <select id="style" name="style">
-            <option value="words-v2">Words · argon2id-v2</option>
-            <option value="characters-v2">Characters · argon2id-v2</option>
-            <option value="words-v1">Legacy words-v1</option>
-            <option value="characters-v1">Legacy characters-v1</option>
-          </select>
-        </label>
-        <label id="separator-row">
-          Word separator
-          <select name="separator">
-            <option value="-">Hyphen (-)</option>
-            <option value=".">Period (.)</option>
-          </select>
-        </label>
-        <label class="full">
-          Length: <output id="length-value">32</output>
-          <input id="length" name="length" type="range" min="12" max="64" value="32">
-          <span class="hint">The result is exactly this many characters.</span>
-        </label>
-      </div>
-      <p id="legacy-warning" class="warning" hidden>Legacy mode preserves old Mimi outputs and does not use your profile or the modern Argon2id construction.</p>
-      <div class="actions"><button id="generate" type="submit">Generate locally</button></div>
-    </form>
+    <div class="workspace">
+      <form id="generator-form" class="panel generator-panel">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">New password</span>
+            <h2>What are we signing into?</h2>
+          </div>
+          <span class="sparkle" aria-hidden="true">✦</span>
+        </div>
 
-    <section class="card" aria-live="polite">
-      <h2>Generated password</h2>
-      <div class="result-row">
-        <pre id="password-result">No password generated</pre>
-        <button id="copy-password" type="button" class="secondary">Copy</button>
-      </div>
-      <p id="status">Ready. For an offline laptop login, open the installed app on your phone and type the result manually.</p>
-    </section>
+        <div class="form-grid">
+          <label>
+            App or device
+            <input name="application" required autocomplete="off" autocapitalize="none" placeholder="example.com or My MacBook">
+          </label>
+          <label>
+            Username
+            <input name="username" required autocomplete="off" autocapitalize="none" placeholder="name@example.com">
+          </label>
+          <label class="full">
+            Your secret
+            <span class="input-with-action">
+              <input id="secret" name="secret" type="password" required autocomplete="off" autocapitalize="none" placeholder="Your memorable secret">
+              <button id="toggle-secret" type="button" class="text-button">Show</button>
+            </span>
+          </label>
+          <label>
+            Style
+            <select id="style" name="style">
+              <optgroup label="Recommended">
+                <option value="words-v2">Friendly words</option>
+                <option value="characters-v2">Compact characters</option>
+              </optgroup>
+              <optgroup label="Compatibility">
+                <option value="words-v1">Legacy words-v1</option>
+                <option value="characters-v1">Legacy characters-v1</option>
+              </optgroup>
+            </select>
+          </label>
+          <label id="separator-row">
+            Separator
+            <select name="separator">
+              <option value="-">Hyphen —</option>
+              <option value=".">Period ·</option>
+            </select>
+          </label>
+          <label class="full length-control">
+            <span>Password length <output id="length-value">32</output></span>
+            <input id="length" name="length" type="range" min="12" max="64" value="32">
+          </label>
+        </div>
 
-    <footer>Mimi never stores your master secret. Losing your profile code changes every argon2id-v2 password, so keep a recovery copy.</footer>
+        <details class="more-options">
+          <summary>More options</summary>
+          <div class="form-grid option-grid">
+            <label>
+              Use for
+              <select name="kind">
+                <option value="website">Website</option>
+                <option value="device-login">Laptop / device login</option>
+                <option value="wifi">Wi-Fi</option>
+                <option value="other">Something else</option>
+              </select>
+            </label>
+            <label>
+              Version
+              <input name="slot" type="number" min="1" max="9999" value="1" required>
+            </label>
+          </div>
+        </details>
+
+        <p id="legacy-warning" class="notice" hidden>Compatibility mode recreates passwords from an earlier Mimi version.</p>
+        <button id="generate" class="generate-button" type="submit">
+          <span>Make my password</span><span aria-hidden="true">→</span>
+        </button>
+      </form>
+
+      <aside class="panel result-panel" aria-live="polite">
+        <div class="result-heading">
+          <div>
+            <span class="eyebrow">Ready when you are</span>
+            <h2>Your password</h2>
+          </div>
+          <button id="copy-password" type="button" class="copy-button">Copy</button>
+        </div>
+        <pre id="password-result">Your password will appear here</pre>
+        <p id="status">Fill in the details, then let Mimi do the rest.</p>
+        <div class="soft-tip">
+          <span aria-hidden="true">☼</span>
+          <p>On another device? Open your saved Mimi app and type the result across.</p>
+        </div>
+      </aside>
+    </div>
+
+    <footer><span>Mimi</span> · made to travel lightly</footer>
   </main>
 </body>
 </html>

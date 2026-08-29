@@ -1,13 +1,13 @@
 {
   "name": "Mimi — local password derivation",
   "short_name": "Mimi",
-  "description": "Derive portable passwords locally and offline.",
+  "description": "Create memorable passwords wherever you are.",
   "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f0e8",
-  "theme_color": "#286947",
+  "background_color": "#f2eee8",
+  "theme_color": "#5f516e",
   "icons": [
     {
       "src": "./icons/mimi-192.png",

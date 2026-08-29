@@ -15,6 +15,8 @@ import { loadWordBank } from "./core/word-bank.js";
 const PROFILE_STORAGE_KEY = "mimi.profile.v1";
 const form = document.querySelector("#generator-form");
 const profileInput = document.querySelector("#profile-code");
+const profilePanel = document.querySelector("#profile-panel");
+const profileSummary = document.querySelector("#profile-summary");
 const secretInput = document.querySelector("#secret");
 const result = document.querySelector("#password-result");
 const status = document.querySelector("#status");
@@ -32,20 +34,24 @@ function setStatus(message, type = "info") {
   status.dataset.type = type;
 }
 
-async function saveProfile(code) {
+async function saveProfile(code, { collapse = false } = {}) {
   const profile = await parseProfileCode(code);
   localStorage.setItem(PROFILE_STORAGE_KEY, profile.code);
   profileInput.value = profile.code;
-  setStatus("Profile ready on this device.", "success");
+  profileSummary.textContent = "Ready on this device";
+  if (collapse) profilePanel.open = false;
   return profile;
 }
 
 async function initializeProfile() {
   const fragment = new URLSearchParams(location.hash.slice(1)).get("profile");
   const saved = fragment || localStorage.getItem(PROFILE_STORAGE_KEY);
-  if (!saved) return;
+  if (!saved) {
+    profilePanel.open = true;
+    return;
+  }
   try {
-    await saveProfile(saved);
+    await saveProfile(saved, { collapse: true });
     if (fragment) history.replaceState(null, "", location.pathname + location.search);
   } catch (error) {
     localStorage.removeItem(PROFILE_STORAGE_KEY);
@@ -57,12 +63,15 @@ document.querySelector("#create-profile").addEventListener("click", async () => 
   const profile = await createProfile();
   localStorage.setItem(PROFILE_STORAGE_KEY, profile.code);
   profileInput.value = profile.code;
-  setStatus("New profile created. Back up this public code before relying on Mimi.", "success");
+  profilePanel.open = true;
+  profileSummary.textContent = "New profile — keep a copy";
+  setStatus("Your new profile is ready.", "success");
 });
 
 document.querySelector("#save-profile").addEventListener("click", async () => {
   try {
-    await saveProfile(profileInput.value);
+    await saveProfile(profileInput.value, { collapse: true });
+    setStatus("Profile imported. You're ready to go.", "success");
   } catch (error) {
     setStatus(error.message, "error");
   }
@@ -72,7 +81,7 @@ document.querySelector("#copy-profile").addEventListener("click", async () => {
   try {
     const profile = await parseProfileCode(profileInput.value);
     await navigator.clipboard.writeText(profile.code);
-    setStatus("Public profile code copied.", "success");
+    setStatus("Profile code copied.", "success");
   } catch (error) {
     setStatus(error.message, "error");
   }
@@ -87,7 +96,7 @@ document.querySelector("#toggle-secret").addEventListener("click", () => {
 document.querySelector("#copy-password").addEventListener("click", async () => {
   if (!activePassword) return;
   await navigator.clipboard.writeText(activePassword);
-  setStatus("Password copied. Clear your clipboard after use.", "success");
+  setStatus("Copied — ready to paste.", "success");
 });
 
 lengthInput.addEventListener("input", () => {
@@ -104,8 +113,8 @@ form.addEventListener("submit", async (event) => {
   event.preventDefault();
   generateButton.disabled = true;
   activePassword = "";
-  result.textContent = "Deriving…";
-  setStatus("Argon2id intentionally takes a moment on this device.");
+  result.textContent = "Making something lovely…";
+  setStatus("Mixing your details into something one-of-a-kind…");
 
   try {
     const data = new FormData(form);
@@ -128,7 +137,7 @@ form.addEventListener("submit", async (event) => {
         ? generateWordsV1(seed, length, await loadWordBank("v1"))
         : generateCharactersV1(seed, length);
     } else {
-      const profile = await saveProfile(profileInput.value);
+      const profile = await saveProfile(profileInput.value, { collapse: true });
       const input = { ...baseInput, profileSalt: profile.profileSalt };
       activePassword = style === "words-v2"
         ? await generateWordsV2(input, await loadWordBank("v2"))
@@ -136,10 +145,11 @@ form.addEventListener("submit", async (event) => {
     }
 
     result.textContent = activePassword;
-    setStatus(`Generated locally. Exact length: ${activePassword.length}.`, "success");
+    setStatus(`All set · ${activePassword.length} characters`, "success");
   } catch (error) {
     result.textContent = "No password generated";
     setStatus(error.message, "error");
+    if (/profile/i.test(error.message)) profilePanel.open = true;
   } finally {
     secretInput.value = "";
     generateButton.disabled = false;

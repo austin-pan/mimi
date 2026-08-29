@@ -10,6 +10,8 @@ import {
   legacySeed,
 } from "./core/legacy.js";
 import { createProfile, parseProfileCode } from "./core/profile.js";
+import { profileQrSvg } from "./core/qr.js";
+import { buildProfileFile, parseProfileFile } from "./core/profile-file.js";
 import { loadWordBank } from "./core/word-bank.js";
 import {
   getRecommendedLength,
@@ -26,6 +28,12 @@ const profilePanel = document.querySelector("#profile-panel");
 const profileSummary = document.querySelector("#profile-summary");
 const profileStatus = document.querySelector("#profile-status");
 const importProfileButton = document.querySelector("#save-profile");
+const showQrButton = document.querySelector("#show-qr");
+const profileQr = document.querySelector("#profile-qr");
+const profileQrCanvas = document.querySelector("#profile-qr-canvas");
+const exportProfileButton = document.querySelector("#export-profile");
+const importFileButton = document.querySelector("#import-file");
+const profileFileInput = document.querySelector("#profile-file-input");
 const secretInput = document.querySelector("#secret");
 const result = document.querySelector("#password-result");
 const status = document.querySelector("#status");
@@ -69,7 +77,6 @@ let explicitTheme = ["light", "dark"].includes(localStorage.getItem(THEME_STORAG
 
 function applyTheme(theme, { persist = false } = {}) {
   document.documentElement.dataset.theme = theme;
-  themeButton.querySelector("span").textContent = theme === "dark" ? "☀" : "☾";
   const nextTheme = theme === "dark" ? "light" : "dark";
   const label = `Use ${nextTheme} mode`;
   themeButton.setAttribute("aria-label", label);
@@ -100,6 +107,7 @@ async function saveProfile(code, { collapse = false } = {}) {
   profileInput.value = profile.code;
   profileSummary.textContent = "Ready on this device";
   if (collapse) profilePanel.open = false;
+  if (!profileQr.hidden) refreshQr();
   return profile;
 }
 
@@ -127,6 +135,7 @@ document.querySelector("#create-profile").addEventListener("click", async () => 
   profileInput.value = profile.code;
   profilePanel.open = true;
   profileSummary.textContent = "New profile — keep a copy";
+  if (!profileQr.hidden) refreshQr();
   setProfileStatus("Created here. Copy this code before setting up another device.", "success");
   setStatus("Your new profile is ready.", "success");
 });
@@ -169,6 +178,81 @@ document.querySelector("#copy-profile").addEventListener("click", async () => {
 
 profileInput.addEventListener("input", () => {
   setProfileStatus("Choose Import after pasting the complete Profile Code.");
+  if (!profileQr.hidden) refreshQr();
+});
+
+function profileImportUrl(code) {
+  return `${location.origin}${location.pathname}#profile=${encodeURIComponent(code)}`;
+}
+
+async function refreshQr() {
+  try {
+    const profile = await parseProfileCode(profileInput.value);
+    profileQrCanvas.innerHTML = profileQrSvg(profileImportUrl(profile.code));
+    return true;
+  } catch {
+    profileQrCanvas.innerHTML = "";
+    return false;
+  }
+}
+
+showQrButton.addEventListener("click", async () => {
+  if (profileQr.hidden) {
+    if (!(await refreshQr())) {
+      setProfileStatus("Create or import a valid Profile Code before showing its QR.", "error");
+      return;
+    }
+    profileQr.hidden = false;
+    showQrButton.textContent = "Hide QR";
+    showQrButton.setAttribute("aria-expanded", "true");
+  } else {
+    profileQr.hidden = true;
+    profileQrCanvas.innerHTML = "";
+    showQrButton.textContent = "Show QR";
+    showQrButton.setAttribute("aria-expanded", "false");
+  }
+});
+
+exportProfileButton.addEventListener("click", async () => {
+  try {
+    const profile = await parseProfileCode(profileInput.value);
+    const file = buildProfileFile(profile.code);
+    const blob = new Blob([file.contents], { type: file.mime });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = file.filename;
+    document.body.append(anchor);
+    anchor.click();
+    anchor.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+    setProfileStatus(`Saved ${file.filename}. Open it on another device to import.`, "success");
+    setStatus("Profile file saved.", "success");
+  } catch (error) {
+    setProfileStatus(error.message, "error");
+    setStatus(error.message, "error");
+  }
+});
+
+importFileButton.addEventListener("click", () => profileFileInput.click());
+
+profileFileInput.addEventListener("change", async () => {
+  const file = profileFileInput.files?.[0];
+  if (!file) return;
+  try {
+    const code = parseProfileFile(await file.text());
+    await saveProfile(code);
+    profileInput.value = code;
+    profileSummary.textContent = "Profile loaded from file";
+    setProfileStatus("Loaded from file — Mimi will reproduce the same passwords here.", "success");
+    setStatus("Profile loaded from file. You're ready to go.", "success");
+    if (!profileQr.hidden) refreshQr();
+  } catch (error) {
+    setProfileStatus(error.message, "error");
+    setStatus(error.message, "error");
+  } finally {
+    profileFileInput.value = "";
+  }
 });
 
 document.querySelector("#toggle-secret").addEventListener("click", () => {

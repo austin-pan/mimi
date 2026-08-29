@@ -110,6 +110,10 @@ h1 { margin-bottom: 0.05rem; font: 700 2rem/1 Georgia, serif; letter-spacing: -0
   font-size: 1rem;
 }
 .theme-button:hover { background: var(--lavender); }
+.theme-button svg { display: block; }
+.theme-button .icon-sun { display: none; }
+:root[data-theme="dark"] .theme-button .icon-moon { display: none; }
+:root[data-theme="dark"] .theme-button .icon-sun { display: block; }
 
 .presence {
   display: flex;
@@ -295,6 +299,36 @@ input[type="range"] { min-height: 24px; padding: 0; accent-color: var(--plum); }
 }
 .compact-actions .quiet, .copy-button { background: transparent; color: var(--plum); }
 
+.transfer-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; grid-column: 1 / -1; }
+.transfer-button {
+  min-height: 34px;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 253, 248, 0.7);
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 750;
+}
+.transfer-button:hover { border-color: #9b88ac; color: var(--plum); background: var(--lavender); }
+.profile-qr {
+  display: grid;
+  grid-column: 1 / -1;
+  justify-items: center;
+  gap: 0.6rem;
+  margin: 0.2rem 0 0;
+}
+.profile-qr-canvas {
+  width: min(220px, 62vw);
+  padding: 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(65, 53, 73, 0.1);
+}
+.profile-qr-canvas svg { display: block; width: 100%; height: auto; }
+.profile-qr figcaption { max-width: 32ch; color: var(--muted); font-size: 0.72rem; line-height: 1.45; text-align: center; }
+
 .notice {
   margin: 0.7rem 0 0;
   padding: 0.55rem 0.7rem;
@@ -448,6 +482,8 @@ footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
 [data-theme="dark"] label { color: #c7bdc9; }
 [data-theme="dark"] input,
 [data-theme="dark"] select { background: #211c25; color: var(--ink); }
+[data-theme="dark"] .transfer-button { background: rgba(41, 35, 45, 0.7); border-color: rgba(194, 169, 208, 0.2); }
+[data-theme="dark"] .transfer-button:hover { border-color: #8c729b; color: var(--plum-dark); background: rgba(61, 51, 69, 0.72); }
 [data-theme="dark"] .length-settings legend { color: #c7bdc9; }
 [data-theme="dark"] .length-modes label { background: #211c25; }
 [data-theme="dark"] .length-modes label:has(input:checked) { background: rgba(61, 51, 69, 0.72); }

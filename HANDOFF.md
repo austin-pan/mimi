@@ -177,13 +177,15 @@ generation, responsive layout, and zero-console-error browser smoke test were
 verified.
 
 App version `1.2.0` is live at `https://austin-pan.github.io/mimi/`, published by
-the `deploy.yml` workflow (gh-pages commit `6e3c979`, source `ec78381`). This
+the `deploy.yml` workflow (gh-pages commit `70db343`, source `d094ac9`). This
 build adds style-specific strength guidance, QR-code / `.mimi-profile` / paste
 transfer of the public Profile Code, inline SVG theme icons, brand-matched app
 icons, a redesigned profile toolbar, the refined 15,000-entry `words-v2` bank,
-shared `tokens.css`, and an update-available prompt. Its build, 29-test suite,
-and a zero-console-error Chromium smoke test were verified. The service-worker
-cache is `mimi-pwa-2026-08-29-v9`. `master` is at the same source and green.
+shared `tokens.css`, an update-available prompt, a minimized dependency surface
+(vendored `seedrandom`, no `jsqr`), and a tightened CSP. Its build, 27-test
+suite, and a zero-console-error Chromium smoke test were verified. The
+service-worker cache is `mimi-pwa-2026-08-29-v10`. `master` is at the same
+source and green.
 
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, pin each action to a reviewed commit SHA,

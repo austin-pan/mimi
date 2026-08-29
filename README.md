@@ -38,10 +38,11 @@ The app supports:
 
 ## GitHub Pages
 
-`.github/workflows/pages.yml` builds, tests, and uploads `web/dist` with the
-official GitHub Pages Actions. In repository **Settings → Pages**, choose
-**GitHub Actions** as the source. Push to `main` or `master`, or run the workflow
-manually.
+`.github/workflows/pages.yml` runs a read-only build and compatibility gate on
+pushes. The current site is published from the root of the existing `gh-pages`
+branch. Build `web/dist`, replace that branch's contents, and push it only after
+the checks pass. Automatic branch publishing would require granting the workflow
+`contents: write`; that permission is intentionally not enabled yet.
 
 The PWA uses only relative URLs, so it works both at a project path such as
 `https://austin-pan.github.io/mimi/` and at a custom-domain root.

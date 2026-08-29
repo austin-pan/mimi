@@ -45,7 +45,7 @@ hardware identifiers.
 | `web/public/service-worker.js` | Same-origin offline shell caching. Bump its cache name for cache-layout changes. |
 | `web/public/manifest.webmanifest` | Relative-scope PWA manifest compatible with GitHub project Pages and custom domains. |
 | `web/test/` | Golden vectors, property/boundary tests, profile tests, and build-boundary checks. |
-| `.github/workflows/pages.yml` | Builds, tests, uploads, and deploys `web/dist` to GitHub Pages. |
+| `.github/workflows/pages.yml` | Read-only CI build and compatibility gate. |
 | `password.py` | Separate original CLI retained for existing users; it is not compatible with web V1/V2. |
 
 There is no application backend, API, Vercel configuration, Python web runtime,
@@ -104,9 +104,11 @@ Required release checks:
 ## GitHub Pages deployment
 
 The workflow triggers on pushes to `main` or `master` and on manual dispatch.
-Repository Settings → Pages must use **GitHub Actions** as the publishing source.
-The workflow uses official checkout, Node, configure-pages,
-upload-pages-artifact, and deploy-pages actions with minimal job permissions.
+Repository Settings → Pages uses the root of the `gh-pages` branch. CI uses the
+official checkout and Node actions with read-only repository permission. The
+current release is published manually from the tested `web/dist` artifact.
+Automatic branch publishing is intentionally deferred because it requires a
+persistent `contents: write` workflow permission.
 
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, pin each action to a reviewed commit SHA,
@@ -145,7 +147,8 @@ that it has.
 
 ### Next
 
-- [ ] Enable GitHub Actions as the Pages source and verify the first public URL.
+- [ ] Decide whether to grant CI `contents: write` for automatic `gh-pages`
+  publishing or keep the safer manual release step.
 - [ ] Perform clean-install and offline browser testing on iOS Safari and Android
   Chrome; service-worker behavior cannot be fully proven by Node unit tests.
 - [ ] Add QR display/scanning and `.mimi-profile` import/export without adding

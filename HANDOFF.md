@@ -308,6 +308,14 @@ labels keep their smaller size. CSS-only; service-worker cache advanced to v18.
 The extension (separate CSS, desktop-only) is unaffected. Verified: all form
 controls compute to 16px and the compact mobile layout still holds.
 
+App version `1.3.8` (in progress, PWA only). Re-flows the mobile form so the
+larger 16px fields aren't cramped: on phones (≤560px) App/Username and the
+recipe fields now stack full width instead of pairing into ~155px columns, and
+the "Password version" constraint widened from 8.5rem to 9.5rem so its label no
+longer wraps (which had dropped its input out of alignment with the separator).
+Desktop keeps the paired two-column layout. CSS-only; service-worker cache
+advanced to v19. Verified on mobile (375px) and desktop in a browser.
+
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, enable branch protection, require review
 for workflow/core changes, and protect the GitHub account with passkeys or

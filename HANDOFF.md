@@ -299,6 +299,15 @@ moves off the tight corner to the icon's inset position and takes the blush tone
 (`#e7b4ae`) instead of lavender. CSS-only; service-worker cache advanced to v17.
 The extension stays at 1.3.5 (unaffected). Verified in a browser.
 
+App version `1.3.7` (in progress, PWA only). Stops iOS Safari from auto-zooming
+into a form field on focus (and never zooming back out, so the generated
+password stayed off-screen): form controls inherited the small label text
+(~12px) via `font: inherit`, and iOS zooms any field under 16px. `input, select`
+now set an explicit `font-size: 16px`, which suppresses the zoom entirely while
+labels keep their smaller size. CSS-only; service-worker cache advanced to v18.
+The extension (separate CSS, desktop-only) is unaffected. Verified: all form
+controls compute to 16px and the compact mobile layout still holds.
+
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, enable branch protection, require review
 for workflow/core changes, and protect the GitHub account with passkeys or

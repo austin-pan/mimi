@@ -293,6 +293,12 @@ tests pass; tooltip dismissal, the reveal animation/scroll/focus, and the
 versioned built manifest were verified in a browser. PNGs were regenerated with
 `rsvg-convert` (librsvg) from the same brand SVG as `scripts/make-icons.mjs`.
 
+App version `1.3.6` (in progress, PWA only). Brings the in-page top-left header
+brand mark (`.brand-star` in `style.css`) in line with the app icon: the spark
+moves off the tight corner to the icon's inset position and takes the blush tone
+(`#e7b4ae`) instead of lavender. CSS-only; service-worker cache advanced to v17.
+The extension stays at 1.3.5 (unaffected). Verified in a browser.
+
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, enable branch protection, require review
 for workflow/core changes, and protect the GitHub account with passkeys or

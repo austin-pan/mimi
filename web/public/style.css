@@ -203,12 +203,12 @@ h2 { margin-bottom: 0; font: 700 1.45rem/1.15 Georgia, serif; letter-spacing: -0
   gap: 0.78rem;
   margin-top: 1rem;
 }
-.recipe-row { display: grid; grid-template-columns: 1fr 9.5rem; gap: 0.78rem; align-items: end; }
+.recipe-row { display: grid; grid-template-columns: 1fr 7rem; gap: 0.78rem; align-items: end; }
 .recipe-row .style-field { grid-column: 1 / -1; }
-/* 9.5rem keeps "Password version" on a single line (8.5rem wrapped it, which
-   dropped its input out of alignment with the separator beside it) and caps the
-   field when the separator is hidden so it doesn't stretch full width. */
-.recipe-row .version-field { max-width: 9.5rem; }
+/* Separator (1fr) and the compact Version field share the row at every width.
+   The cap keeps Version from stretching full width when the separator is hidden
+   (character styles) so it stays a small, deliberate numeric field. */
+.recipe-row .version-field { max-width: 7rem; }
 .full { grid-column: 1 / -1; }
 label { display: grid; gap: 0.32rem; color: #5d5561; font-size: 0.76rem; font-weight: 750; }
 .label-line { display: flex; align-items: center; gap: 0.3rem; }
@@ -688,10 +688,11 @@ footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
   .primary-group:has(#save-profile[hidden]) #create-profile { grid-column: 1 / -1; }
   .pb { justify-content: center; }
   .microcopy { grid-column: auto; }
-  /* On phones the 16px field text needs the full width: stack App/Username and
-     the recipe fields instead of pairing them into cramped columns. */
+  /* On phones the 16px field text needs the full width: stack App/Username
+     instead of pairing them into cramped columns. Separator + Version still
+     share their row — Version is compact enough to fit. */
   .form-grid { grid-template-columns: 1fr; gap: 0.65rem; }
-  .recipe-row { grid-template-columns: 1fr; gap: 0.65rem; }
+  .recipe-row { gap: 0.65rem; }
   .full { grid-column: 1 / -1; }
   .generator-panel, .result-panel { padding: 1rem; border-radius: 20px; }
   .result-panel { order: 2; }

@@ -316,6 +316,13 @@ longer wraps (which had dropped its input out of alignment with the separator).
 Desktop keeps the paired two-column layout. CSS-only; service-worker cache
 advanced to v19. Verified on mobile (375px) and desktop in a browser.
 
+App version `1.3.9` (in progress, PWA only). Renames the rotation field from
+"Password version" to "Version" and re-pairs Separator + Version onto one row at
+every width (the compact field no longer stacks alone with dead space beside
+it); the version column narrows to 7rem to suit the shorter label. Help text and
+the `slot` field name are unchanged. CSS/label only; service-worker cache
+advanced to v20. Verified on mobile and desktop in a browser.
+
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, enable branch protection, require review
 for workflow/core changes, and protect the GitHub account with passkeys or

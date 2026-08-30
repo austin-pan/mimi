@@ -49,15 +49,20 @@ export const v2BaseInput = {
   style: "words-v2",
 };
 
-// Vectors were recomputed after removing the experimental `input.kind` field
-// from encodeContext() in derive-v2.js. That field was added post-v1.3.2 and
-// never shipped to real users, so this is a pre-adoption correction, not a
-// breaking algorithm change. No existing passwords are affected.
+// Vectors were recomputed (pre-adoption, no real users affected) twice:
+//   1. after removing the experimental `input.kind` field from encodeContext();
+//   2. after replacing the byte-expansion step with an SP 800-108-style
+//      counter-mode KDF, HMAC-SHA256(argon2Key, label ‖ context ‖ counter),
+//      in place of the earlier SHA-256(label ‖ key ‖ context ‖ counter) hash.
+// Both are pre-adoption corrections, not breaking algorithm changes: the
+// service had no users, so no existing passwords are affected. The expansion is
+// frozen again at this construction; any further change must use a new
+// algorithm ID.
 export const v2FrozenVectors = {
-  words32: "lizzie-his-rinnilan-teildigot-M4",
-  chars32: "%wKYLY$Kwetcv9rnN.UvF#mhrmKtLs4N",
-  words42: "plea-me-flocoliok-fileideaon-billaimben-D6",
-  chars20: "9g$JqcHnPH.n*HCa5vvs",
+  words32: "dane-agnes-extract-frennuleon-N6",
+  chars32: "AE2#@fhhQU7n*_7D4%%pCG76ZdfcsTwi",
+  words42: "its-our-brekonneon-vubandool-kuthernand-J2",
+  chars20: "FUtPT@9*%hq@2LoC7CW3",
 };
 
 // The words-v2 bank was expanded from 10,014 to 15,000 entries pre-adoption

@@ -37,6 +37,27 @@ test("storage adapter round-trips values", async () => {
   assert.equal(await storage.get("k"), undefined);
 });
 
+test("adapter prefers Firefox's Promise-based browser.* over chrome.*", async () => {
+  // chrome.* here would throw; the adapter must reach for browser.* on Firefox.
+  mockChrome();
+  globalThis.chrome.storage.local.get = () => { throw new Error("used chrome.*"); };
+  const store = {};
+  globalThis.browser = {
+    storage: {
+      local: {
+        async get(key) { return key in store ? { [key]: store[key] } : {}; },
+        async set(entry) { Object.assign(store, entry); },
+      },
+    },
+  };
+  try {
+    await storage.set("k", { via: "browser" });
+    assert.deepEqual(await storage.get("k"), { via: "browser" });
+  } finally {
+    delete globalThis.browser;
+  }
+});
+
 test("getAppVersion reads the manifest version", () => {
   mockChrome({ version: "1.2.0" });
   assert.equal(getAppVersion(), "1.2.0");

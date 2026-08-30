@@ -73,6 +73,24 @@ async function sha256(bytes) {
   return new Uint8Array(await globalThis.crypto.subtle.digest("SHA-256", bytes));
 }
 
+const EXPAND_LABEL = encoder.encode("mimi-expand-v2");
+
+// Import the 64-byte Argon2id output as an HMAC-SHA256 key. Native Web Crypto,
+// so this adds no dependency to the trusted computing base.
+function importExpansionKey(key) {
+  return globalThis.crypto.subtle.importKey(
+    "raw",
+    key,
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+}
+
+async function hmacSha256(hmacKey, bytes) {
+  return new Uint8Array(await globalThis.crypto.subtle.sign("HMAC", hmacKey, bytes));
+}
+
 async function deriveKey(input, parameters = ARGON2_PARAMETERS) {
   validateDerivationInput(input);
   const context = encodeContext(input);
@@ -90,6 +108,7 @@ class DeterministicBytes {
   constructor(key, context) {
     this.key = key;
     this.context = context;
+    this.hmacKey = null;
     this.buffer = new Uint8Array();
     this.offset = 0;
     this.counter = 0;
@@ -97,8 +116,14 @@ class DeterministicBytes {
 
   async nextByte() {
     if (this.offset >= this.buffer.length) {
-      this.buffer = await sha256(
-        concatBytes(encoder.encode("mimi-expand-v2"), this.key, this.context, uint32(this.counter)),
+      // SP 800-108-style counter-mode KDF: each 32-byte block is
+      // HMAC-SHA256(argon2Key, label ‖ context ‖ counter). HMAC is
+      // length-extension resistant and is the standard PRF for key
+      // expansion, unlike a bare SHA-256(key ‖ message) construction.
+      if (!this.hmacKey) this.hmacKey = await importExpansionKey(this.key);
+      this.buffer = await hmacSha256(
+        this.hmacKey,
+        concatBytes(EXPAND_LABEL, this.context, uint32(this.counter)),
       );
       this.counter += 1;
       this.offset = 0;

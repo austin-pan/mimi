@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Mimi",
-  "version": "1.3.2",
+  "version": "1.3.4",
   "description": "Create memorable passwords wherever you sign in. Fully local, offline, and backend-free.",
   "action": {
     "default_popup": "popup/popup.html",

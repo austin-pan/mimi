@@ -69,13 +69,14 @@ core plus assets live in `shared/`, imported by both clients.
 | `shared/assets/word-bank-v2.txt` | V2 list (15,000 entries: original words, pronouns, plus pre-adoption word-like tokens); frozen. |
 | `scripts/expand-wordbank.mjs` | Reproducible generator used for the one-time pre-adoption v2 bank expansion. |
 | `scripts/make-icons.mjs` | Regenerates the brand-mark PWA/extension PNG icons from the plum "m" mark. |
+| `scripts/build-firefox.mjs` | Copies the built `extension/dist` to `extension/dist-firefox` and injects the Gecko manifest settings for Firefox/AMO. |
 | `shared/styles/tokens.css` | Canonical design tokens (palette) consumed by the extension. |
 | `shared/test/` | Single golden-vector source (`vectors.js`) plus generators, profile, settings, and transfer suites. |
 | `web/src/index.js` | PWA UI wiring; imports the shared core and passes word-bank URLs relative to `document.baseURI`. |
 | `web/public/` | PWA-only shell: `index.html`, `style.css`, `service-worker.js`, `manifest.webmanifest`, icons. |
 | `web/test/build.test.js` | Build-boundary check on the built `web/dist`. |
 | `extension/public/manifest.json` | Manifest V3: `storage`+`activeTab` only, `wasm-unsafe-eval` CSP, `Alt+Shift+M` shortcut. |
-| `extension/src/platform/chrome.js` | The only browser-specific module: storage, version, word-bank URL, active-tab host. |
+| `extension/src/platform/chrome.js` | The only browser-specific module: storage, version, word-bank URL, active-tab host. Resolves `browser.*` (Firefox, Promise-based) or `chrome.*` (Chromium) per call, so one bundle runs on both with no polyfill. |
 | `extension/src/popup/` | Everyday popup: shared form + generation, active-tab autofill of app/username, per-site presets. |
 | `extension/src/options/` | Profile create/import/copy, QR, and `.mimi-profile` transfer, using the shared modules. |
 | `extension/test/` | Adapter and manifest (permission/CSP/shortcut) tests. |
@@ -95,6 +96,13 @@ locally, so setup and generation make no network request. It reuses the shared
 core byte-for-byte: loading the unpacked popup reproduces the same golden
 vectors as the PWA (verified in a Chromium DOM smoke test).
 
+`npm run build:firefox` builds the extension and then writes a Firefox variant
+to `extension/dist-firefox` with the Gecko manifest settings added (Chrome warns
+on those keys, so the base manifest stays Chrome-clean). The platform adapter is
+already cross-browser, so no source changes are needed to target Firefox —
+only AMO signing (listed or unlisted) before distribution. Load-unpacked
+verification on real Chrome/Edge and real Firefox is still a manual step.
+
 ## V2 compatibility contract
 
 `argon2id-v2` is defined by all of the following:
@@ -105,7 +113,7 @@ vectors as the PWA (verified in a Chromium DOM smoke test).
   username, rotation slot, length, style, and separator.
 - Context-specific Argon2 salt derived with SHA-256.
 - Argon2id: 64 MiB memory, 3 iterations, parallelism 1, 64 output bytes.
-- SHA-256 counter expansion and rejection sampling for unbiased selections.
+- SP 800-108-style counter-mode expansion — `HMAC-SHA256(argon2Key, "mimi-expand-v2" ‖ context ‖ counter)` — and rejection sampling for unbiased selections.
 - Exact word-bank ordering, symbol alphabets, format rules, and shuffle order.
 
 `words-v2` produces an exact-length lowercase-word sequence using `-` or `.`,
@@ -125,6 +133,15 @@ pronounceable word-like tokens (see `scripts/expand-wordbank.mjs`). The original
 10,014 entries are preserved as an exact prefix, but this still changes every
 `words-v2` output, so the golden word vectors were regenerated. The bank is
 frozen again at 15,000; any further change must use a new algorithm ID.
+
+Two further pre-adoption corrections were made while the service still had no
+users (so no passwords are affected): `input.kind` was dropped from the context
+array, and the byte-expansion step was moved from a bare
+`SHA-256(label ‖ key ‖ context ‖ counter)` hash to an SP 800-108-style
+counter-mode KDF, `HMAC-SHA256(argon2Key, label ‖ context ‖ counter)` — a
+length-extension-resistant standard PRF, native Web Crypto, no new dependency.
+Both regenerated the golden vectors. The construction is now frozen; any later
+change must use a new algorithm ID.
 
 Recommended mode is presentation policy, not an additional KDF input. It maps
 `words-v2` to 42 characters (five 7-letter words plus the uppercase/digit
@@ -244,6 +261,17 @@ when a profile is active, fixes the iPad `.mimi-profile` file-picker by adding
 `actions/checkout` and `actions/setup-node` to reviewed v7 commit SHAs. iOS
 Safari QR import and offline generation verified on device. All 28 tests pass.
 
+App version `1.3.4` (in progress). Hardens the `argon2id-v2` byte expansion:
+replaces the `SHA-256(label ‖ key ‖ context ‖ counter)` construction with an
+SP 800-108-style counter-mode KDF, `HMAC-SHA256(argon2Key, label ‖ context ‖
+counter)` — a length-extension-resistant standard PRF via native Web Crypto,
+no new dependency (pre-adoption correction; golden vectors regenerated). Makes
+the browser extension cross-browser: the platform adapter now resolves
+`browser.*`/`chrome.*` per call, and `npm run build:firefox` emits a Firefox/AMO
+package (`extension/dist-firefox`) with Gecko manifest settings, no
+`webextension-polyfill`. Extension manifest bumped to 1.3.4; service-worker
+cache advanced to v15. All 29 tests pass.
+
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, enable branch protection, require review
 for workflow/core changes, and protect the GitHub account with passkeys or
@@ -343,14 +371,17 @@ that it has. `docs/security-review.md` records an internal review only.
   generation all verified.
 - [x] Pinned `actions/checkout` and `actions/setup-node` to reviewed v7 commit
   SHAs; upgraded CI to Node 24.
-- [ ] Extension Phase 4: load-unpacked verification in real Chrome/Edge (popup
-  lifecycle, keyboard/AX, zoom, themes), then Firefox packaging via a
-  `webextension-polyfill` adapter. Consider a PSL-based registrable-domain
-  helper to replace the current `www.`-stripping host heuristic.
+- [x] Made the extension cross-browser without `webextension-polyfill` (adapter
+  resolves `browser.*`/`chrome.*` per call) and added `npm run build:firefox`
+  to emit a Firefox/AMO package with Gecko manifest settings.
+- [x] Brought the shared design tokens (`tokens.css`) to the extension options
+  page (both surfaces already load the one stylesheet).
+- [ ] Extension Phase 4: load-unpacked verification in real Chrome/Edge and real
+  Firefox (popup lifecycle, keyboard/AX, zoom, themes, WASM load), then AMO
+  signing (listed or unlisted). Consider a PSL-based registrable-domain helper
+  to replace the current `www.`-stripping host heuristic.
 - [ ] Perform the manual checklist on Android Chrome (service worker, install,
   native-camera QR import, offline).
-- [ ] Bring the shared design tokens (`tokens.css`) to the extension options
-  page so both surfaces load one stylesheet.
 - [ ] Design a V3 compatibility-policy model for minimum uppercase, digit,
   special, and distinct-special counts without changing released V2 outputs.
 - [ ] Commission an independent cryptographic review before recommending Mimi

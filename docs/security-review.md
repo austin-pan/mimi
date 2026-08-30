@@ -44,9 +44,11 @@ with the in-app QR scanner. Runtime dependencies are now just `hash-wasm` and
   payload is encoded into QR modules as numeric path data, never echoed into
   markup) and static icon strings. Results use `textContent`. No inline styles.
 - **Sound randomness.** V2 uses `crypto.getRandomValues` for the 128-bit salt and
-  is otherwise fully deterministic (SHA-256 counter expansion + rejection
-  sampling); there is no `Math.random` in the core. V1's weak `seedrandom` is
-  compatibility-only and clearly marked.
+  is otherwise fully deterministic: an SP 800-108-style counter-mode KDF
+  (`HMAC-SHA256(argon2Key, label ‖ context ‖ counter)`, a length-extension-
+  resistant standard PRF) expands the Argon2id output, with rejection sampling
+  for unbiased selections. There is no `Math.random` in the core. V1's weak
+  `seedrandom` is compatibility-only and clearly marked.
 - **Golden vectors** fail the build if any released algorithm output changes.
 - **Minimal extension surface.** Permissions are `storage` + `activeTab` only —
   no host permissions, no content scripts, no background worker, no clipboard-read,

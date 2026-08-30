@@ -261,16 +261,21 @@ when a profile is active, fixes the iPad `.mimi-profile` file-picker by adding
 `actions/checkout` and `actions/setup-node` to reviewed v7 commit SHAs. iOS
 Safari QR import and offline generation verified on device. All 28 tests pass.
 
-App version `1.3.4` (in progress). Hardens the `argon2id-v2` byte expansion:
-replaces the `SHA-256(label ‖ key ‖ context ‖ counter)` construction with an
-SP 800-108-style counter-mode KDF, `HMAC-SHA256(argon2Key, label ‖ context ‖
-counter)` — a length-extension-resistant standard PRF via native Web Crypto,
-no new dependency (pre-adoption correction; golden vectors regenerated). Makes
-the browser extension cross-browser: the platform adapter now resolves
-`browser.*`/`chrome.*` per call, and `npm run build:firefox` emits a Firefox/AMO
-package (`extension/dist-firefox`) with Gecko manifest settings, no
-`webextension-polyfill`. Extension manifest bumped to 1.3.4; service-worker
-cache advanced to v15. All 29 tests pass.
+App version `1.3.4` is live at `https://austin-pan.github.io/mimi/`, published by
+the `deploy.yml` workflow (gh-pages commit `fbe5bac`, source `65131d0`). It
+hardens the `argon2id-v2` byte expansion: replaces the
+`SHA-256(label ‖ key ‖ context ‖ counter)` construction with an SP 800-108-style
+counter-mode KDF, `HMAC-SHA256(argon2Key, label ‖ context ‖ counter)` — a
+length-extension-resistant standard PRF via native Web Crypto, no new dependency
+(pre-adoption correction; golden vectors regenerated). It also makes the browser
+extension cross-browser: the platform adapter now resolves `browser.*`/`chrome.*`
+per call, and `npm run build:firefox` emits a Firefox/AMO package
+(`extension/dist-firefox`) with Gecko manifest settings, no
+`webextension-polyfill`. Extension manifest bumped to 1.3.4; service-worker cache
+advanced to v15. All 29 tests pass; the new expansion was verified in Node
+(exact golden vectors, production Argon2 parameters) and end-to-end in a browser
+(WASM Argon2id + WebCrypto HMAC, zero console errors), and the live release was
+confirmed at v1.3.4 with the v15 cache.
 
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, enable branch protection, require review

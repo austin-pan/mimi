@@ -7,8 +7,8 @@
   <meta name="description" content="Create memorable passwords wherever you are.">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./icons/mimi.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="./icons/mimi-192.png">
+  <link rel="icon" href="./icons/mimi.svg?v=2" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/mimi-192.png?v=2">
   <link rel="stylesheet" href="./tokens.css">
   <link rel="stylesheet" href="./style.css">
   <script src="./main.js" defer></script>
@@ -176,7 +176,7 @@
           </div>
           <button id="copy-password" type="button" class="copy-button" title="Copy the generated password">Copy</button>
         </div>
-        <pre id="password-result">Your password will appear here</pre>
+        <pre id="password-result" tabindex="-1">Your password will appear here</pre>
         <div id="password-strength" class="password-strength" hidden>
           <strong id="password-strength-label">Recommended</strong>
           <span id="password-strength-details">Upper &amp; lowercase · number · symbol</span>
@@ -189,7 +189,7 @@
       </aside>
     </div>
 
-    <footer><span class="footer-brand">Mimi</span> · <button type="button" id="app-version" class="version-button" title="Check for a Mimi update">v1.3.4</button> · everything happens on this device</footer>
+    <footer><span class="footer-brand">Mimi</span> · <button type="button" id="app-version" class="version-button" title="Check for a Mimi update">v1.3.5</button> · everything happens on this device</footer>
   </main>
 
   <div id="update-banner" class="update-banner" role="status" aria-live="polite" hidden>

@@ -421,6 +421,25 @@ input[type="range"] { min-height: 24px; padding: 0; accent-color: var(--plum); }
   overflow-wrap: anywhere;
   white-space: pre-wrap;
   user-select: all;
+  scroll-margin: 1.5rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+#password-result:focus-visible {
+  outline: none;
+  border-color: var(--plum);
+  box-shadow: 0 0 0 3px rgba(95, 81, 110, 0.22);
+}
+#password-result.just-generated {
+  animation: password-reveal 1.1s ease;
+}
+@keyframes password-reveal {
+  0% { border-color: var(--plum); box-shadow: 0 0 0 4px rgba(95, 81, 110, 0.28); }
+  60% { border-color: var(--plum); box-shadow: 0 0 0 6px rgba(95, 81, 110, 0.1); }
+  100% { box-shadow: 0 0 0 0 rgba(95, 81, 110, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #password-result { transition: none; }
+  #password-result.just-generated { animation: none; }
 }
 .password-strength {
   display: flex;

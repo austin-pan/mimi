@@ -1,4 +1,4 @@
-const CACHE_NAME = "mimi-pwa-2026-08-29-v15";
+const CACHE_NAME = "mimi-pwa-2026-08-29-v16";
 const CORE_FILES = [
   "./",
   "./main.js",
@@ -42,7 +42,9 @@ self.addEventListener("fetch", (event) => {
         }
         return response;
       } catch (error) {
-        const cached = await caches.match(event.request);
+        // ignoreSearch so cache-busting query strings (e.g. icons/mimi.svg?v=2)
+        // still resolve to the precached asset when offline.
+        const cached = await caches.match(event.request, { ignoreSearch: true });
         if (cached) return cached;
         if (event.request.mode === "navigate") return caches.match("./");
         throw error;

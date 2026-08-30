@@ -277,6 +277,22 @@ advanced to v15. All 29 tests pass; the new expansion was verified in Node
 (WASM Argon2id + WebCrypto HMAC, zero console errors), and the live release was
 confirmed at v1.3.4 with the v15 cache.
 
+App version `1.3.5` (in progress). UI/PWA polish: a tap or click outside an open
+field tooltip now dismisses it; generating a password scrolls the result into
+view, moves focus to it (`#password-result` is `tabindex="-1"`), and replays a
+brief highlight (respecting `prefers-reduced-motion`). Regenerates the PWA/
+extension PNG install icons to the corrected Traveling Spark mark — they had
+been stale since `b36981d`, before the spark fix — and adds a `?v=2` cache-
+busting query to the icon URLs in the manifest and `index.html` so Android/
+desktop installs refetch the new icon (the OS caches the install icon by URL;
+a same-URL byte change is not reliably picked up). **iOS Home Screen icons never
+auto-update — the user must remove and re-add Mimi.** The service worker now
+matches with `ignoreSearch` so versioned icon URLs still resolve offline.
+Extension manifest bumped to 1.3.5; service-worker cache advanced to v16. All 29
+tests pass; tooltip dismissal, the reveal animation/scroll/focus, and the
+versioned built manifest were verified in a browser. PNGs were regenerated with
+`rsvg-convert` (librsvg) from the same brand SVG as `scripts/make-icons.mjs`.
+
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, enable branch protection, require review
 for workflow/core changes, and protect the GitHub account with passkeys or

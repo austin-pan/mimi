@@ -1,3 +1,14 @@
+// Regenerates web/public/icons/{mimi-192.png,mimi-512.png,mimi.svg} from the
+// brand mark. Whenever the art here changes, bump the `?v=N` query on the icon
+// references in web/public/manifest.webmanifest and web/public/index.html so
+// installed PWAs (Android/desktop) refetch the new icon — the OS caches the
+// install icon by URL, and a same-URL byte change is not reliably picked up.
+// iOS Home Screen icons never auto-update; that requires remove + re-add.
+//
+// Requires Playwright's Chromium (CI). Without it, librsvg gives the same
+// raster from the same SVG:
+//   rsvg-convert -w 192 -h 192 icon-192.svg -o web/public/icons/mimi-192.png
+//   rsvg-convert -w 512 -h 512 icon-512.svg -o web/public/icons/mimi-512.png
 import { chromium } from "playwright";
 import { writeFile } from "node:fs/promises";
 

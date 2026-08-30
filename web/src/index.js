@@ -135,9 +135,26 @@ addEventListener("resize", () => {
   if (activeHelpTip) showFieldTooltip(activeHelpTip);
 });
 
+// A tap or click anywhere outside an open tooltip dismisses it. Taps on a help
+// tip itself call stopPropagation above, so this only fires for outside taps.
+document.addEventListener("click", () => {
+  if (activeHelpTip) hideFieldTooltip(activeHelpTip);
+});
+
 function setStatus(message, type = "info") {
   status.textContent = message;
   status.dataset.type = type;
+}
+
+// Bring the fresh password into view and draw the eye to it: scroll it to a
+// comfortable position (it sits below the form on narrow screens), move focus
+// for keyboard/screen-reader users, and replay a brief highlight.
+function revealPassword() {
+  result.scrollIntoView({ behavior: "smooth", block: "center" });
+  result.focus({ preventScroll: true });
+  result.classList.remove("just-generated");
+  void result.offsetWidth; // reflow so the animation restarts on repeat generations
+  result.classList.add("just-generated");
 }
 
 function setProfileStatus(message, type = "info") {
@@ -470,6 +487,7 @@ form.addEventListener("submit", async (event) => {
     passwordStrengthLabel.textContent = guidance.label;
     passwordStrengthDetails.textContent = "Upper & lowercase · number · symbol";
     setStatus(`All set · ${activePassword.length} characters`, "success");
+    revealPassword();
   } catch (error) {
     result.textContent = "No password generated";
     setStatus(error.message, "error");

@@ -323,6 +323,20 @@ it); the version column narrows to 7rem to suit the shorter label. Help text and
 the `slot` field name are unchanged. CSS/label only; service-worker cache
 advanced to v20. Verified on mobile and desktop in a browser.
 
+App version `1.3.10` (in progress, PWA only). Fixes the footer update-check and
+the update banner. (1) The manual check said "up to date" even when an update
+existed, then the banner contradicted it: `registration.update()` reports a new
+worker via `updatefound`/`installing` before it becomes `waiting`, so checking
+only `waiting` was premature. It now also watches `updatefound`/`installing` and
+shows "A new version is downloading…" (never "up to date") when one is found.
+(2) The banner collapsed to ~half width on mobile — `left: 50%` shrink-to-fit
+capped its width — so its text wrapped to several lines; it now centres with
+auto margins at `width: max-content` (one line, full-width fallback), with the
+message shortened to "A new version is ready." (3) All toasts and the banner
+play a re-triggerable attention animation (`toast-attention`/`banner-attention`,
+pop + settle), honoring `prefers-reduced-motion`. CSS/JS only; service-worker
+cache advanced to v21. Verified in a browser.
+
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, enable branch protection, require review
 for workflow/core changes, and protect the GitHub account with passkeys or

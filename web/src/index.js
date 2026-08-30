@@ -75,6 +75,10 @@ function showToast(message, type = "success") {
   toast.textContent = message;
   toast.dataset.type = type;
   toast.hidden = false;
+  // Replay the attention animation even when a toast is already on screen.
+  toast.classList.remove("toast-animate");
+  void toast.offsetWidth; // reflow so the animation restarts
+  toast.classList.add("toast-animate");
   toastTimer = setTimeout(() => {
     toast.hidden = true;
   }, 3200);
@@ -547,6 +551,9 @@ const updateBanner = document.querySelector("#update-banner");
 
 function showUpdateBanner(registration) {
   updateBanner.hidden = false;
+  updateBanner.classList.remove("banner-animate");
+  void updateBanner.offsetWidth; // reflow so the animation restarts
+  updateBanner.classList.add("banner-animate");
   document.querySelector("#update-now").onclick = () => {
     if (registration.waiting) registration.waiting.postMessage("SKIP_WAITING");
   };
@@ -590,15 +597,32 @@ versionButton.addEventListener("click", async () => {
     return;
   }
   showToast("Checking for updates…", "info");
+  const registration = serviceWorkerRegistration;
+  // A new worker found by update() is reported via `updatefound`, then goes
+  // through `installing` before it becomes `waiting`. If we only checked
+  // `waiting` right after update(), we'd flash "up to date" and then contradict
+  // it with the update banner a moment later. Track whether a new version turns
+  // up during this check instead.
+  let updateFound = false;
+  const onUpdateFound = () => { updateFound = true; };
+  registration.addEventListener("updatefound", onUpdateFound);
   try {
-    await serviceWorkerRegistration.update();
-    if (serviceWorkerRegistration.waiting) {
-      showUpdateBanner(serviceWorkerRegistration);
+    await registration.update();
+    // Let a just-fired `updatefound` settle before deciding.
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    if (registration.waiting) {
+      showUpdateBanner(registration);
+    } else if (updateFound || registration.installing) {
+      // The global updatefound handler shows the banner once it finishes
+      // installing; just acknowledge the download here.
+      showToast("A new version is downloading…", "info");
     } else {
       showToast(`Mimi v${packageMetadata.version} is up to date.`);
     }
   } catch {
     showToast("Couldn't check for an update. Try again when online.", "error");
+  } finally {
+    registration.removeEventListener("updatefound", onUpdateFound);
   }
 });
 

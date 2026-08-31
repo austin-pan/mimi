@@ -68,6 +68,15 @@ const fieldTooltip = document.querySelector("#field-tooltip");
 
 versionButton.textContent = `v${packageMetadata.version}`;
 
+// When running inside the Tauri desktop app, suppress web-only features.
+const IS_TAURI = typeof window.__TAURI_INTERNALS__ !== "undefined";
+if (IS_TAURI) {
+  // Service worker won't run; hide the update-check button entirely.
+  versionButton.closest("footer").querySelector(".version-button").hidden = true;
+  // PWA install prompt doesn't apply.
+  installButton.hidden = true;
+}
+
 let activePassword = "";
 let activeProfileCode = "";
 let deferredInstallPrompt = null;
@@ -577,7 +586,7 @@ document.querySelector("#update-dismiss").addEventListener("click", () => {
   updateBanner.hidden = true;
 });
 
-if ("serviceWorker" in navigator) {
+if (!IS_TAURI && "serviceWorker" in navigator) {
   navigator.serviceWorker.register("./service-worker.js").then((registration) => {
     serviceWorkerRegistration = registration;
     // Only prompt when a new worker supersedes one already controlling the page.

@@ -14,3 +14,5 @@ __pycache__
 .vercel
 .vercel_python_packages
 .env*
+src-tauri/target
+src-tauri/gen

@@ -16,6 +16,7 @@
 </head>
 <body>
   <main>
+    <a class="skip-link" href="#application-input">Skip to form</a>
     <header class="topbar">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true"><span class="brand-letter">m</span><span class="brand-star">✦</span></div>
@@ -95,7 +96,7 @@
     </details>
 
     <div class="workspace">
-      <form id="generator-form" class="panel generator-panel">
+      <form id="generator-form" class="panel generator-panel" autocomplete="off">
         <div class="panel-heading">
           <div>
             <span class="eyebrow">New password</span>
@@ -107,7 +108,7 @@
         <div class="form-grid">
           <label>
             <span class="label-line">App or device <span class="help-tip" aria-label="Help for app or device" data-tip="The specific place you will use this password. Changing it creates a different password.">?</span></span>
-            <input name="application" required autocomplete="off" autocapitalize="none" placeholder="example.com or My MacBook">
+            <input id="application-input" name="application" required autocomplete="off" autocapitalize="none" placeholder="example.com or My MacBook">
           </label>
           <label>
             <span class="label-line">Username <span class="help-tip" aria-label="Help for username" data-tip="The email address, account name, or user ID you enter when signing in. Use the same form each time you recreate this password.">?</span></span>
@@ -189,7 +190,7 @@
       </aside>
     </div>
 
-    <footer><span class="footer-brand">Mimi</span> · <button type="button" id="app-version" class="version-button" title="Check for a Mimi update">v1.3.11</button> · everything happens on this device</footer>
+    <footer><span class="footer-brand">Mimi</span> · <button type="button" id="app-version" class="version-button" title="Check for a Mimi update">v1.3.12</button> · everything happens on this device</footer>
   </main>
 
   <div id="update-banner" class="update-banner" role="status" aria-live="polite" hidden>

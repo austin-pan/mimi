@@ -626,6 +626,16 @@ versionButton.addEventListener("click", async () => {
   }
 });
 
+// Press G (when not already typing) to jump to the first recipe field.
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "g" || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+  const active = document.activeElement;
+  if (active && (active.tagName === "INPUT" || active.tagName === "SELECT" || active.tagName === "TEXTAREA" || active.isContentEditable)) return;
+  e.preventDefault();
+  const appInput = document.querySelector("#application-input");
+  if (appInput) { appInput.focus(); appInput.scrollIntoView({ behavior: "smooth", block: "center" }); }
+});
+
 lengthInput.min = String(MIN_LENGTH);
 lengthInput.max = String(MAX_LENGTH);
 updateLengthGuidance();

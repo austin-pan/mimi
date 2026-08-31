@@ -209,6 +209,9 @@ h2 { margin-bottom: 0; font: 700 1.45rem/1.15 Georgia, serif; letter-spacing: -0
    The cap keeps Version from stretching full width when the separator is hidden
    (character styles) so it stays a small, deliberate numeric field. */
 .recipe-row .version-field { max-width: 7rem; }
+/* When the Separator is hidden (Characters style), pull Style off full-width
+   so it pairs with Version on the same row: [Style (1fr)] [Version (7rem)]. */
+.recipe-row:has(#separator-row[hidden]) .style-field { grid-column: 1; }
 .full { grid-column: 1 / -1; }
 label { display: grid; gap: 0.32rem; color: #5d5561; font-size: 0.76rem; font-weight: 600; }
 .label-line { display: flex; align-items: center; gap: 0.3rem; }
@@ -260,10 +263,12 @@ input, select {
   transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 select {
-  /* Remove OS chrome; draw our own chevron so padding is identical on every platform. */
+  /* appearance:none removes the OS chevron; we draw our own via base64 SVG so
+     the minifier cannot mangle the color (percent-decoded %23→# breaks in SVG
+     attribute context on some browsers). */
   appearance: none;
   padding-right: 2.1rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235d5561' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMCA2Jz48cGF0aCBkPSdNMSAxbDQgNCA0LTQnIHN0cm9rZT0nIzVkNTU2MScgc3Ryb2tlLXdpZHRoPScxLjUnIGZpbGw9J25vbmUnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcgc3Ryb2tlLWxpbmVqb2luPSdyb3VuZCcvPjwvc3ZnPg==");
   background-repeat: no-repeat;
   background-position: right 0.9rem center;
   background-size: 10px 6px;
@@ -605,7 +610,7 @@ footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
 [data-theme="dark"] input,
 [data-theme="dark"] select { background-color: #211c25; color: var(--ink); }
 [data-theme="dark"] select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23c7bdc9' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMCA2Jz48cGF0aCBkPSdNMSAxbDQgNCA0LTQnIHN0cm9rZT0nI2M3YmRjOScgc3Ryb2tlLXdpZHRoPScxLjUnIGZpbGw9J25vbmUnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcgc3Ryb2tlLWxpbmVqb2luPSdyb3VuZCcvPjwvc3ZnPg==");
 }
 [data-theme="dark"] .pb { background: rgba(41, 35, 45, 0.7); border-color: rgba(194, 169, 208, 0.2); color: var(--plum); }
 [data-theme="dark"] .pb-subtle { border-color: transparent; background: transparent; color: var(--muted); }
@@ -706,6 +711,27 @@ footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
 .update-dismiss:hover { background: var(--lavender); color: var(--plum); }
 [data-theme="dark"] .update-banner { background: #29232d; border-color: rgba(194, 169, 208, 0.22); }
 [data-theme="dark"] .update-refresh { background: #725d7f; }
+
+/* Skip link — hidden until focused, drops in from the top on Tab press. */
+.skip-link {
+  position: fixed;
+  top: -3.5rem;
+  left: 50%;
+  z-index: 200;
+  transform: translateX(-50%);
+  padding: 0.55rem 1.1rem;
+  border: 0;
+  border-radius: 0 0 12px 12px;
+  background: var(--plum);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: top 160ms ease;
+}
+.skip-link:focus { top: 0; outline: none; }
+[data-theme="dark"] .skip-link { background: #725d7f; }
 
 @media (max-width: 840px) {
   main { width: min(720px, calc(100% - 1.25rem)); }

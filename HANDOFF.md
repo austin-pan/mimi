@@ -367,7 +367,7 @@ in v1.3.13). All 29 tests pass.
 
 App version `1.3.13` committed (source `a5c470a`), deploy superseded by v1.3.14.
 
-App version `1.3.14` committed (source TBD), deploy pending. Re-enables the v1
+App version `1.3.14` committed (source `8cf3d27`), deploy pending. Re-enables the v1
 legacy generators in the Style dropdown: "Legacy words (v1)" and "Legacy
 characters (v1)" appear below a disabled separator. The JS dispatch was extended
 to call `generateWordsV1`/`generateCharactersV1` (using `legacySeed`) for v1

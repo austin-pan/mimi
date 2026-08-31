@@ -339,11 +339,11 @@ ready." (3) All toasts and the banner play a re-triggerable attention animation
 `prefers-reduced-motion`. CSS/JS only; service-worker cache advanced to v21. All
 29 tests pass; verified in a browser.
 
-App version `1.3.11` committed (sources `17133f4`, `9765d3e`), deploy pending.
-PWA-only form polish: (1) form label `font-weight` reduced from 750 (rendered as
-800/ExtraBold on system fonts) to 600 (Semibold) — labels and the length
-fieldset legend included; (2) select arrow: `appearance: none` + custom SVG
-chevron via `background-image`, `padding-right 1.9→2.1rem`,
+App version `1.3.11` committed (sources `17133f4`, `9765d3e`), deploy superseded
+by v1.3.13. PWA-only form polish: (1) form label `font-weight` reduced from 750
+(rendered as 800/ExtraBold on system fonts) to 600 (Semibold) — labels and the
+length fieldset legend included; (2) select arrow: `appearance: none` + custom
+SVG chevron via `background-image`, `padding-right 1.9→2.1rem`,
 `background-position right 0.7→0.9rem` — consistent across iOS, Android, and
 desktop with a controlled gap from the border; (3) help-tip `?` spans removed
 from tab order (no `tabindex="0"`); Tab now flows core recipe fields only.
@@ -351,6 +351,30 @@ Additionally, the git remote was switched from SSH to HTTPS and
 `gh auth git-credential` set as the local credential helper so future pushes
 work without re-generating an SSH agent across sessions. No service-worker or
 golden-vector changes. All 29 tests pass.
+
+App version `1.3.12` committed (source `68e3e0a`), deploy superseded by v1.3.13.
+PWA-only bug fix and polish: (1) dropdown arrows invisible after v1.3.11 —
+CSS minifier decoded `%23` → literal `%23` in the SVG `stroke` attribute making
+it an invalid color; fixed by switching to base64-encoded data URI which the
+minifier leaves intact; (2) "Compact characters" recipe layout — when separator
+row is hidden, the Style field was stranded on its own row; fixed with
+`:has(#separator-row[hidden]) .style-field { grid-column: 1 }` so Style and
+Version pair on one row; (3) form `autocomplete="off"` to reduce browser
+save-password prompts; (4) skip link (`Skip to form`) from keyboard focus to the
+first recipe field; (5) `G` key shortcut focuses the application input from
+anywhere outside a form control. No service-worker cache bump (oversight — fixed
+in v1.3.13). All 29 tests pass.
+
+App version `1.3.13` committed (source TBD), deploy pending. Fixes two regressions
+from v1.3.11/v1.3.12: (1) Update-check always returned "up to date" — root cause
+was that `service-worker.js` was not modified in v1.3.11 or v1.3.12, so
+`registration.update()` saw an identical SW script and never fired `updatefound`;
+fixed by bumping `CACHE_NAME` from `mimi-pwa-2026-08-29-v21` to
+`mimi-pwa-2026-08-29-v22` — any change to the SW file forces the browser to
+detect and install the new worker. (2) Dropdown arrows still invisible on the live
+site — the live site was running v1.3.11 (broken `%23` SVG encoding) because
+neither v1.3.11 nor v1.3.12 was deployed; deploying v1.3.13 (which carries the
+v1.3.12 base64 arrow fix) resolves this. All 29 tests pass.
 
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, enable branch protection, require review

@@ -210,7 +210,7 @@ h2 { margin-bottom: 0; font: 700 1.45rem/1.15 Georgia, serif; letter-spacing: -0
    (character styles) so it stays a small, deliberate numeric field. */
 .recipe-row .version-field { max-width: 7rem; }
 .full { grid-column: 1 / -1; }
-label { display: grid; gap: 0.32rem; color: #5d5561; font-size: 0.76rem; font-weight: 750; }
+label { display: grid; gap: 0.32rem; color: #5d5561; font-size: 0.76rem; font-weight: 600; }
 .label-line { display: flex; align-items: center; gap: 0.3rem; }
 .help-tip {
   position: relative;
@@ -251,7 +251,7 @@ input, select {
   border: 1px solid var(--line);
   border-radius: 11px;
   outline: none;
-  background: #fff;
+  background-color: #fff;
   color: var(--ink);
   /* 16px keeps iOS Safari from auto-zooming into a field on focus (it zooms for
      anything smaller and never zooms back out). The small label text is set
@@ -259,7 +259,15 @@ input, select {
   font-size: 16px;
   transition: border-color 140ms ease, box-shadow 140ms ease;
 }
-select { padding-right: 2.2rem; }
+select {
+  /* Remove OS chrome; draw our own chevron so padding is identical on every platform. */
+  appearance: none;
+  padding-right: 1.9rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235d5561' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 10px 6px;
+}
 input:focus, select:focus { border-color: #9b88ac; box-shadow: 0 0 0 3px rgba(155, 136, 172, 0.16); }
 input[aria-invalid="true"] { border-color: #a44747; box-shadow: 0 0 0 3px rgba(164, 71, 71, 0.12); }
 
@@ -280,7 +288,7 @@ input[aria-invalid="true"] { border-color: #a44747; box-shadow: 0 0 0 3px rgba(1
 }
 
 .length-settings { min-width: 0; margin: 0; padding: 0; border: 0; }
-.length-settings legend { margin-bottom: 0.35rem; color: #5d5561; font-size: 0.76rem; font-weight: 750; }
+.length-settings legend { margin-bottom: 0.35rem; color: #5d5561; font-size: 0.76rem; font-weight: 600; }
 .length-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
 .length-modes label {
   display: flex;
@@ -595,7 +603,10 @@ footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
 [data-theme="dark"] .panel { background: rgba(41, 35, 45, 0.94); border-color: rgba(194, 169, 208, 0.18); }
 [data-theme="dark"] label { color: #c7bdc9; }
 [data-theme="dark"] input,
-[data-theme="dark"] select { background: #211c25; color: var(--ink); }
+[data-theme="dark"] select { background-color: #211c25; color: var(--ink); }
+[data-theme="dark"] select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23c7bdc9' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
 [data-theme="dark"] .pb { background: rgba(41, 35, 45, 0.7); border-color: rgba(194, 169, 208, 0.2); color: var(--plum); }
 [data-theme="dark"] .pb-subtle { border-color: transparent; background: transparent; color: var(--muted); }
 [data-theme="dark"] .pb:hover:not(:disabled) { border-color: #8c729b; color: var(--plum-dark); background: rgba(61, 51, 69, 0.72); }

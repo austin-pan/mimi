@@ -106,15 +106,15 @@
 
         <div class="form-grid">
           <label>
-            <span class="label-line">App or device <span class="help-tip" tabindex="0" aria-label="Help for app or device" data-tip="The specific place you will use this password. Changing it creates a different password.">?</span></span>
+            <span class="label-line">App or device <span class="help-tip" aria-label="Help for app or device" data-tip="The specific place you will use this password. Changing it creates a different password.">?</span></span>
             <input name="application" required autocomplete="off" autocapitalize="none" placeholder="example.com or My MacBook">
           </label>
           <label>
-            <span class="label-line">Username <span class="help-tip" tabindex="0" aria-label="Help for username" data-tip="The email address, account name, or user ID you enter when signing in. Use the same form each time you recreate this password.">?</span></span>
+            <span class="label-line">Username <span class="help-tip" aria-label="Help for username" data-tip="The email address, account name, or user ID you enter when signing in. Use the same form each time you recreate this password.">?</span></span>
             <input name="username" required autocomplete="off" autocapitalize="none" placeholder="name@example.com">
           </label>
           <label class="full">
-            <span class="label-line">Your secret <span class="help-tip" tabindex="0" aria-label="Help for your secret" data-tip="The private passphrase Mimi uses to make your password. Mimi never stores it. Tip: five or more random, unrelated words tend to make a memorable secret — personal details, quotes, or reused passwords are easier to guess.">?</span></span>
+            <span class="label-line">Your secret <span class="help-tip" aria-label="Help for your secret" data-tip="The private passphrase Mimi uses to make your password. Mimi never stores it. Tip: five or more random, unrelated words tend to make a memorable secret — personal details, quotes, or reused passwords are easier to guess.">?</span></span>
             <span class="input-with-action">
               <input id="secret" name="secret" type="password" required autocomplete="off" autocapitalize="none" placeholder="Your memorable secret">
               <button id="toggle-secret" type="button" class="text-button">Show</button>
@@ -122,7 +122,7 @@
           </label>
           <div class="recipe-row full">
             <label class="style-field">
-              <span class="label-line">Style <span class="help-tip" tabindex="0" aria-label="Help for style" data-tip="Friendly words are easier to type; compact characters fit shorter limits.">?</span></span>
+              <span class="label-line">Style <span class="help-tip" aria-label="Help for style" data-tip="Friendly words are easier to type; compact characters fit shorter limits.">?</span></span>
               <select id="style" name="style">
                 <option value="words-v2">Friendly words</option>
                 <option value="characters-v2">Compact characters</option>
@@ -136,7 +136,7 @@
               </select>
             </label>
             <label class="version-field">
-              <span class="label-line">Version <span class="help-tip" tabindex="0" aria-label="Help for version" data-tip="Increase this number when you need to replace a password while keeping the other details the same.">?</span></span>
+              <span class="label-line">Version <span class="help-tip" aria-label="Help for version" data-tip="Increase this number when you need to replace a password while keeping the other details the same.">?</span></span>
               <input name="slot" type="number" min="1" max="9999" value="1" required>
             </label>
           </div>
@@ -189,7 +189,7 @@
       </aside>
     </div>
 
-    <footer><span class="footer-brand">Mimi</span> · <button type="button" id="app-version" class="version-button" title="Check for a Mimi update">v1.3.10</button> · everything happens on this device</footer>
+    <footer><span class="footer-brand">Mimi</span> · <button type="button" id="app-version" class="version-button" title="Check for a Mimi update">v1.3.11</button> · everything happens on this device</footer>
   </main>
 
   <div id="update-banner" class="update-banner" role="status" aria-live="polite" hidden>

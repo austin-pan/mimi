@@ -277,7 +277,7 @@ advanced to v15. All 29 tests pass; the new expansion was verified in Node
 (WASM Argon2id + WebCrypto HMAC, zero console errors), and the live release was
 confirmed at v1.3.4 with the v15 cache.
 
-App version `1.3.5` (in progress). UI/PWA polish: a tap or click outside an open
+App version `1.3.5` deployed (source `c4fa897`). UI/PWA polish: a tap or click outside an open
 field tooltip now dismisses it; generating a password scrolls the result into
 view, moves focus to it (`#password-result` is `tabindex="-1"`), and replays a
 brief highlight (respecting `prefers-reduced-motion`). Regenerates the PWA/
@@ -293,13 +293,13 @@ tests pass; tooltip dismissal, the reveal animation/scroll/focus, and the
 versioned built manifest were verified in a browser. PNGs were regenerated with
 `rsvg-convert` (librsvg) from the same brand SVG as `scripts/make-icons.mjs`.
 
-App version `1.3.6` (in progress, PWA only). Brings the in-page top-left header
+App version `1.3.6` deployed (source `9fcd6c8`, PWA only). Brings the in-page top-left header
 brand mark (`.brand-star` in `style.css`) in line with the app icon: the spark
 moves off the tight corner to the icon's inset position and takes the blush tone
 (`#e7b4ae`) instead of lavender. CSS-only; service-worker cache advanced to v17.
 The extension stays at 1.3.5 (unaffected). Verified in a browser.
 
-App version `1.3.7` (in progress, PWA only). Stops iOS Safari from auto-zooming
+App version `1.3.7` deployed (source `19790c2`, PWA only). Stops iOS Safari from auto-zooming
 into a form field on focus (and never zooming back out, so the generated
 password stayed off-screen): form controls inherited the small label text
 (~12px) via `font: inherit`, and iOS zooms any field under 16px. `input, select`
@@ -308,7 +308,7 @@ labels keep their smaller size. CSS-only; service-worker cache advanced to v18.
 The extension (separate CSS, desktop-only) is unaffected. Verified: all form
 controls compute to 16px and the compact mobile layout still holds.
 
-App version `1.3.8` (in progress, PWA only). Re-flows the mobile form so the
+App version `1.3.8` deployed (source `9a8c65e`, PWA only). Re-flows the mobile form so the
 larger 16px fields aren't cramped: on phones (≤560px) App/Username and the
 recipe fields now stack full width instead of pairing into ~155px columns, and
 the "Password version" constraint widened from 8.5rem to 9.5rem so its label no
@@ -316,26 +316,41 @@ longer wraps (which had dropped its input out of alignment with the separator).
 Desktop keeps the paired two-column layout. CSS-only; service-worker cache
 advanced to v19. Verified on mobile (375px) and desktop in a browser.
 
-App version `1.3.9` (in progress, PWA only). Renames the rotation field from
+App version `1.3.9` deployed (source `7e29610`, PWA only). Renames the rotation field from
 "Password version" to "Version" and re-pairs Separator + Version onto one row at
 every width (the compact field no longer stacks alone with dead space beside
 it); the version column narrows to 7rem to suit the shorter label. Help text and
 the `slot` field name are unchanged. CSS/label only; service-worker cache
 advanced to v20. Verified on mobile and desktop in a browser.
 
-App version `1.3.10` (in progress, PWA only). Fixes the footer update-check and
-the update banner. (1) The manual check said "up to date" even when an update
-existed, then the banner contradicted it: `registration.update()` reports a new
-worker via `updatefound`/`installing` before it becomes `waiting`, so checking
-only `waiting` was premature. It now also watches `updatefound`/`installing` and
-shows "A new version is downloading…" (never "up to date") when one is found.
-(2) The banner collapsed to ~half width on mobile — `left: 50%` shrink-to-fit
-capped its width — so its text wrapped to several lines; it now centres with
-auto margins at `width: max-content` (one line, full-width fallback), with the
-message shortened to "A new version is ready." (3) All toasts and the banner
-play a re-triggerable attention animation (`toast-attention`/`banner-attention`,
-pop + settle), honoring `prefers-reduced-motion`. CSS/JS only; service-worker
-cache advanced to v21. Verified in a browser.
+App version `1.3.10` is live at `https://austin-pan.github.io/mimi/`, published by
+the `deploy.yml` workflow (gh-pages commit `31408f9`, source `f184180`). Fixes
+the footer update-check and the update banner. (1) The manual check said "up to
+date" even when an update existed, then the banner contradicted it:
+`registration.update()` reports a new worker via `updatefound`/`installing`
+before it becomes `waiting`, so checking only `waiting` was premature. It now
+also watches `updatefound`/`installing` and shows "A new version is downloading…"
+(never "up to date") when one is found. (2) The banner collapsed to ~half width
+on mobile — `left: 50%` shrink-to-fit capped its width — so its text wrapped to
+several lines; it now centres with auto margins at `width: max-content` (one
+line, full-width fallback), with the message shortened to "A new version is
+ready." (3) All toasts and the banner play a re-triggerable attention animation
+(`toast-attention`/`banner-attention`, pop + settle), honoring
+`prefers-reduced-motion`. CSS/JS only; service-worker cache advanced to v21. All
+29 tests pass; verified in a browser.
+
+App version `1.3.11` committed (sources `17133f4`, `9765d3e`), deploy pending.
+PWA-only form polish: (1) form label `font-weight` reduced from 750 (rendered as
+800/ExtraBold on system fonts) to 600 (Semibold) — labels and the length
+fieldset legend included; (2) select arrow: `appearance: none` + custom SVG
+chevron via `background-image`, `padding-right 1.9→2.1rem`,
+`background-position right 0.7→0.9rem` — consistent across iOS, Android, and
+desktop with a controlled gap from the border; (3) help-tip `?` spans removed
+from tab order (no `tabindex="0"`); Tab now flows core recipe fields only.
+Additionally, the git remote was switched from SSH to HTTPS and
+`gh auth git-credential` set as the local credential helper so future pushes
+work without re-generating an SSH agent across sessions. No service-worker or
+golden-vector changes. All 29 tests pass.
 
 The build and compatibility suite gate every deployment. Do not bypass them.
 For stronger supply-chain protection, enable branch protection, require review

@@ -262,17 +262,6 @@ input, select {
   font-size: 16px;
   transition: border-color 140ms ease, box-shadow 140ms ease;
 }
-select {
-  /* appearance:none removes the OS chevron; we draw our own via base64 SVG so
-     the minifier cannot mangle the color (percent-decoded %23→# breaks in SVG
-     attribute context on some browsers). */
-  appearance: none;
-  padding-right: 2.1rem;
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMCA2Jz48cGF0aCBkPSdNMSAxbDQgNCA0LTQnIHN0cm9rZT0nIzVkNTU2MScgc3Ryb2tlLXdpZHRoPScxLjUnIGZpbGw9J25vbmUnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcgc3Ryb2tlLWxpbmVqb2luPSdyb3VuZCcvPjwvc3ZnPg==");
-  background-repeat: no-repeat;
-  background-position: right 0.9rem center;
-  background-size: 10px 6px;
-}
 input:focus, select:focus { border-color: #9b88ac; box-shadow: 0 0 0 3px rgba(155, 136, 172, 0.16); }
 input[aria-invalid="true"] { border-color: #a44747; box-shadow: 0 0 0 3px rgba(164, 71, 71, 0.12); }
 
@@ -609,9 +598,6 @@ footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
 [data-theme="dark"] label { color: #c7bdc9; }
 [data-theme="dark"] input,
 [data-theme="dark"] select { background-color: #211c25; color: var(--ink); }
-[data-theme="dark"] select {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMCA2Jz48cGF0aCBkPSdNMSAxbDQgNCA0LTQnIHN0cm9rZT0nI2M3YmRjOScgc3Ryb2tlLXdpZHRoPScxLjUnIGZpbGw9J25vbmUnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcgc3Ryb2tlLWxpbmVqb2luPSdyb3VuZCcvPjwvc3ZnPg==");
-}
 [data-theme="dark"] .pb { background: rgba(41, 35, 45, 0.7); border-color: rgba(194, 169, 208, 0.2); color: var(--plum); }
 [data-theme="dark"] .pb-subtle { border-color: transparent; background: transparent; color: var(--muted); }
 [data-theme="dark"] .pb:hover:not(:disabled) { border-color: #8c729b; color: var(--plum-dark); background: rgba(61, 51, 69, 0.72); }

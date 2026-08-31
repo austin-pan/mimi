@@ -365,7 +365,15 @@ first recipe field; (5) `G` key shortcut focuses the application input from
 anywhere outside a form control. No service-worker cache bump (oversight — fixed
 in v1.3.13). All 29 tests pass.
 
-App version `1.3.13` committed (source `a5c470a`), deploy pending. Fixes two regressions
+App version `1.3.13` committed (source `a5c470a`), deploy superseded by v1.3.14.
+
+App version `1.3.14` committed (source TBD), deploy pending. Re-enables the v1
+legacy generators in the Style dropdown: "Legacy words (v1)" and "Legacy
+characters (v1)" appear below a disabled separator. The JS dispatch was extended
+to call `generateWordsV1`/`generateCharactersV1` (using `legacySeed`) for v1
+styles, while v2 styles continue to use their existing paths. Strength-badge
+detail line is now style-aware ("Words · uppercase · number · symbol" vs
+"Upper & lowercase · number · symbol"). All 29 tests pass. Fixes two regressions
 from v1.3.11/v1.3.12: (1) Update-check always returned "up to date" — root cause
 was that `service-worker.js` was not modified in v1.3.11 or v1.3.12, so
 `registration.update()` saw an identical SW script and never fired `updatefound`;

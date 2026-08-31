@@ -4,6 +4,11 @@ import {
   MAX_LENGTH,
   MIN_LENGTH,
 } from "../../shared/core/derive-v2.js";
+import {
+  generateCharactersV1,
+  generateWordsV1,
+  legacySeed,
+} from "../../shared/core/legacy.js";
 import { createProfile, parseProfileCode } from "../../shared/core/profile.js";
 import { profileCodeFromHash } from "../../shared/core/profile-link.js";
 import { profileQrSvg } from "../../shared/core/qr.js";
@@ -480,16 +485,25 @@ form.addEventListener("submit", async (event) => {
 
     const profile = await saveProfile(profileInput.value, { collapse: true });
     const input = { ...baseInput, profileSalt: profile.profileSalt };
-    activePassword = style === "words-v2"
-      ? await generateWordsV2(input, await loadWordBankFrom(wordBankUrl("v2")))
-      : await generateCharactersV2(input);
+    const seed = legacySeed(baseInput); // used only by v1 styles
+    if (style === "words-v2") {
+      activePassword = await generateWordsV2(input, await loadWordBankFrom(wordBankUrl("v2")));
+    } else if (style === "words-v1") {
+      activePassword = generateWordsV1(seed, length, await loadWordBankFrom(wordBankUrl("v1")));
+    } else if (style === "characters-v1") {
+      activePassword = generateCharactersV1(seed, length);
+    } else {
+      activePassword = await generateCharactersV2(input);
+    }
 
     result.textContent = activePassword;
     const guidance = getStrengthGuidance(style, length);
     passwordStrength.hidden = false;
     passwordStrength.dataset.level = guidance.level;
     passwordStrengthLabel.textContent = guidance.label;
-    passwordStrengthDetails.textContent = "Upper & lowercase · number · symbol";
+    passwordStrengthDetails.textContent = style.startsWith("words")
+      ? "Words · uppercase · number · symbol"
+      : "Upper & lowercase · number · symbol";
     setStatus(`All set · ${activePassword.length} characters`, "success");
     revealPassword();
   } catch (error) {

@@ -262,10 +262,10 @@ input, select {
 select {
   /* Remove OS chrome; draw our own chevron so padding is identical on every platform. */
   appearance: none;
-  padding-right: 1.9rem;
+  padding-right: 2.1rem;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235d5561' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 0.7rem center;
+  background-position: right 0.9rem center;
   background-size: 10px 6px;
 }
 input:focus, select:focus { border-color: #9b88ac; box-shadow: 0 0 0 3px rgba(155, 136, 172, 0.16); }

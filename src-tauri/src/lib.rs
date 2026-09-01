@@ -55,16 +55,19 @@ pub fn run() {
                 })
                 .build(app)?;
 
-            // Global keyboard shortcut: ⌘⇧M opens/closes the panel from anywhere.
+            // Global keyboard shortcut: ⌥⌘M opens/closes the panel from anywhere.
+            // on_shortcut both registers and sets the handler in one call.
+            // Non-fatal: another app may already hold the hotkey.
             let shortcut = Shortcut::new(
-                Some(Modifiers::SUPER | Modifiers::SHIFT),
+                Some(Modifiers::SUPER | Modifiers::ALT),
                 Code::KeyM,
             );
-            app.global_shortcut().register(shortcut)?;
             let app_handle = app.handle().clone();
-            app.global_shortcut().on_shortcut(shortcut, move |_app, _shortcut, _event| {
+            if let Err(e) = app.global_shortcut().on_shortcut(shortcut, move |_app, _shortcut, _event| {
                 toggle_window(&app_handle);
-            })?;
+            }) {
+                eprintln!("Warning: could not register ⌥⌘M shortcut: {e}");
+            }
 
             Ok(())
         })

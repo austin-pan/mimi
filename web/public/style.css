@@ -759,3 +759,13 @@ footer .footer-brand { font-family: Georgia, serif; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* ── Tauri desktop-app overrides ─────────────────────────────────────────── */
+/* .tauri is added to <html> by index.js when running inside the native app. */
+
+/* Clip page content to the rounded window corners set by the CALayer mask.   */
+html.tauri { overflow: hidden; border-radius: 12px; }
+
+/* selects rendered natively in WKWebView can be shorter than inputs;         */
+/* force the same 42 px height so the recipe row stays visually balanced.     */
+html.tauri select { height: 42px; }

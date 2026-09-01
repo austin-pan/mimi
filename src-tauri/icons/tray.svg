@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- sparkle ✦ mark -->
+  <path d="M 394 82 C 399 108, 415 123, 440 128 C 415 133, 399 148, 394 174 C 389 148, 374 133, 348 128 C 374 123, 389 108, 394 82 Z" fill="black"/>
+  <!-- italic m -->
+  <text x="47%" y="57%" dy="0.02em" text-anchor="middle" dominant-baseline="central"
+        font-family="Georgia, 'Times New Roman', 'Liberation Serif', serif"
+        font-style="italic" font-weight="700" font-size="307" fill="black">m</text>
+</svg>

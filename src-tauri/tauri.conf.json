@@ -13,8 +13,8 @@
       {
         "label": "main",
         "title": "Mimi",
-        "width": 420,
-        "height": 680,
+        "width": 400,
+        "height": 580,
         "decorations": false,
         "resizable": false,
         "visible": false,
@@ -36,6 +36,9 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
+    "resources": {
+      "icons/tray-icon.png": "icons/tray-icon.png"
+    },
     "macOS": {
       "minimumSystemVersion": "13.0",
       "signingIdentity": null
